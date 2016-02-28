@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:theme="@style/FullscreenTheme"
+    tools:context=".GameActivity"
+    >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/nebula"
+        android:contentDescription="@string/background_start_accessibility"/>
+
+    <LinearLayout
+        android:id="@+id/start_title_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/start_title_margin"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/app_name"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_title"
+            android:layout_marginBottom="@dimen/default_margin"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:text="@string/button_play"
+            android:onClick="onPlayClicked"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/default_margin"
+        android:gravity="center_vertical"
+        android:text="@string/button_settings"
+        android:textColor="@color/text_white"
+        android:drawableStart="@android:drawable/ic_menu_preferences"
+        />
+
+</RelativeLayout>

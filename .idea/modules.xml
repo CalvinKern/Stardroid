@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Stardroid/Stardroid.iml" filepath="$PROJECT_DIR$/Stardroid/Stardroid.iml" />
-      <module fileurl="file://$PROJECT_DIR$/StardroidProject.iml" filepath="$PROJECT_DIR$/StardroidProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Stardroid.iml" filepath="$PROJECT_DIR$/Stardroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Stardroid/Stardroid-Stardroid.iml" filepath="$PROJECT_DIR$/Stardroid/Stardroid-Stardroid.iml" />
     </modules>
   </component>
 </project>
-

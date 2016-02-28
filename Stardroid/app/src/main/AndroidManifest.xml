@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.seakernel.stardroid"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/usership"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".GameActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/FullscreenTheme"
+            android:screenOrientation="userLandscape"
+            />
+
+        <activity
+            android:name=".legacy.MainGameActivity"
+            android:label="@string/app_name"
+            android:theme="@style/FullscreenTheme"
+            android:screenOrientation="userLandscape"
+            />
+
+        <activity
+            android:name=".legacy.StartScreenActivity"
+            android:theme="@style/FullscreenTheme"
+            android:screenOrientation="userLandscape"
+            />
+
+        <activity
+            android:name=".legacy.GameOverActivity"
+            android:theme="@style/FullscreenTheme"
+            android:screenOrientation="userLandscape"
+            />
+
+        <activity-alias
+            android:name="launcher"
+            android:targetActivity=".legacy.StartScreenActivity"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+    </application>
+
+</manifest>
