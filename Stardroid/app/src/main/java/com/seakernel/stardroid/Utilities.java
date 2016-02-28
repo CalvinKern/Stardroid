@@ -57,14 +57,6 @@ public class Utilities {
             mScore = score;
         }
 
-        public String getName() {
-            return mName;
-        }
-
-        public int getScore() {
-            return mScore;
-        }
-
         @Override
         public String toString() {
             return String.format("%s: %d", mName, mScore);

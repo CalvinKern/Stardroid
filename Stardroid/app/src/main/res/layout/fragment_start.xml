@@ -45,6 +45,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/start_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -54,6 +55,39 @@
         android:text="@string/button_settings"
         android:textColor="@color/text_white"
         android:drawableStart="@android:drawable/ic_menu_preferences"
+        android:background="?attr/selectableItemBackground"
         />
+
+    <RelativeLayout
+        android:id="@+id/start_settings_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/double_margin"
+        android:background="@color/dark_black_overlay"
+        android:visibility="gone"
+        android:clickable="true"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="@string/button_settings"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_subtitle"
+            />
+        <TextView
+            android:id="@+id/start_settings_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/button_close"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_detail"
+            android:background="?attr/selectableItemBackground"
+            />
+    </RelativeLayout>
 
 </RelativeLayout>

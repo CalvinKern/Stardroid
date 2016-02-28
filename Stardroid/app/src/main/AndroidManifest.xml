@@ -37,7 +37,7 @@
 
         <activity-alias
             android:name="launcher"
-            android:targetActivity=".legacy.StartScreenActivity"
+            android:targetActivity=".GameActivity"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
