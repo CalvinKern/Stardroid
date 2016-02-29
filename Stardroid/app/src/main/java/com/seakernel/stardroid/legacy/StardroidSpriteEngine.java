@@ -167,8 +167,8 @@ public class StardroidSpriteEngine
                 + "\n"
                 + "void main()\n"
                 + "{\n"
-                + "   vec4 color = texture2D(textureUnit, textureCoordinateVarying);\n"
-                + "   gl_FragColor = color;\n"
+                + "   vec4 mColor = texture2D(textureUnit, textureCoordinateVarying);\n"
+                + "   gl_FragColor = mColor;\n"
                 + "}";
     }
 
@@ -682,7 +682,7 @@ public class StardroidSpriteEngine
                     continue;
                 }
 
-                // Change color for power-ups
+                // Change mColor for power-ups
                 // Engine Speed = WHITE
                 // Firing Speed = YELLOW
                 // Firing Output = CYAN
@@ -761,7 +761,7 @@ public class StardroidSpriteEngine
         GLES20.glEnableVertexAttribArray(0);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, geometryBuffer.capacity() / elements);
 
-        // Old way (direct color)
+        // Old way (direct mColor)
 //        GLES20.glVertexAttribPointer(1,elements, GLES20.GL_FLOAT, false, 0, shipColorBuffer);
 //        GLES20.glEnableVertexAttribArray(1);
 

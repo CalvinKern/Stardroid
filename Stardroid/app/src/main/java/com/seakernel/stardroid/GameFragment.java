@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
+import android.opengl.Matrix;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -36,11 +37,18 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
             R.drawable.pausescreen,
     };
 
-    private int mScreenWidth;
-    private int mScreenHeight;
+//    private int mScreenWidth;
+//    private int mScreenHeight;
     private boolean mIsPaused;
     private boolean mHasActiveTouch;
+    private StardroidEngine stardroidEngine = null;
     private OnPauseStateChangeListener mPauseListener;
+
+    // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
+    private final float[] mMVPMatrix = new float[16];
+    private final float[] mProjectionMatrix = new float[16];
+    private final float[] mViewMatrix = new float[16];
+    private float mRatio;
 
     public static GameFragment newInstance() {
         Bundle args = new Bundle();
@@ -65,6 +73,13 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         mPauseListener = null; // Safely set the pause listener back to null in case we had one
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        stardroidEngine = new StardroidEngine();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,8 +96,9 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mHasActiveTouch = true;
-                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_POINTER_UP)
+                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_POINTER_UP) {
                     mHasActiveTouch = false;
+                }
 
                 if (mHasActiveTouch && !mIsPaused) {
 //                    shipX = 2 * (event.getRawX() - screenWidth / 2) / screenWidth + 1f * stardroidModel.getUserShip().getShipWidth();
@@ -95,38 +111,6 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         });
 
         return root;
-    }
-
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        // Clear the screen
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-        // Enable textures
-        GLES20.glEnable(GLES20.GL_TEXTURE_2D);
-        GLES20.glEnable(GLES20.GL_BLEND);
-        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-
-        // Texture variables
-        int[] textures = importTextures();
-
-        // When working on below, may be nice to pass in TEXTURE_DRAWABLE_IDS into setTextures()
-
-        //  in order to determine the index into 'textures'
-//        // Import into Sprite Engine
-//        spriteEngine.setTextures(userShipTexture,
-//                enemyShipTexture,
-//                specialEnemyShipTexture,
-//                bulletTexture,
-//                starTexture,
-//                fullHealthTexture,      // healthRestoreTexture
-//                starTexture,            // enginePowerTexture
-//                bulletTexture,          // bulletStreamsTexture
-//                halfHealthTexture,      // bulletSpeedTexture
-//                fullHealthTexture,
-//                halfHealthTexture,
-//                lowHealthTexture,
-//                pauseTexture);
     }
 
     /**
@@ -169,27 +153,75 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     }
 
     @Override
+    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+        // Clear the screen
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+        // Enable textures
+        GLES20.glEnable(GLES20.GL_TEXTURE_2D);
+        GLES20.glEnable(GLES20.GL_BLEND);
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
+
+        // Texture variables
+        int[] textures = importTextures();
+
+        // When working on below, may be nice to pass in TEXTURE_DRAWABLE_IDS into setTextures()
+
+        stardroidEngine.setTextures();
+        //  in order to determine the index into 'textures'
+        //        // Import into Sprite Engine
+        //        stardroidEngine.setTextures(userShipTexture,
+        //                enemyShipTexture,
+        //                specialEnemyShipTexture,
+        //                bulletTexture,
+        //                starTexture,
+        //                fullHealthTexture,      // healthRestoreTexture
+        //                starTexture,            // enginePowerTexture
+        //                bulletTexture,          // bulletStreamsTexture
+        //                halfHealthTexture,      // bulletSpeedTexture
+        //                fullHealthTexture,
+        //                halfHealthTexture,
+        //                lowHealthTexture,
+        //                pauseTexture);
+    }
+
+    @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        GLES20.glViewport(0, height / 10, width, height);
+        GLES20.glViewport(0, 0, width, height);
 
         // Store the size of the screen
-        mScreenWidth = width;
-        mScreenHeight = height;
+//        mScreenWidth = width;
+//        mScreenHeight = height;
+
+        mRatio = (float) width / height;
+        stardroidEngine.initializeScreen(mRatio);
+
+        // this projection matrix is applied to object coordinates
+        // in the onDrawFrame() method
+        Matrix.frustumM(mProjectionMatrix, 0, -mRatio, mRatio, -1, 1, 3, 7);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
+        // Set the camera position (View matrix)
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
 //        SpaceShip userShip = stardroidModel.getUserShip();
 //
 //        if (isActive)
 //            stardroidModel.addUserBullet(userShip.getShipX() + stardroidModel.getUserShip().getShipWidth(), userShip.getShipY());
 //
-//        if (!isPaused)
-//            spriteEngine.draw(stardroidModel.getUserShip(), stardroidModel.getUserBullets(), stardroidModel.getCollidingBullets(), stardroidModel.generateEnemies(), stardroidModel.generateSpecialEnemies(), stardroidModel.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
-//        else if (inGame)
-//            spriteEngine.drawPause();
+        if (!mIsPaused) {
+            stardroidEngine.draw(mMVPMatrix, mRatio);
+//            stardroidEngine.draw(stardroidModel.getUserShip(), stardroidModel.getUserBullets(), stardroidModel.getCollidingBullets(), stardroidModel.generateEnemies(), stardroidModel.generateSpecialEnemies(), stardroidModel.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
+//        } else {
+//            stardroidEngine.drawPause();
+        }
     }
 
     public void onPauseClick() {
