@@ -16,7 +16,7 @@ import com.seakernel.stardroid.model.StardroidModel;
  * A full-screen activity that shows and hides the system UI (i.e. status bar and navigation/system
  * bar) with user interaction.
  */
-public class GameActivity extends AppCompatActivity implements View.OnSystemUiVisibilityChangeListener {
+public class MainActivity extends AppCompatActivity implements View.OnSystemUiVisibilityChangeListener {
 
     // Fragment Tags
     private static final String START_FRAGMENT_TAG = "start";
