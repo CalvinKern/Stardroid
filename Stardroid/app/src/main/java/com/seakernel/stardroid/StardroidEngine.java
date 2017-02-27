@@ -1,5 +1,6 @@
 package com.seakernel.stardroid;
 
+import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.model.StardroidPause;
 import com.seakernel.stardroid.model.StardroidShape;
 import com.seakernel.stardroid.model.StardroidStar;
@@ -53,7 +54,14 @@ public class StardroidEngine {
     public void draw(float[] mvpMatrix, float screenRatio) {
         // Draw the stars in the background
         drawStars(mvpMatrix, screenRatio);
-        mPauseSprite.draw(mvpMatrix);
+
+        // If paused, only draw the
+        if (StardroidModel.getInstance().isPaused()) {
+            mPauseSprite.draw(mvpMatrix);
+            return; // Return here if we are paused so we don't keep drawing everything else
+        }
+
+        // TODO: Draw the rest of the game
     }
 
     private void drawStars(float[] mvpMatrix, float screenRatio) {

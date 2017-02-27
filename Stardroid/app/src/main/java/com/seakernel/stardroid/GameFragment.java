@@ -202,11 +202,12 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 //        if (isActive)
 //            stardroidModel.addUserBullet(userShip.getShipX() + stardroidModel.getUserShip().getShipWidth(), userShip.getShipY());
 //
-        if (!model.isPaused()) {
-            stardroidEngine.draw(mMVPMatrix, mRatio);
+        stardroidEngine.draw(mMVPMatrix, mRatio);
+
+//        if (!model.isPaused()) {
 //            stardroidEngine.draw(stardroidModel.getUserShip(), stardroidModel.getUserBullets(), stardroidModel.getCollidingBullets(), stardroidModel.generateEnemies(), stardroidModel.generateSpecialEnemies(), stardroidModel.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
 //        } else {
 //            stardroidEngine.drawPause();
-        }
+//        }
     }
 }
