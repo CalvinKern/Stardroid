@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * A full-screen activity that shows and hides the system UI (i.e. status bar and navigation/system
+ * bar) with user interaction.
  */
 public class GameActivity extends AppCompatActivity implements View.OnSystemUiVisibilityChangeListener, GameFragment.OnPauseStateChangeListener {
 
@@ -23,11 +23,15 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
     // Save Keys
     private static final String IN_GAME_KEY = "game";
 
+    // Animation Constants
     /**
      * Some older devices needs a small delay between UI widget updates
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
+    private static final int UI_INITIAL_ANIMATION_DELAY = 100;
+
+    // Member variables
 
     private boolean mInGame; // Keep track of game state, may switch to find view by id
     private boolean mIsPaused;
@@ -89,7 +93,7 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
         // Trigger the initial hideSystemControls() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(100);
+        delayedHide(UI_INITIAL_ANIMATION_DELAY);
     }
 
     @Override
@@ -121,6 +125,32 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
         }
     }
 
+    // =============================================================================================
+    // OnPauseStateChangeListener Methods
+    // =============================================================================================
+
+    @Override
+    public void onPauseStateChanged(boolean paused) {
+        mIsPaused = paused;
+    }
+
+    // =============================================================================================
+    // OnSystemUiVisibilityChangeListener Methods
+    // =============================================================================================
+
+    @Override
+    public void onSystemUiVisibilityChange(int visibility) {
+        // On system visibility change, we need to see if we are displaying system controls
+        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+            // If system controls are visible (status bar, home, back, recent) then hideSystemControls them
+            hideSystemControls();
+        }
+    }
+
+    // =============================================================================================
+    // Helper Methods
+    // =============================================================================================
+
     private void hideSystemControls() {
         // Hide UI first
         ActionBar actionBar = getSupportActionBar();
@@ -141,15 +171,6 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    @Override
-    public void onSystemUiVisibilityChange(int visibility) {
-        // On system visibility change, we need to see if we are displaying system controls
-        if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-            // If system controls are visible (status bar, home, back, recent) then hideSystemControls them
-            hideSystemControls();
-        }
-    }
-
     public void onPlayClicked(View view) {
         mInGame = true; // We are starting the game
 
@@ -157,10 +178,5 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
         transaction.replace(R.id.activity_frame, GameFragment.newInstance(), GAME_FRAGMENT_TAG);
         transaction.addToBackStack(null);
         transaction.commit();
-    }
-
-    @Override
-    public void onPauseStateChanged(boolean paused) {
-        mIsPaused = paused;
     }
 }
