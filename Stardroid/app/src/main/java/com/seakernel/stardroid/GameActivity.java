@@ -1,6 +1,7 @@
 package com.seakernel.stardroid;
 
 import android.annotation.SuppressLint;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,19 +10,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.seakernel.stardroid.model.StardroidModel;
+
 /**
  * A full-screen activity that shows and hides the system UI (i.e. status bar and navigation/system
  * bar) with user interaction.
  */
-public class GameActivity extends AppCompatActivity implements View.OnSystemUiVisibilityChangeListener, GameFragment.OnPauseStateChangeListener {
+public class GameActivity extends AppCompatActivity implements View.OnSystemUiVisibilityChangeListener {
 
     // Fragment Tags
     private static final String START_FRAGMENT_TAG = "start";
     private static final String GAME_FRAGMENT_TAG = "game";
     private static final String OVER_FRAGMENT_TAG = "over";
-
-    // Save Keys
-    private static final String IN_GAME_KEY = "game";
 
     // Animation Constants
     /**
@@ -32,9 +32,6 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
     private static final int UI_INITIAL_ANIMATION_DELAY = 100;
 
     // Member variables
-
-    private boolean mInGame; // Keep track of game state, may switch to find view by id
-    private boolean mIsPaused;
     private final Handler mHideHandler = new Handler();
     private final Runnable mHideRunnable = new Runnable() {
         @Override
@@ -65,6 +62,10 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
         }
     };
 
+    // =============================================================================================
+    // Activity Methods
+    // =============================================================================================
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,14 +76,10 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
         // Set the view for the activity
         setContentView(R.layout.activity_game);
 
-        // Pull out any saved state
-        if (savedInstanceState != null) {
-            mInGame = savedInstanceState.getBoolean(IN_GAME_KEY, mInGame);
-        }
-
-        // Load the view with the start fragment
+        // Load the view with the start fragment on top of the game fragment (so we can see the cool stars)
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.activity_frame, StartFragment.newInstance(), START_FRAGMENT_TAG);
+        transaction.add(R.id.game_surface, GameFragment.newInstance(), GAME_FRAGMENT_TAG);
+        transaction.add(R.id.game_overlay, StartFragment.newInstance(), START_FRAGMENT_TAG);
         transaction.commit();
     }
 
@@ -98,7 +95,7 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        outState.putBoolean(IN_GAME_KEY, mInGame);
+        // TODO: Serialize the model and save it
 
         super.onSaveInstanceState(outState, outPersistentState);
     }
@@ -107,31 +104,24 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
     public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onRestoreInstanceState(savedInstanceState, persistentState);
 
-        mInGame = savedInstanceState.getBoolean(IN_GAME_KEY, mInGame);
+        // TODO: Read in the serialized model data
     }
 
     @Override
     public void onBackPressed() {
-        // If we're in the game or not paused, pause the game
-        if (mInGame && !mIsPaused) {
-            GameFragment fragment = (GameFragment) getFragmentManager().findFragmentByTag(GAME_FRAGMENT_TAG);
-            if (fragment != null) {
-                fragment.onPauseClick();
+        StardroidModel model = StardroidModel.getInstance();
+        if (model.isGameRunning()) {
+            if (model.isPaused()) {
+                // If the game is running and paused, then we're going back to the start screen
+                model.resetState();
+            } else {
+                // If we're in the game and not paused, pause the game
+                model.setPaused(true);
             }
         } else {
-            // TODO: Popup asking 'are you sure exit'?
-            mInGame = false; // We are no longer in a game state if we call super on back press
+            // TODO: Popup asking 'are you sure exit' if at the top of the back stack?
             super.onBackPressed();
         }
-    }
-
-    // =============================================================================================
-    // OnPauseStateChangeListener Methods
-    // =============================================================================================
-
-    @Override
-    public void onPauseStateChanged(boolean paused) {
-        mIsPaused = paused;
     }
 
     // =============================================================================================
@@ -172,11 +162,14 @@ public class GameActivity extends AppCompatActivity implements View.OnSystemUiVi
     }
 
     public void onPlayClicked(View view) {
-        mInGame = true; // We are starting the game
-
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.activity_frame, GameFragment.newInstance(), GAME_FRAGMENT_TAG);
+        // Hide the start fragment so that the game can show unobstructed
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.remove(manager.findFragmentByTag(START_FRAGMENT_TAG));
         transaction.addToBackStack(null);
         transaction.commit();
+
+        // Start the game model
+        StardroidModel.getInstance().startGame();
     }
 }

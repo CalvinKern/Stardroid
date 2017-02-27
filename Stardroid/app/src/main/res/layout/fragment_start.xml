@@ -9,13 +9,6 @@
     tools:context=".GameActivity"
     >
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/nebula"
-        android:contentDescription="@string/background_start_accessibility"/>
-
     <LinearLayout
         android:id="@+id/start_title_container"
         android:layout_width="wrap_content"

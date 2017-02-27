@@ -15,7 +15,7 @@ public class StardroidEngine {
 
     // Member Variables
     private ArrayList<StardroidStar> mStars = null;
-    private StardroidPause mPause = null;
+    private StardroidPause mPauseSprite = null;
 
     /**
      * This method initializes all necessary data structures and GLES20
@@ -24,7 +24,7 @@ public class StardroidEngine {
 
         // initialize the stars in the background for the start of the game
         initializeStars(screenRatio);
-        mPause = new StardroidPause();
+        mPauseSprite = new StardroidPause();
     }
 
     /**
@@ -53,7 +53,7 @@ public class StardroidEngine {
     public void draw(float[] mvpMatrix, float screenRatio) {
         // Draw the stars in the background
         drawStars(mvpMatrix, screenRatio);
-        mPause.draw(mvpMatrix);
+        mPauseSprite.draw(mvpMatrix);
     }
 
     private void drawStars(float[] mvpMatrix, float screenRatio) {

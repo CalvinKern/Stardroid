@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.seakernel.stardroid.model.StardroidModel;
+
 import java.nio.IntBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -39,10 +41,8 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
 //    private int mScreenWidth;
 //    private int mScreenHeight;
-    private boolean mIsPaused;
     private boolean mHasActiveTouch;
     private StardroidEngine stardroidEngine = null;
-    private OnPauseStateChangeListener mPauseListener;
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private final float[] mMVPMatrix = new float[16];
@@ -55,22 +55,6 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         GameFragment fragment = new GameFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        // If the context wants to register for pause events, set the listener
-        if (context instanceof OnPauseStateChangeListener) {
-            mPauseListener = (OnPauseStateChangeListener) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mPauseListener = null; // Safely set the pause listener back to null in case we had one
     }
 
     @Override
@@ -100,7 +84,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
                     mHasActiveTouch = false;
                 }
 
-                if (mHasActiveTouch && !mIsPaused) {
+                if (mHasActiveTouch && !StardroidModel.getInstance().isPaused()) {
 //                    shipX = 2 * (event.getRawX() - screenWidth / 2) / screenWidth + 1f * stardroidModel.getUserShip().getShipWidth();
 //                    shipY = -2 * (event.getRawY() - screenHeight / 2) / screenHeight + 0.5f * stardroidModel.getUserShip().getShipHeight();
 //
@@ -203,8 +187,10 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        StardroidModel model = StardroidModel.getInstance();
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
+        // TODO: Can these matrices be set in onSurfaceChanged, so that it only happens once?
         // Set the camera position (View matrix)
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
@@ -216,25 +202,11 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 //        if (isActive)
 //            stardroidModel.addUserBullet(userShip.getShipX() + stardroidModel.getUserShip().getShipWidth(), userShip.getShipY());
 //
-        if (!mIsPaused) {
+        if (!model.isPaused()) {
             stardroidEngine.draw(mMVPMatrix, mRatio);
 //            stardroidEngine.draw(stardroidModel.getUserShip(), stardroidModel.getUserBullets(), stardroidModel.getCollidingBullets(), stardroidModel.generateEnemies(), stardroidModel.generateSpecialEnemies(), stardroidModel.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
 //        } else {
 //            stardroidEngine.drawPause();
         }
-    }
-
-    public void onPauseClick() {
-        mIsPaused = !mIsPaused;
-
-        if (mPauseListener != null) {
-            mPauseListener.onPauseStateChanged(mIsPaused);
-        }
-    }
-    /**
-     * An optional listener to get pause events
-     */
-    public interface OnPauseStateChangeListener {
-        void onPauseStateChanged(boolean paused);
     }
 }

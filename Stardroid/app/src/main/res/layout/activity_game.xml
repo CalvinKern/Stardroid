@@ -8,7 +8,13 @@
     >
 
     <FrameLayout
-        android:id="@+id/activity_frame"
+        android:id="@+id/game_surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <FrameLayout
+        android:id="@+id/game_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
