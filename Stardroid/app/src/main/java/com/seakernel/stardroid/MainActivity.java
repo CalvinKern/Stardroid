@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
             if (model.isPaused()) {
                 // If the game is running and paused, then we're going back to the start screen
                 model.resetState();
+                super.onBackPressed();
             } else {
                 // If we're in the game and not paused, pause the game
                 model.setPaused(true);
