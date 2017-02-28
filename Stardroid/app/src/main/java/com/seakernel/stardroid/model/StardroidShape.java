@@ -113,6 +113,7 @@ public class StardroidShape {
     }
 
     protected void initialize() {
+        // Intentionally empty for sub class implementation
     }
 
     protected float[] getCoordinates() {

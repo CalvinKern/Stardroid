@@ -1,5 +1,7 @@
 package com.seakernel.stardroid;
 
+import android.opengl.Matrix;
+
 import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.model.StardroidPause;
 import com.seakernel.stardroid.model.StardroidShape;
@@ -55,11 +57,7 @@ public class StardroidEngine {
         // Draw the stars in the background
         drawStars(mvpMatrix, screenRatio);
 
-        // If paused, only draw the
-        if (StardroidModel.getInstance().isPaused()) {
-            mPauseSprite.draw(mvpMatrix);
-            return; // Return here if we are paused so we don't keep drawing everything else
-        }
+        drawPause(mvpMatrix);
 
         // TODO: Draw the rest of the game
     }
@@ -92,6 +90,26 @@ public class StardroidEngine {
         // Remove stars that have passed
         for (StardroidStar oldStar : passedStars) {
             mStars.remove(oldStar);
+        }
+    }
+
+    /**
+     * @param mvpMatrix
+     * @return true if the game is paused
+     */
+    private boolean drawPause(float[] mvpMatrix) {
+        // If paused, only draw the
+        if (StardroidModel.getInstance().isPaused()) {
+            mPauseSprite.draw(mvpMatrix); // TODO: Change this to draw the resume button (that also states paused)
+            return true; // Return here if we are paused so we don't keep drawing everything else
+        } else {
+            // TODO: Modify mvp to draw pause in the top right? corner.
+            float[] copyMvp = new float[mvpMatrix.length];
+            System.arraycopy(mvpMatrix, 0, copyMvp, 0, mvpMatrix.length); // TODO: in place state saving of mvpMatrix for efficiency?
+
+            // TODO: draw once the mvp is correct
+//            mPauseSprite.draw(copyMvp);
+            return false;
         }
     }
 }
