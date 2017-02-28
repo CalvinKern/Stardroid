@@ -33,7 +33,9 @@ public class StardroidPause extends StardroidShape {
 
     @Override
     public void draw(float[] mvpMatrix) {
-        mMVPMatrix = mvpMatrix.clone();
+        mMVPMatrix = new float[mvpMatrix.length];
+        // TODO: Instead of modifying mvpMatrix, we could modify COORDINATES (getCoordinates) based on left and right?
+        System.arraycopy(mvpMatrix, 0, mMVPMatrix, 0, mvpMatrix.length); // TODO: in place state saving of mvpMatrix for efficiency?
 
         Matrix.translateM(mMVPMatrix, 0, POS, POS, 0.0f);
 
