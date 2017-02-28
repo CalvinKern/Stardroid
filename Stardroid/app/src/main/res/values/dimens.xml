@@ -11,4 +11,8 @@
     <dimen name="text_detail">14sp</dimen>
     <dimen name="text_record">16sp</dimen>
 
+    <!--UI-->
+    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="border_width">1dp</dimen>
+
 </resources>
