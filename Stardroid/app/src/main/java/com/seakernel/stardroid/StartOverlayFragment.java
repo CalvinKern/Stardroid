@@ -14,11 +14,11 @@ import java.util.List;
 /**
  * Created by Calvin on 2/27/16.
  */
-public class StartFragment extends Fragment implements View.OnClickListener {
+public class StartOverlayFragment extends Fragment implements View.OnClickListener {
 
-    public static StartFragment newInstance() {
+    public static StartOverlayFragment newInstance() {
         Bundle args = new Bundle();
-        StartFragment fragment = new StartFragment();
+        StartOverlayFragment fragment = new StartOverlayFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,12 +52,14 @@ public class StartFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.start_settings:
+            case R.id.start_settings: {
                 showSettings();
                 break;
-            case R.id.start_settings_close:
+            }
+            case R.id.start_settings_close: {
                 closeSettings();
                 break;
+            }
         }
     }
 

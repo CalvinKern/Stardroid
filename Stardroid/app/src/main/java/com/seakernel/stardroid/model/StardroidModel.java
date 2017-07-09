@@ -1,5 +1,10 @@
 package com.seakernel.stardroid.model;
 
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Created by Calvin on 2/27/2017.
  */
@@ -7,6 +12,14 @@ package com.seakernel.stardroid.model;
 public class StardroidModel {
 
     // Static Variables
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef
+    public @interface GameState {
+        int BLANK = 0;
+        int RUNNING = 1;
+        int PAUSED = 2;
+        int DIED = 3;
+    }
 
     private static StardroidModel mModel;
 
@@ -19,38 +32,42 @@ public class StardroidModel {
 
     // Instance Variables
 
-    private boolean mIsPaused;
-    private boolean mIsGameRunning;
+    @GameState
+    private int mState;
 
     private StardroidModel() {
         resetState();
     }
 
     public void resetState() {
-        mIsPaused = false;
-        mIsGameRunning = false;
+        mState = GameState.BLANK;
         // TODO: Reset the rest of the game state
     }
 
+    @GameState
+    public int getState() {
+        return mState;
+    }
+
     public boolean isPaused() {
-        return mIsPaused;
+        return mState == GameState.PAUSED;
     }
 
     public void setPaused(boolean isPaused) {
-        mIsPaused = isPaused;
+        mState = isPaused ? GameState.PAUSED : GameState.RUNNING;
     }
 
     public boolean isGameRunning() {
-        return mIsGameRunning;
+        return mState == GameState.RUNNING;
     }
 
     public void startGame() {
-        mIsGameRunning = true;
+        mState = GameState.RUNNING;
         // TODO: Any other setup
     }
 
     public void stopGame() {
-        mIsGameRunning = false;
+        mState = GameState.BLANK;
         // TODO: Any other wrap up
     }
 }

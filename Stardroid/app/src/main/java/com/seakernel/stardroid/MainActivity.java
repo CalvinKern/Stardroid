@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
         // Load the view with the start fragment on top of the game fragment (so we can see the cool stars)
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.add(R.id.game_surface, GameFragment.newInstance(), GAME_FRAGMENT_TAG);
-        transaction.add(R.id.game_overlay, StartFragment.newInstance(), START_FRAGMENT_TAG);
+        transaction.add(R.id.game_overlay, StartOverlayFragment.newInstance(), START_FRAGMENT_TAG);
         transaction.commit();
     }
 
@@ -110,18 +110,20 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
     @Override
     public void onBackPressed() {
         StardroidModel model = StardroidModel.getInstance();
-        if (model.isGameRunning()) {
-            if (model.isPaused()) {
-                // If the game is running and paused, then we're going back to the start screen
-                model.resetState();
-                super.onBackPressed();
-            } else {
-                // If we're in the game and not paused, pause the game
+
+        switch (model.getState()) {
+            case StardroidModel.GameState.RUNNING: {
                 model.setPaused(true);
+                break;
             }
-        } else {
-            // TODO: Popup asking 'are you sure exit' if at the top of the back stack?
-            super.onBackPressed();
+            case StardroidModel.GameState.PAUSED: {
+                model.resetState(); // TODO: Remove this once I have a 'quit' button in the pause screen
+                // Intentional fallthrough
+            }
+            default: {
+                super.onBackPressed();
+                break;
+            }
         }
     }
 
@@ -167,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.remove(manager.findFragmentByTag(START_FRAGMENT_TAG));
-        transaction.addToBackStack(null);
+        transaction.addToBackStack(null); // TODO: Remove this once I have a 'quit' button in the pause screen
         transaction.commit();
 
         // Start the game model
