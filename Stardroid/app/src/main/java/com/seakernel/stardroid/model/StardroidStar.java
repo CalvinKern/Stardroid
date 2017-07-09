@@ -43,31 +43,31 @@ public class StardroidStar extends StardroidShape {
     private float[] getStarColor() {
         int colorClass = (int)(Math.random() * 15); // Stars range between around 7 colors
 
+        // Hottest to coldest
         switch (colorClass) {
             case 0:
-                return new float[] {0.6f, 0.6f, 1.f, 1.f}; // Blue is the hottest
+                return OpenGlColors.STAR_BLUE; // Blue is the hottest
             case 1:
             case 2:
-                return new float[] {0.8f, 0.8f, 1.f, 1.f}; // White Blue is next
+                return OpenGlColors.STAR_WHITE_BLUE; // White Blue is next
             case 3:
             case 4:
-                return new float[] {0.875f, 0.875f, 1.f, 1.f}; // White Blue is next
+                return OpenGlColors.STAR_LIGHTER_WHITE_BLUE; // White Blue is next
             case 5:
             case 6:
             case 7:
             case 8:
-                return new float[] {1.f, 1.f, 1.f, 1.f}; // White
+            default:
+                return OpenGlColors.STAR_WHITE; // Return a white star default
             case 9:
             case 10:
-                return new float[] {1.f, 0.95f, 0.7f, 1.f}; // White Yellow
+                return OpenGlColors.STAR_WHITE_YELLOW; // White Yellow
             case 11:
             case 12:
-                return new float[] {1.f, 0.75f, 0.5f, 1.f}; // Yellow Orange
+                return OpenGlColors.STAR_YELLOW_ORANGE; // Yellow Orange
             case 13:
             case 14:
-                return new float[] {1.f, 0.75f, 0.7f, 1.f}; // Orange Red
-            default:
-                return new float[] {1.f, 1.f, 1.f, 1.f}; // Return a white star default
+                return OpenGlColors.STAR_ORANGE_RED; // Orange Red
         }
     }
 
