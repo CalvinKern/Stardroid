@@ -14,8 +14,6 @@ public class StardroidPause extends StardroidShape {
 
     @Override
     protected void initialize() {
-        super.initialize();
-
         mColor = new float[] {1.f, 1.f, 1.f, 1.f};
     }
 

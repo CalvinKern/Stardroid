@@ -26,8 +26,6 @@ public class StardroidStar extends StardroidShape {
 
     @Override
     protected void initialize() {
-        super.initialize();
-
         mColor = getStarColor();
         double rand = Math.random();
         mFloatingSpeed = (float)((rand * RAND_SIZE_SCALE) + MIN_SIZE) / SIZE_SCALE;

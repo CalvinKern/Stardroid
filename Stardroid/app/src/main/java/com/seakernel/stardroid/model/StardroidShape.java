@@ -9,7 +9,7 @@ import java.nio.FloatBuffer;
 /**
  * Created by Calvin on 2/27/16.
  */
-public class StardroidShape {
+public abstract class StardroidShape {
     // Vertex Shader keys
     public static final String POSITION = "position";
     public static final String MODEL_VIEW = "modelView";
@@ -23,7 +23,7 @@ public class StardroidShape {
     public static final String TEXTURE_COORDINATE_VARYING = "textureCoordinateVarying";
 
     // This String contains the vertex shader source code required by GLES to draw
-    public static final String TEXTURE_VERTEX_SHADER_SOURCE =
+    protected static final String TEXTURE_VERTEX_SHADER_SOURCE =
             "precision mediump float;\n"
                     + "uniform mat4 " + MODEL_VIEW + ";\n"
                     + "attribute vec3 " + POSITION + ";\n"
@@ -38,7 +38,7 @@ public class StardroidShape {
                     + "}";
 
     // This String contains the fragment shader source code required for GLES to draw
-    public static final String TEXTURE_FRAGMENT_SHADER_SOURCE =
+    protected static final String TEXTURE_FRAGMENT_SHADER_SOURCE =
             "precision mediump float;\n"
                     + "uniform sampler2D " + TEXTURE_UNIT + ";\n"
                     + "varying vec2 " + TEXTURE_COORDINATE_VARYING + ";\n"
@@ -49,14 +49,14 @@ public class StardroidShape {
                     + "   gl_FragColor = mColor;\n"
                     + "}";
 
-    private static final String COLOR_VERTEX_SHADER_SOURCE =
+    protected static final String COLOR_VERTEX_SHADER_SOURCE =
             "attribute vec4 " + POSITION_VARYING + ";"
                     + "uniform mat4 " + MVP_MATRIX + ";"
                     + "void main() {"
                     + "  gl_Position = " + MVP_MATRIX + " * " + POSITION_VARYING + ";"
                     + "}";
 
-    private static final String COLOR_FRAGMENT_SHADER_SOURCE =
+    protected static final String COLOR_FRAGMENT_SHADER_SOURCE =
             "precision mediump float;"
                     + "uniform vec4 " + COLOR_VARYING + ";"
                     + "void main() {"
@@ -80,6 +80,8 @@ public class StardroidShape {
     private final int PROGRAM;
     protected float[] mMVPMatrix; // for subclass use
 
+    protected abstract void initialize();
+
     public StardroidShape() {
         initialize();
 
@@ -102,18 +104,20 @@ public class StardroidShape {
         // create empty OpenGL ES Program
         PROGRAM = GLES20.glCreateProgram();
 
-        // add the vertex shader to program
         GLES20.glAttachShader(PROGRAM, vertexShader);
-
-        // add the fragment shader to program
         GLES20.glAttachShader(PROGRAM, fragmentShader);
 
         // creates OpenGL ES program executables
         GLES20.glLinkProgram(PROGRAM);
-    }
 
-    protected void initialize() {
-        // Intentionally empty for sub class implementation
+        // get handle to vertex shader's vPosition member
+        mPositionHandle = GLES20.glGetAttribLocation(PROGRAM, POSITION_VARYING);
+
+        // get handle to fragment shader's vColor member
+        mColorHandle = GLES20.glGetUniformLocation(PROGRAM, COLOR_VARYING);
+
+        // get handle to shape's transformation matrix
+        mMVPMatrixHandle = GLES20.glGetUniformLocation(PROGRAM, MVP_MATRIX);
     }
 
     protected float[] getCoordinates() {
@@ -129,9 +133,6 @@ public class StardroidShape {
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(PROGRAM);
 
-        // get handle to vertex shader's vPosition member
-        mPositionHandle = GLES20.glGetAttribLocation(PROGRAM, POSITION_VARYING);
-
         // Enable a handle to the triangle vertices
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
@@ -139,14 +140,8 @@ public class StardroidShape {
         GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
                 GLES20.GL_FLOAT, false, VERTEX_STRIDE, mVertexBuffer);
 
-        // get handle to fragment shader's vColor member
-        mColorHandle = GLES20.glGetUniformLocation(PROGRAM, COLOR_VARYING);
-
         // Set mColor for drawing the triangle
         GLES20.glUniform4fv(mColorHandle, 1, mColor, 0);
-
-        // get handle to shape's transformation matrix
-        mMVPMatrixHandle = GLES20.glGetUniformLocation(PROGRAM, MVP_MATRIX);
 
         // Pass the projection and view transformation to the shader
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
@@ -163,7 +158,7 @@ public class StardroidShape {
      *
      * @return either the mColor shader or texture shader
      */
-    public String getVertexShader() {
+    protected String getVertexShader() {
         return COLOR_VERTEX_SHADER_SOURCE;
     }
 
@@ -172,11 +167,11 @@ public class StardroidShape {
      *
      * @return either the mColor shader or texture shader
      */
-    public String getFragmentShader() {
+    protected String getFragmentShader() {
         return COLOR_FRAGMENT_SHADER_SOURCE;
     }
 
-    public static int loadShader(int type, String shaderCode){
+    protected static int loadShader(int type, String shaderCode){
         int shader = GLES20.glCreateShader(type);
 
         // add the source code to the shader and compile it
