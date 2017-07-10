@@ -36,12 +36,12 @@ public class StardroidStar extends StardroidShape {
      *
      * http://oneminuteastronomer.com/708/star-colors-explained/
      *
-     * @return
+     * @return a 16 byte color as a 4 part float array
      */
     private float[] getStarColor() {
-        int colorClass = (int)(Math.random() * 15); // Stars range between around 7 colors
+        int colorClass = (int)(Math.random() * 15);
 
-        // Hottest to coldest
+        // Stars range between around 7 colors, hottest to coldest
         switch (colorClass) {
             case 0:
                 return OpenGlColors.STAR_BLUE; // Blue is the hottest
