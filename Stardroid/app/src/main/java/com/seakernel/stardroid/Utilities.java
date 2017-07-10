@@ -24,7 +24,7 @@ public class Utilities {
 
             return getPlayerInfoList(players, scores);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO: Known issue -- 07/09/2017
         }
 
         return null;
