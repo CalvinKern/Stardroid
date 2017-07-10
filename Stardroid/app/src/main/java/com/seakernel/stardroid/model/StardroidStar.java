@@ -1,21 +1,39 @@
 package com.seakernel.stardroid.model;
 
+import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 /**
  * Created by Calvin on 2/28/16.
  */
 public class StardroidStar extends StardroidShape {
+    // Fragment Shader keys
+    public static final String COLOR_GLOWING_VARYING = "vColorGlowing";
+
+    // Constants
+    private static final int MIN_SIZE = 1;
+
+    private static final double GLOW_MAX = 2.5;
+    private static final double GLOW_CHANCE = 0.65;
+
+    private static final float HALF_SIZE = 0.0075f;
+    private static final float SIZE_SCALE = 1000.f;
+    private static final float RAND_SIZE_SCALE = 3.5f;
+
+    private static final float MAX_SIZE_RATIO = (RAND_SIZE_SCALE + MIN_SIZE) / SIZE_SCALE;
 
     private float mPositionX;
     private float mPositionY;
-
     private float mFloatingSpeed;
-    private static final int MIN_SIZE = 1;
-    private static final float HALF_SIZE = 0.0075f;
-    private static final float RAND_SIZE_SCALE = 3.5f;
-    private static final float SIZE_SCALE = 1000.f;
-    private static final float MAX_SIZE_RATIO = (RAND_SIZE_SCALE + MIN_SIZE) / SIZE_SCALE;
+    private int mColorGlowingHandle;
+
+    protected static final String COLOR_GLOWING_FRAGMENT_SHADER_SOURCE =
+            "precision mediump float;"
+                    + "uniform vec4 " + COLOR_VARYING + ";"
+                    + "uniform vec4 " + COLOR_GLOWING_VARYING + ";"
+                    + "void main() {"
+                    + "  gl_FragColor = " + COLOR_VARYING + "*" + COLOR_GLOWING_VARYING + ";"
+                    + "}";
 
     public StardroidStar (float x, float y) {
         super();
@@ -29,6 +47,19 @@ public class StardroidStar extends StardroidShape {
         mColor = getStarColor();
         double rand = Math.random();
         mFloatingSpeed = (float)((rand * RAND_SIZE_SCALE) + MIN_SIZE) / SIZE_SCALE;
+    }
+
+    @Override
+    protected void onCreateProgramHandles(final int PROGRAM) {
+        super.onCreateProgramHandles(PROGRAM);
+
+        // get handle to fragment shader's vColor member
+        mColorGlowingHandle = GLES20.glGetUniformLocation(PROGRAM, COLOR_GLOWING_VARYING);
+    }
+
+    @Override
+    protected String getFragmentShader() {
+        return COLOR_GLOWING_FRAGMENT_SHADER_SOURCE;
     }
 
     /**
@@ -75,6 +106,12 @@ public class StardroidStar extends StardroidShape {
 
         Matrix.translateM(mMVPMatrix, 0, mPositionX, mPositionY, 0.0f);
 //        Matrix.rotateM(mMVPMatrix, 0, 0.0f, 0.0f, 0.0f, 1.0f);
+
+        float offset = Math.random() < GLOW_CHANCE ? 1.f : (float)(Math.random() * GLOW_MAX) + 1;
+        float[] glowOffset = new float[] {offset, offset, offset, offset};
+
+        // Set mColor for drawing the triangle
+        GLES20.glUniform4fv(mColorGlowingHandle, 1, glowOffset, 0);
 
         super.draw(mMVPMatrix);
     }
