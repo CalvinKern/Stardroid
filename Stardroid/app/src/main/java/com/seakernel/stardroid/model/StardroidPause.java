@@ -11,7 +11,6 @@ public class StardroidPause extends StardroidShape {
     private static final float WIDTH = .05f;
     private static final float HEIGHT_SCALE = (2f/3f) * (3.5f);
 
-
     @Override
     protected void initialize() {
         mColor = new float[] {1.f, 1.f, 1.f, 1.f};
