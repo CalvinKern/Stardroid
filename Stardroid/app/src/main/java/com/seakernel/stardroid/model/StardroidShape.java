@@ -1,6 +1,8 @@
 package com.seakernel.stardroid.model;
 
 import android.opengl.GLES20;
+import android.support.annotation.CallSuper;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -110,6 +112,11 @@ public abstract class StardroidShape {
         // creates OpenGL ES program executables
         GLES20.glLinkProgram(PROGRAM);
 
+        onCreateProgramHandles(PROGRAM);
+    }
+
+    @CallSuper
+    protected void onCreateProgramHandles(final int PROGRAM) {
         // get handle to vertex shader's vPosition member
         mPositionHandle = GLES20.glGetAttribLocation(PROGRAM, POSITION_VARYING);
 
@@ -155,6 +162,7 @@ public abstract class StardroidShape {
 
     /**
      * Used to get the required vertex shader at runtime
+     * Default return value is the mColor shader.
      *
      * @return either the mColor shader or texture shader
      */
@@ -164,6 +172,7 @@ public abstract class StardroidShape {
 
     /**
      * Used to get the required fragment shader at runtime
+     * Default return value is the mColor shader.
      *
      * @return either the mColor shader or texture shader
      */
@@ -177,6 +186,11 @@ public abstract class StardroidShape {
         // add the source code to the shader and compile it
         GLES20.glShaderSource(shader, shaderCode);
         GLES20.glCompileShader(shader);
+        String shaderLog = GLES20.glGetShaderInfoLog(shader);
+
+        if (shaderLog.length() > 0) {
+            Log.e("SHADER_LOG", "Shader type :: " + type + "\n" + shaderLog);
+        }
 
         return shader;
     }
