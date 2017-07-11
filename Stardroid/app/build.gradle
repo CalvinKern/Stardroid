@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.seakernel.stardroid"
@@ -28,4 +28,5 @@ dependencies {
     testCompile "junit:junit:4.12"
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:support-v4:$supportVersion"
+    compile 'net.danlew:android.joda:2.9.9'
 }
