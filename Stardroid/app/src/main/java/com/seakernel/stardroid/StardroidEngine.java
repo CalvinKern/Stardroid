@@ -35,7 +35,7 @@ public class StardroidEngine {
     private void initializeStars(float screenRatio) {
         mStars = new ArrayList<>();
         if (mStars.size() == 0) {
-            int randCount = 100;
+            int randCount = STAR_MAX_COUNT_MAGIC;
 
             for (int i = 0; i < randCount; i++) {
                 float randX = (float)(Math.random() * screenRatio * 2) - screenRatio;
