@@ -1,7 +1,6 @@
 package com.seakernel.stardroid;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
@@ -10,6 +9,7 @@ import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,13 +42,19 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 //    private int mScreenWidth;
 //    private int mScreenHeight;
     private boolean mHasActiveTouch;
-    private StardroidEngine stardroidEngine = null;
+    private StardroidEngine mStardroidEngine = null;
 
+    // View Matrices
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private float mRatio;
+
+    // FPS variables
+    private int mFrameCount = 0;
+    private long mFrameStartNano = System.nanoTime();
+    private static final int FRAME_COLLECTION_SIZE = 1;
 
     public static GameFragment newInstance() {
         Bundle args = new Bundle();
@@ -61,7 +67,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        stardroidEngine = new StardroidEngine();
+        mStardroidEngine = new StardroidEngine(); // TODO: Make this retain state when put in the background
     }
 
     @Nullable
@@ -151,10 +157,10 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
         // When working on below, may be nice to pass in TEXTURE_DRAWABLE_IDS into setTextures()
 
-        stardroidEngine.setTextures();
+        mStardroidEngine.setTextures();
         //  in order to determine the index into 'textures'
         //        // Import into Sprite Engine
-        //        stardroidEngine.setTextures(userShipTexture,
+        //        mStardroidEngine.setTextures(userShipTexture,
         //                enemyShipTexture,
         //                specialEnemyShipTexture,
         //                bulletTexture,
@@ -178,7 +184,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 //        mScreenHeight = height;
 
         mRatio = (float) width / height;
-        stardroidEngine.initializeScreen(mRatio);
+        mStardroidEngine.initializeScreen(mRatio);
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
@@ -187,7 +193,17 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        StardroidModel model = StardroidModel.getInstance();
+        final long now = System.nanoTime();
+        if (now - mFrameStartNano >= FRAME_COLLECTION_SIZE * 1000000000L) {
+            Log.d("Game Fragment",
+                    String.format("FPS = %d (average of %d second(s))\nObjects = %d", mFrameCount / FRAME_COLLECTION_SIZE, FRAME_COLLECTION_SIZE, mStardroidEngine.getObjectCount()));
+
+            mFrameStartNano = System.nanoTime();
+            mFrameCount = 0;
+        }
+        mFrameCount++;
+
+        StardroidModel model = StardroidModel.getInstance(); // TODO: Definitely change the model to hold stars, and everything else
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
         // TODO: Can these matrices be set in onSurfaceChanged, so that it only happens once?
@@ -202,12 +218,12 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 //        if (isActive)
 //            stardroidModel.addUserBullet(userShip.getShipX() + stardroidModel.getUserShip().getShipWidth(), userShip.getShipY());
 //
-        stardroidEngine.draw(mMVPMatrix, mRatio);
+        mStardroidEngine.draw(mMVPMatrix, mRatio);
 
 //        if (!model.isPaused()) {
-//            stardroidEngine.draw(stardroidModel.getUserShip(), stardroidModel.getUserBullets(), stardroidModel.getCollidingBullets(), stardroidModel.generateEnemies(), stardroidModel.generateSpecialEnemies(), stardroidModel.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
+//            mStardroidEngine.draw(stardroidModel.getUserShip(), stardroidModel.getUserBullets(), stardroidModel.getCollidingBullets(), stardroidModel.generateEnemies(), stardroidModel.generateSpecialEnemies(), stardroidModel.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
 //        } else {
-//            stardroidEngine.drawPause();
+//            mStardroidEngine.drawPause();
 //        }
     }
 }
