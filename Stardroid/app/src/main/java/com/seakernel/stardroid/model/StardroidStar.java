@@ -13,7 +13,7 @@ public class StardroidStar extends StardroidShape {
     // Constants
     private static final int MIN_SIZE = 1;
 
-    private static final double GLOW_MAX = 2.5;
+    private static final double GLOW_MAX = 0.3;
     private static final double GLOW_CHANCE = 0.65;
 
     private static final float HALF_SIZE = 0.0075f;
@@ -107,8 +107,8 @@ public class StardroidStar extends StardroidShape {
         Matrix.translateM(mMVPMatrix, 0, mPositionX, mPositionY, 0.0f);
 //        Matrix.rotateM(mMVPMatrix, 0, 0.0f, 0.0f, 0.0f, 1.0f);
 
-        float offset = Math.random() < GLOW_CHANCE ? 1.f : (float)(Math.random() * GLOW_MAX) + 1;
-        float[] glowOffset = new float[] {offset, offset, offset, offset};
+        float offset = Math.random() < GLOW_CHANCE ? 1.f : 1 - (float)(Math.random() * GLOW_MAX);
+        float[] glowOffset = new float[] {offset, offset, offset, 1.f};
 
         // Set mColor for drawing the triangle
         GLES20.glUniform4fv(mColorGlowingHandle, 1, glowOffset, 0);
