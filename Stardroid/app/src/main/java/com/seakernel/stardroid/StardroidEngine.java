@@ -35,9 +35,7 @@ public class StardroidEngine {
     private void initializeStars(float screenRatio) {
         mStars = new ArrayList<>();
         if (mStars.size() == 0) {
-            int randCount = STAR_MAX_COUNT_MAGIC;
-
-            for (int i = 0; i < randCount; i++) {
+            for (int i = 0; i < STAR_MAX_COUNT_MAGIC; i++) {
                 float randX = (float)(Math.random() * screenRatio * 2) - screenRatio;
                 float randY = (float)(Math.random() * screenRatio * 2) - screenRatio;
 
@@ -49,15 +47,15 @@ public class StardroidEngine {
 
     public void setTextures() { /*TODO:...Once I have something to texture*/ }
 
-    public void draw(float[] mvpMatrix, float screenRatio) {
-        drawStars(mvpMatrix, screenRatio); // First so it can go in the background
+    public void draw(float[] mvMatrix, float screenRatio) {
+        drawStars(mvMatrix, screenRatio); // First so it can go in the background
 
-        drawPause(mvpMatrix);
+        drawPause(mvMatrix);
 
         // TODO: Draw the rest of the game
     }
 
-    private void drawStars(float[] mvpMatrix, float screenRatio) {
+    private void drawStars(float[] mvMatrix, float screenRatio) {
         // TODO: Speed up by moving create/destroy to a background thread (in model?)
 
         // randomly add new stars to the background
@@ -81,7 +79,7 @@ public class StardroidEngine {
                 continue;
             }
 
-            star.draw(mvpMatrix);
+            star.draw(mvMatrix);
         }
 
         // Remove stars that have passed
@@ -91,21 +89,21 @@ public class StardroidEngine {
     }
 
     /**
-     * @param mvpMatrix
+     * @param mvMatrix
      * @return true if the game is paused
      */
-    private boolean drawPause(float[] mvpMatrix) {
+    private boolean drawPause(float[] mvMatrix) {
         // If paused, only draw the
         if (StardroidModel.getInstance().isPaused()) {
-            mPauseSprite.draw(mvpMatrix); // TODO: Change this to draw the resume button (that also states paused)
+            mPauseSprite.draw(mvMatrix); // TODO: Change this to draw the resume button (that also states paused)
             return true; // Return here if we are paused so we don't keep drawing everything else
         } else {
-            // TODO: Modify mvp to draw pause in the top right? corner.
-            final float[] copyMvp = new float[mvpMatrix.length];
-            System.arraycopy(mvpMatrix, 0, copyMvp, 0, mvpMatrix.length); // TODO: in place state saving of mvpMatrix for efficiency?
+            // TODO: Modify mvp to draw pause in the (top-right?) corner.
+            final float[] copyMv = new float[mvMatrix.length];
+            System.arraycopy(mvMatrix, 0, copyMv, 0, mvMatrix.length); // TODO: in place state saving of mvMatrix for efficiency?
 
             // TODO: draw once the mvp is correct
-//            mPauseSprite.draw(copyMvp);
+//            mPauseSprite.draw(copyMv);
             return false;
         }
     }

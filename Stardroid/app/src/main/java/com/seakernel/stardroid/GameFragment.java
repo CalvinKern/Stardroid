@@ -45,8 +45,8 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     private StardroidEngine mStardroidEngine = null;
 
     // View Matrices
-    // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
-    private final float[] mMVPMatrix = new float[16];
+    // mMvMatrix is an abbreviation for "Model View Projection Matrix"
+    private final float[] mMvMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private float mRatio;
@@ -211,14 +211,14 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
         // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        Matrix.multiplyMM(mMvMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
 //        SpaceShip userShip = stardroidModel.getUserShip();
 //
 //        if (isActive)
 //            stardroidModel.addUserBullet(userShip.getShipX() + stardroidModel.getUserShip().getShipWidth(), userShip.getShipY());
 //
-        mStardroidEngine.draw(mMVPMatrix, mRatio);
+        mStardroidEngine.draw(mMvMatrix, mRatio);
 
 //        if (!model.isPaused()) {
 //            mStardroidEngine.draw(stardroidModel.getUserShip(), stardroidModel.getUserBullets(), stardroidModel.getCollidingBullets(), stardroidModel.generateEnemies(), stardroidModel.generateSpecialEnemies(), stardroidModel.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS

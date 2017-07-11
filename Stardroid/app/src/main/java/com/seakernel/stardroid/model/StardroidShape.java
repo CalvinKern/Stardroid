@@ -80,7 +80,7 @@ public abstract class StardroidShape {
     // Set mColor with red, green, blue and alpha (opacity) values
     protected float mColor[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
     private final int PROGRAM;
-    protected float[] mMVPMatrix; // for subclass use
+    protected float[] mMvMatrix;
 
     protected abstract void initialize();
 

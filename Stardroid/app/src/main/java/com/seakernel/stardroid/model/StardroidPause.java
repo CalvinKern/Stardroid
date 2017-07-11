@@ -29,18 +29,18 @@ public class StardroidPause extends StardroidShape {
     }
 
     @Override
-    public void draw(float[] mvpMatrix) {
-        mMVPMatrix = new float[mvpMatrix.length];
-        // TODO: Instead of modifying mvpMatrix, we could modify COORDINATES (getCoordinates) based on left and right?
-        System.arraycopy(mvpMatrix, 0, mMVPMatrix, 0, mvpMatrix.length); // TODO: in place state saving of mvpMatrix for efficiency?
+    public void draw(float[] mvMatrix) {
+        mMvMatrix = new float[mvMatrix.length];
+        // TODO: Instead of modifying mvMatrix, we could modify COORDINATES (getCoordinates) based on left and right?
+        System.arraycopy(mvMatrix, 0, mMvMatrix, 0, mvMatrix.length); // TODO: in place state saving of mvMatrix for efficiency?
 
-        Matrix.translateM(mMVPMatrix, 0, POS, POS, 0.0f);
+        Matrix.translateM(mMvMatrix, 0, POS, POS, 0.0f);
 
-        Matrix.translateM(mMVPMatrix, 0, -POS - WIDTH, -POS + (WIDTH * HEIGHT_SCALE), 0.0f);
-        super.draw(mMVPMatrix);
+        Matrix.translateM(mMvMatrix, 0, -POS - WIDTH, -POS + (WIDTH * HEIGHT_SCALE), 0.0f);
+        super.draw(mMvMatrix);
 
         // TODO: Get the right width that should be between the pause bars by considering the eye position?
-        Matrix.translateM(mMVPMatrix, 0, 3 * WIDTH, 0.0F, 0.0f);
-        super.draw(mMVPMatrix);
+        Matrix.translateM(mMvMatrix, 0, 3 * WIDTH, 0.0F, 0.0f);
+        super.draw(mMvMatrix);
     }
 }
