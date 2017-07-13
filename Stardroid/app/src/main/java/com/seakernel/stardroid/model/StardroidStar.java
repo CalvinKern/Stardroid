@@ -38,6 +38,7 @@ public class StardroidStar extends StardroidShape {
     public StardroidStar (float x, float y) {
         super();
 
+        // TODO: This could be internally monitored in the background to speed up drawing \0/ for multi-threading
         mPositionX = x;
         mPositionY = y;
     }
