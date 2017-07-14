@@ -206,17 +206,17 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMvMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-//        SpaceShip userShip = stardroidModel.getUserShip();
+//        SpaceShip userShip = model.getUserShip();
 //
 //        if (isActive)
-//            stardroidModel.addUserBullet(userShip.getShipX() + stardroidModel.getUserShip().getShipWidth(), userShip.getShipY());
+//            model.addUserBullet(userShip.getShipX() + userShip.getShipWidth(), userShip.getShipY());
 //
         profiler.startTrackingSection();
         mStardroidEngine.draw(mMvMatrix, mRatio);
         profiler.stopTrackingSection("Drawing");
 
 //        if (!model.isPaused()) {
-//            mStardroidEngine.draw(stardroidModel.getUserShip(), stardroidModel.getUserBullets(), stardroidModel.getCollidingBullets(), stardroidModel.generateEnemies(), stardroidModel.generateSpecialEnemies(), stardroidModel.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
+//            mStardroidEngine.draw(userShip, model.getUserBullets(), model.getCollidingBullets(), model.generateEnemies(), model.generateSpecialEnemies(), model.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
 //        } else {
 //            mStardroidEngine.drawPause();
 //        }
