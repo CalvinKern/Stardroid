@@ -9,13 +9,13 @@ import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.seakernel.stardroid.model.StardroidModel;
+import com.seakernel.stardroid.utilities.Profiler;
 
 import java.nio.IntBuffer;
 
@@ -193,15 +193,8 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        final long now = System.nanoTime();
-        if (now - mFrameStartNano >= FRAME_COLLECTION_SIZE * 1000000000L) {
-            Log.d("Game Fragment",
-                    String.format("FPS = %d (average of %d second(s))\nObjects = %d", mFrameCount / FRAME_COLLECTION_SIZE, FRAME_COLLECTION_SIZE, mStardroidEngine.getObjectCount()));
-
-            mFrameStartNano = System.nanoTime();
-            mFrameCount = 0;
-        }
-        mFrameCount++;
+        Profiler profiler = Profiler.getInstance();
+        profiler.trackFrame(mStardroidEngine);
 
         StardroidModel model = StardroidModel.getInstance(); // TODO: Definitely change the model to hold stars, and everything else
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
@@ -218,7 +211,9 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 //        if (isActive)
 //            stardroidModel.addUserBullet(userShip.getShipX() + stardroidModel.getUserShip().getShipWidth(), userShip.getShipY());
 //
+        profiler.startTrackingSection();
         mStardroidEngine.draw(mMvMatrix, mRatio);
+        profiler.stopTrackingSection("Drawing");
 
 //        if (!model.isPaused()) {
 //            mStardroidEngine.draw(stardroidModel.getUserShip(), stardroidModel.getUserBullets(), stardroidModel.getCollidingBullets(), stardroidModel.generateEnemies(), stardroidModel.generateSpecialEnemies(), stardroidModel.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
