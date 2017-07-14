@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class StardroidEngine {
 
-    private static final int MAGIC_MAX_COUNT_STAR = 1690; // REDUCE this to improve FPS ;)
+    private static final int MAGIC_MAX_COUNT_STAR = 169; // REDUCE this to improve FPS ;)
     private static final int MAGIC_MAX_COUNT_OBJECTS = 800; // This is the max for 60 fps on a good phone
 
     // Member Variables
