@@ -13,7 +13,8 @@ import java.util.ArrayList;
  */
 public class StardroidEngine {
 
-    private static final int STAR_MAX_COUNT_MAGIC = 169; // REDUCE this to improve FPS ;)
+    private static final int MAGIC_MAX_COUNT_STAR = 1690; // REDUCE this to improve FPS ;)
+    private static final int MAGIC_MAX_COUNT_OBJECTS = 800; // This is the max for 60 fps on a good phone
 
     // Member Variables
     private ArrayList<StardroidStar> mStars = null;
@@ -35,7 +36,7 @@ public class StardroidEngine {
     private void initializeStars(float screenRatio) {
         mStars = new ArrayList<>();
         if (mStars.size() == 0) {
-            for (int i = 0; i < STAR_MAX_COUNT_MAGIC; i++) {
+            for (int i = 0; i < MAGIC_MAX_COUNT_STAR; i++) {
                 float randX = (float)(Math.random() * screenRatio * 2) - screenRatio;
                 float randY = (float)(Math.random() * screenRatio * 2) - screenRatio;
 
@@ -59,7 +60,7 @@ public class StardroidEngine {
         // TODO: Speed up by moving create/destroy to a background thread (in model?)
 
         // randomly add new stars to the background
-        if (mStars.size() < STAR_MAX_COUNT_MAGIC && Math.random() * 100 <= 25) {
+        if (mStars.size() < MAGIC_MAX_COUNT_STAR && Math.random() * 100 <= 25) {
             float halfRatio = screenRatio/2;
             float randY = (float)(Math.random() * screenRatio) - halfRatio;
             StardroidStar newStar = new StardroidStar(-screenRatio, randY);
