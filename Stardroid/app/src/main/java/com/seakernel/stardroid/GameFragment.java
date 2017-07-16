@@ -45,8 +45,8 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     private StardroidEngine mStardroidEngine = null;
 
     // View Matrices
-    // mMvMatrix is an abbreviation for "Model View Projection Matrix"
-    private final float[] mMvMatrix = new float[16];
+    // mMvpMatrix is an abbreviation for "Model View Projection Matrix"
+    private final float[] mMvpMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
 
@@ -203,7 +203,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
         // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMvMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        Matrix.multiplyMM(mMvpMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
 //        SpaceShip userShip = model.getUserShip();
 //
@@ -211,7 +211,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 //            model.addUserBullet(userShip.getShipX() + userShip.getShipWidth(), userShip.getShipY());
 //
         profiler.startTrackingSection();
-        mStardroidEngine.draw(mMvMatrix);
+        mStardroidEngine.draw(mMvpMatrix);
         profiler.stopTrackingSection("Drawing");
 
 //        if (!model.isPaused()) {

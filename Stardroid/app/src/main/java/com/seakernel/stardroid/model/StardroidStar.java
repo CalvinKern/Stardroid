@@ -106,11 +106,11 @@ public class StardroidStar extends StardroidShape {
     }
 
     @Override
-    public void draw(float[] mvMatrix) {
-        mMvMatrix = mvMatrix.clone();
+    public void draw(float[] mvpMatrix) {
+        mMvpMatrix = mvpMatrix.clone();
 
-        Matrix.translateM(mMvMatrix, 0, mPositionX, mPositionY, 0.0f);
-//        Matrix.rotateM(mMvMatrix, 0, 0.0f, 0.0f, 0.0f, 1.0f);
+        Matrix.translateM(mMvpMatrix, 0, mPositionX, mPositionY, 0.0f);
+//        Matrix.rotateM(mMvpMatrix, 0, 0.0f, 0.0f, 0.0f, 1.0f);
 
         float offset = Math.random() < TWINKLE_CHANCE ? 1.f : 1 - (float)(Math.random() * TWINKLE_MAX);
         float[] twinkleOffset = new float[] {offset, offset, offset, 1.f};
@@ -118,7 +118,7 @@ public class StardroidStar extends StardroidShape {
         // Set mColor for drawing the triangle
         GLES20.glUniform4fv(mColorTwinkleHandle, 1, twinkleOffset, 0);
 
-        super.draw(mMvMatrix);
+        super.draw(mMvpMatrix);
     }
 
     @Override

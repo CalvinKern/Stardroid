@@ -59,15 +59,15 @@ public class StardroidEngine {
 
     public void setTextures() { /*TODO:...Once I have something to texture*/ }
 
-    public void draw(float[] mvMatrix) {
-        drawStars(mvMatrix); // First so it can go in the background
+    public void draw(float[] mvpMatrix) {
+        drawStars(mvpMatrix); // First so it can go in the background
 
-        drawPause(mvMatrix);
+        drawPause(mvpMatrix);
 
         // TODO: Draw the rest of the game
     }
 
-    private void drawStars(float[] mvMatrix) {
+    private void drawStars(float[] mvpMatrix) {
         // TODO: Speed up by moving create/destroy to a background thread (in model?)
 
         // randomly add new stars to the background
@@ -91,7 +91,7 @@ public class StardroidEngine {
                 continue;
             }
 
-            star.draw(mvMatrix);
+            star.draw(mvpMatrix);
         }
 
         // Remove stars that have passed
@@ -101,21 +101,21 @@ public class StardroidEngine {
     }
 
     /**
-     * @param mvMatrix
+     * @param mvpMatrix
      * @return true if the game is paused
      */
-    private boolean drawPause(float[] mvMatrix) {
+    private boolean drawPause(float[] mvpMatrix) {
         // If paused, only draw the
         if (StardroidModel.getInstance().isPaused()) {
-            mPauseSprite.draw(mvMatrix); // TODO: Change this to draw the resume button (that also states paused)
+            mPauseSprite.draw(mvpMatrix); // TODO: Change this to draw the resume button (that also states paused)
             return true; // Return here if we are paused so we don't keep drawing everything else
         } else {
             // TODO: Modify mvp to draw pause in the (top-right?) corner.
-            final float[] copyMv = new float[mvMatrix.length];
-            System.arraycopy(mvMatrix, 0, copyMv, 0, mvMatrix.length); // TODO: in place state saving of mvMatrix for efficiency?
+            final float[] copyMvp = new float[mvpMatrix.length];
+            System.arraycopy(mvpMatrix, 0, copyMvp, 0, mvpMatrix.length); // TODO: in place state saving of mvpMatrix for efficiency?
 
             // TODO: draw once the mvp is correct
-//            mPauseSprite.draw(copyMv);
+//            mPauseSprite.draw(copyMvp);
             return false;
         }
     }
