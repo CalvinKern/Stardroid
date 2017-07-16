@@ -32,6 +32,7 @@ public class Profiler {
     private static final Profiler PROFILER = new Profiler();
 
     private int mFrameCount = 0;
+    private long mCurrentFps = 0;
     private final Stack<Long> mNanoTimes = new Stack<>();
 
     public static Profiler getInstance() {
@@ -77,7 +78,8 @@ public class Profiler {
     private synchronized long getCurrentTime(StardroidEngine engine) {
         long timeStamp = peekNanoTime();
         if (timeStamp >= FRAMES_PER_SECOND * ONE_SECOND_IN_NANOSECONDS) {
-            Log.d(TAG, String.format(FRAME_LOG_MESSAGE, mFrameCount / FRAMES_PER_SECOND, FRAMES_PER_SECOND, engine.getObjectCount()));
+            mCurrentFps = mFrameCount / FRAMES_PER_SECOND;
+            Log.d(TAG, String.format(FRAME_LOG_MESSAGE, mCurrentFps, FRAMES_PER_SECOND, engine.getObjectCount()));
             mFrameCount = 0;
 
             // Reset the time
@@ -98,6 +100,10 @@ public class Profiler {
     public void trackFrame(StardroidEngine engine) {
         getCurrentTime(engine);
         newFrame();
+    }
+
+    public long getCurrentFramesPerSecond() {
+        return mCurrentFps;
     }
 
     /**

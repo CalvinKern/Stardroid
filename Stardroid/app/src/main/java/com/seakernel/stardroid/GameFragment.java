@@ -13,11 +13,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.utilities.Profiler;
 
 import java.nio.IntBuffer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -26,6 +29,8 @@ import javax.microedition.khronos.opengles.GL10;
  * Created by Calvin on 2/27/16.
  */
 public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
+
+    private static final int FRAME_COLLECTION_SIZE = 1;
 
     private static final int[] TEXTURE_DRAWABLE_IDS = new int[] {
             R.drawable.usership,
@@ -39,21 +44,19 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
             R.drawable.pausescreen,
     };
 
-//    private int mScreenWidth;
-//    private int mScreenHeight;
+    private Timer mTimer;
     private boolean mHasActiveTouch;
     private StardroidEngine mStardroidEngine = null;
 
     // View Matrices
-    // mMvpMatrix is an abbreviation for "Model View Projection Matrix"
-    private final float[] mMvpMatrix = new float[16];
-    private final float[] mProjectionMatrix = new float[16];
+    private final float[] mMvpMatrix = new float[16]; // Model View Projection Matrix
     private final float[] mViewMatrix = new float[16];
+    private final float[] mProjectionMatrix = new float[16];
 
     // FPS variables
     private int mFrameCount = 0;
+    private TextView mFpsTextView;
     private long mFrameStartNano = System.nanoTime();
-    private static final int FRAME_COLLECTION_SIZE = 1;
 
     public static GameFragment newInstance() {
         Bundle args = new Bundle();
@@ -67,12 +70,38 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         super.onCreate(savedInstanceState);
 
         mStardroidEngine = new StardroidEngine(); // TODO: Make this retain state when put in the background
+
+        // Only schedule fps text updater if we're in debug
+        if (BuildConfig.DEBUG) {
+            mTimer = new Timer();
+            mTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    updateFpsTextView();
+                }
+            }, 1000, 1000);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_game, container, false);
+
+        // Only waste time getting the frames per second label if we're in debug mode
+        if (BuildConfig.DEBUG) {
+            mFpsTextView = (TextView) root.findViewById(R.id.fps_label);
+        }
 
         GLSurfaceView glView = (GLSurfaceView) root.findViewById(R.id.game_surface);
         glView.setEGLContextClientVersion(2);
@@ -101,6 +130,28 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
         return root;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        mFpsTextView = null;
+    }
+
+    private void updateFpsTextView() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mFpsTextView != null) {
+                    mFpsTextView.setText(getString(R.string.fps, Profiler.getInstance().getCurrentFramesPerSecond()));
+                }
+            }
+        });
+    }
+
+    // =============================================================================================
+    // OpenGL Initialization Methods
+    // =============================================================================================
 
     /**
      * This method will import the texture resources into GLES 2.0 and return an array of those
@@ -189,6 +240,10 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         // in the onDrawFrame() method
         Matrix.frustumM(mProjectionMatrix, 0, -aspectRatio, aspectRatio, -1, 1, 3, 7);
     }
+
+    // =============================================================================================
+    // Drawing Methods
+    // =============================================================================================
 
     @Override
     public void onDrawFrame(GL10 gl) {
