@@ -2,6 +2,7 @@ package com.seakernel.stardroid.utilities;
 
 import android.util.Log;
 
+import com.seakernel.stardroid.BuildConfig;
 import com.seakernel.stardroid.StardroidEngine;
 
 import java.util.Stack;
@@ -79,7 +80,9 @@ public class Profiler {
         long timeStamp = peekNanoTime();
         if (timeStamp >= FRAMES_PER_SECOND * ONE_SECOND_IN_NANOSECONDS) {
             mCurrentFps = mFrameCount / FRAMES_PER_SECOND;
-            Log.d(TAG, String.format(FRAME_LOG_MESSAGE, mCurrentFps, FRAMES_PER_SECOND, engine.getObjectCount()));
+            if (BuildConfig.DEBUG) {
+                Log.d(TAG, String.format(FRAME_LOG_MESSAGE, mCurrentFps, FRAMES_PER_SECOND, engine.getObjectCount()));
+            }
             mFrameCount = 0;
 
             // Reset the time
@@ -119,8 +122,10 @@ public class Profiler {
      * @param sectionName the name of the section to use when logging
      */
     public void stopTrackingSection(String sectionName) {
-        // TODO: Somehow make this log in a way that isn't obnoxious?
         long timeStamp = popNanoTime();
-        Log.d(TAG, String.format(SECTION_LOG_MESSAGE, sectionName, timeStamp / ONE_MILLISECOND_IN_NANOSECONDS));
+        if (BuildConfig.DEBUG) {
+            // TODO: Somehow make this log in a way that isn't obnoxious?
+            Log.d(TAG, String.format(SECTION_LOG_MESSAGE, sectionName, timeStamp / ONE_MILLISECOND_IN_NANOSECONDS));
+        }
     }
 }
