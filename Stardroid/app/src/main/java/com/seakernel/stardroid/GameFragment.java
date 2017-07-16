@@ -248,7 +248,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 gl) {
         Profiler profiler = Profiler.getInstance();
-        profiler.trackFrame(mStardroidEngine);
+        long dt = profiler.trackFrame(mStardroidEngine);
 
         StardroidModel model = StardroidModel.getInstance(); // TODO: Definitely change the model to hold stars, and everything else
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
@@ -266,7 +266,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 //            model.addUserBullet(userShip.getShipX() + userShip.getShipWidth(), userShip.getShipY());
 //
         profiler.startTrackingSection();
-        mStardroidEngine.draw(mMvpMatrix);
+        mStardroidEngine.draw(mMvpMatrix, dt);
         profiler.stopTrackingSection("Drawing");
 
 //        if (!model.isPaused()) {

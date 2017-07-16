@@ -59,15 +59,15 @@ public class StardroidEngine {
 
     public void setTextures() { /*TODO:...Once I have something to texture*/ }
 
-    public void draw(float[] mvpMatrix) {
-        drawStars(mvpMatrix); // First so it can go in the background
+    public void draw(float[] mvpMatrix, long dt) {
+        drawStars(mvpMatrix, dt); // First so it can go in the background
 
         drawPause(mvpMatrix);
 
         // TODO: Draw the rest of the game
     }
 
-    private void drawStars(float[] mvpMatrix) {
+    private void drawStars(float[] mvpMatrix, long dt) {
         // TODO: Speed up by moving create/destroy to a background thread (in model?)
 
         // randomly add new stars to the background
@@ -83,7 +83,7 @@ public class StardroidEngine {
 
         // Loop through all the stars in the background
         for (StardroidStar star : mStars) {
-            star.update(0);
+            star.update(dt);
 
             // Determine if the star has passed the screen
             if (star.getPositionX() >= mAspectRatio) {
