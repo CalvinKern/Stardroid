@@ -101,6 +101,10 @@ public class StardroidStar extends StardroidShape {
         }
     }
 
+    public void update(long dt) {
+        setPositionX(getPositionX() + getStarFloatingSpeed());
+    }
+
     @Override
     public void draw(float[] mvMatrix) {
         mMvMatrix = mvMatrix.clone();

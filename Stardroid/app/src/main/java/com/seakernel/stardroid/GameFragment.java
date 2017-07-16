@@ -49,7 +49,6 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     private final float[] mMvMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
-    private float mRatio;
 
     // FPS variables
     private int mFrameCount = 0;
@@ -183,12 +182,12 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 //        mScreenWidth = width;
 //        mScreenHeight = height;
 
-        mRatio = (float) width / height;
-        mStardroidEngine.initializeScreen(mRatio);
+        float aspectRatio = (float) width / height;
+        mStardroidEngine.initializeScreen(aspectRatio);
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
-        Matrix.frustumM(mProjectionMatrix, 0, -mRatio, mRatio, -1, 1, 3, 7);
+        Matrix.frustumM(mProjectionMatrix, 0, -aspectRatio, aspectRatio, -1, 1, 3, 7);
     }
 
     @Override
@@ -212,7 +211,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 //            model.addUserBullet(userShip.getShipX() + userShip.getShipWidth(), userShip.getShipY());
 //
         profiler.startTrackingSection();
-        mStardroidEngine.draw(mMvMatrix, mRatio);
+        mStardroidEngine.draw(mMvMatrix);
         profiler.stopTrackingSection("Drawing");
 
 //        if (!model.isPaused()) {
