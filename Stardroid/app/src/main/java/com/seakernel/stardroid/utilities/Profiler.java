@@ -24,10 +24,9 @@ import java.util.Stack;
 
 public class Profiler {
     private static final String TAG = "PROFILER";
-    private static final long FRAMES_PER_SECOND = 1;
     private static final long ONE_SECOND_IN_NANOSECONDS = 1000000000L;
     private static final long ONE_MILLISECOND_IN_NANOSECONDS = 1000000L;
-    private static final String FRAME_LOG_MESSAGE = "FPS = %d (average of %d second(s))\nObjects = %d";
+    private static final String FRAME_LOG_MESSAGE = "FPS = %d\nObjects = %d";
     private static final String SECTION_LOG_MESSAGE = "%s took %d milliseconds";
 
     private static final Profiler PROFILER = new Profiler();
@@ -65,31 +64,10 @@ public class Profiler {
      */
     private synchronized long lookNanoTime(boolean pop) {
         if (mNanoTimes.size() == 0) {
+
             return 0;
         }
         return System.nanoTime() - (pop ? mNanoTimes.pop() : mNanoTimes.peek());
-    }
-
-    /**
-     * Get the latest nano time difference and log the current state
-     *
-     * @param engine used to log out objects to the console
-     * @return the current running time in nanoseconds since the last frame/log
-     */
-    private synchronized long getCurrentTime(StardroidEngine engine) {
-        long timeStamp = peekNanoTime();
-        if (timeStamp >= FRAMES_PER_SECOND * ONE_SECOND_IN_NANOSECONDS) {
-            mCurrentFps = mFrameCount / FRAMES_PER_SECOND;
-            if (BuildConfig.DEBUG) {
-                Log.d(TAG, String.format(FRAME_LOG_MESSAGE, mCurrentFps, FRAMES_PER_SECOND, engine.getObjectCount()));
-            }
-            mFrameCount = 0;
-
-            // Reset the time
-            popNanoTime();
-            pushNanoTime();
-        }
-        return timeStamp;
     }
 
     // Adds a new frame to the time tracking
@@ -99,10 +77,22 @@ public class Profiler {
 
     /**
      * Track the start time of this frame
+     *
+     * @return the current delta time since the last frame
      */
-    public void trackFrame(StardroidEngine engine) {
-        getCurrentTime(engine);
+    public long trackFrame(StardroidEngine engine) {
         newFrame();
+
+        long dt = popNanoTime();
+        pushNanoTime(); // Push a new time onto the stack
+
+        mCurrentFps = (long) (mFrameCount / ( (dt * 1.) / ONE_SECOND_IN_NANOSECONDS));
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, String.format(FRAME_LOG_MESSAGE, mCurrentFps, engine.getObjectCount()));
+        }
+        mFrameCount = 0;
+
+        return dt;
     }
 
     public long getCurrentFramesPerSecond() {
