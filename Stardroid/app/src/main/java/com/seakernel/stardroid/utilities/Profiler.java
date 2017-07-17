@@ -78,21 +78,21 @@ public class Profiler {
     /**
      * Track the start time of this frame
      *
-     * @return the current delta time since the last frame
+     * @return the current delta time in milliseconds since the last frame
      */
-    public long trackFrame(StardroidEngine engine) {
+    public float trackFrame(StardroidEngine engine) {
         newFrame();
 
-        long dt = popNanoTime();
+        float dt = popNanoTime();
         pushNanoTime(); // Push a new time onto the stack
 
-        mCurrentFps = (long) (mFrameCount / ( (dt * 1.) / ONE_SECOND_IN_NANOSECONDS));
+        mCurrentFps = (long) (mFrameCount / (dt / ONE_SECOND_IN_NANOSECONDS));
         if (BuildConfig.DEBUG) {
             Log.d(TAG, String.format(FRAME_LOG_MESSAGE, mCurrentFps, engine.getObjectCount()));
         }
         mFrameCount = 0;
 
-        return dt;
+        return dt / ONE_MILLISECOND_IN_NANOSECONDS;
     }
 
     public long getCurrentFramesPerSecond() {

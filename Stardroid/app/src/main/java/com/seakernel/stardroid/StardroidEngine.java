@@ -59,7 +59,7 @@ public class StardroidEngine {
 
     public void setTextures() { /*TODO:...Once I have something to texture*/ }
 
-    public void draw(float[] mvpMatrix, long dt) {
+    public void draw(float[] mvpMatrix, float dt) {
         drawStars(mvpMatrix, dt); // First so it can go in the background
 
         drawPause(mvpMatrix);
@@ -67,7 +67,7 @@ public class StardroidEngine {
         // TODO: Draw the rest of the game
     }
 
-    private void drawStars(float[] mvpMatrix, long dt) {
+    private void drawStars(float[] mvpMatrix, float dt) {
         // TODO: Speed up by moving create/destroy to a background thread (in model?)
 
         // randomly add new stars to the background

@@ -8,19 +8,15 @@ import android.opengl.Matrix;
  */
 public class StardroidStar extends StardroidShape {
     // Fragment Shader keys
-    public static final String COLOR_TWINKLE_VARYING = "vColorTwinkle";
+    private static final String COLOR_TWINKLE_VARYING = "vColorTwinkle";
 
     // Constants
-    private static final int MIN_SIZE = 1;
 
     private static final double TWINKLE_MAX = 0.3;
     private static final double TWINKLE_CHANCE = 0.65;
 
     private static final float HALF_SIZE = 0.0075f;
-    private static final float SIZE_SCALE = 1000.f;
-    private static final float RAND_SIZE_SCALE = 3.5f;
-
-    private static final float MAX_SIZE_RATIO = (RAND_SIZE_SCALE + MIN_SIZE) / SIZE_SCALE;
+    private static final float SPEED_SCALE = 10000.f;
 
     private float mPositionX;
     private float mPositionY;
@@ -46,8 +42,8 @@ public class StardroidStar extends StardroidShape {
     @Override
     protected void initialize() {
         mColor = getStarColor();
-        double rand = Math.random();
-        mFloatingSpeed = (float)((rand * RAND_SIZE_SCALE) + MIN_SIZE) / SIZE_SCALE;
+        double rand = Math.random(); // TODO: Bias the random number to be smaller
+        mFloatingSpeed = (float)(rand / SPEED_SCALE);
     }
 
     @Override
@@ -101,8 +97,12 @@ public class StardroidStar extends StardroidShape {
         }
     }
 
-    public void update(long dt) {
-        setPositionX(getPositionX() + getStarFloatingSpeed());
+    public void update(float dt) {
+        // Fixed time step
+//        setPositionX(getPositionX() + getStarFloatingSpeed());
+
+        // Variable time step
+        setPositionX(getPositionX() + (getStarFloatingSpeed() * dt));
     }
 
     @Override
@@ -123,12 +123,12 @@ public class StardroidStar extends StardroidShape {
 
     @Override
     protected float[] getCoordinates() {
-        float size = HALF_SIZE * (mFloatingSpeed / MAX_SIZE_RATIO);
+        float halfSize = HALF_SIZE * (mFloatingSpeed * SPEED_SCALE);
         return new float[] {
-                -size, -size, 0.0f, // bottom left
-                size, -size, 0.0f,  // bottom right
-                -size,  size, 0.0f, // top left
-                size,  size, 0.0f,  // top right
+                -halfSize, -halfSize, 0.0f, // bottom left
+                halfSize, -halfSize, 0.0f,  // bottom right
+                -halfSize,  halfSize, 0.0f, // top left
+                halfSize,  halfSize, 0.0f,  // top right
         };
     }
 

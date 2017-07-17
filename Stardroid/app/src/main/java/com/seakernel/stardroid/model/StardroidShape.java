@@ -136,7 +136,7 @@ public abstract class StardroidShape {
         };
     }
 
-    public void update(long dt) {} // Default implementation to do nothing
+    public void update(float dt) {} // Default implementation to do nothing
 
     public void draw(float[] mvpMatrix) {
         // Add program to OpenGL ES environment
