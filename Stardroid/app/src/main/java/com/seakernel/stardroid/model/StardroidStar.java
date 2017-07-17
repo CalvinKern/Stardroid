@@ -99,7 +99,7 @@ public class StardroidStar extends StardroidShape {
 
     public void update(float dt) {
         // Fixed time step
-//        setPositionX(getPositionX() + getStarFloatingSpeed());
+//        setPositionX(getPositionX() + (getStarFloatingSpeed() * 10));
 
         // Variable time step
         setPositionX(getPositionX() + (getStarFloatingSpeed() * dt));
