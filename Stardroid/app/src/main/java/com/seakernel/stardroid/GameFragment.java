@@ -255,7 +255,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
         // TODO: Can these matrices be set in onSurfaceChanged, so that it only happens once?
         // Set the camera position (View matrix)
-        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, -1.0f, 0.0f);
 
         // Calculate the projection and view transformation
         Matrix.multiplyMM(mMvpMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);

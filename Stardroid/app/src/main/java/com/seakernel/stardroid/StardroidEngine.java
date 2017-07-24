@@ -76,7 +76,7 @@ public class StardroidEngine {
             star.update(dt);
 
             // Determine if the star has passed the screen
-            if (star.getPositionX() >= mAspectRatio) {
+            if (star.getPositionX() <= -mAspectRatio) {
                 passedStars.add(star);
                 continue;
             }
@@ -100,7 +100,7 @@ public class StardroidEngine {
             float halfRatio = mAspectRatio / 2;
             float randY = (float)(Math.random() * mAspectRatio) - halfRatio;
 
-            StardroidStar newStar = new StardroidStar(-mAspectRatio, randY);
+            StardroidStar newStar = new StardroidStar(mAspectRatio, randY);
             mStars.add(newStar);
         }
     }
