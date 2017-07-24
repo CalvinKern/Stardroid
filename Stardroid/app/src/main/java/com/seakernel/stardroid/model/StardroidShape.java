@@ -156,10 +156,14 @@ public abstract class StardroidShape {
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 
         // Draw the triangle
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, VERTEX_COUNT);
+        GLES20.glDrawArrays(getDrawMode(), 0, VERTEX_COUNT);
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
+    }
+
+    protected int getDrawMode() {
+        return GLES20.GL_TRIANGLE_STRIP;
     }
 
     /**
