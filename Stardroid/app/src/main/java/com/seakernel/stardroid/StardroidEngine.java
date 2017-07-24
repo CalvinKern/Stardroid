@@ -72,6 +72,7 @@ public class StardroidEngine {
 
         // randomly add new stars to the background
         if (mStars.size() < MAGIC_MAX_COUNT_STAR && Math.random() * 100 <= 25) {
+            // FIXME: 7/23/2017 instead of getting the randY from mAspectRatio, get it from mvp so that it can scale to the size of the actual play area
             float halfRatio = mAspectRatio / 2;
             float randY = (float)(Math.random() * mAspectRatio) - halfRatio;
             StardroidStar newStar = new StardroidStar(-mAspectRatio, randY);

@@ -35,6 +35,7 @@ public class StardroidStar extends StardroidShape {
         super();
 
         // TODO: This could be internally monitored in the background to speed up drawing \0/ for multi-threading
+        // FIXME: 7/23/2017 need to create the star with its start side at the end of the screen instead of its left side
         mPositionX = x;
         mPositionY = y;
     }
