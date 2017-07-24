@@ -68,17 +68,6 @@ public class StardroidEngine {
     }
 
     private void drawStars(float[] mvpMatrix, float dt) {
-        // TODO: Speed up by moving create/destroy to a background thread (in model?)
-
-        // randomly add new stars to the background
-        if (mStars.size() < MAGIC_MAX_COUNT_STAR && Math.random() * 100 <= 25) {
-            // FIXME: 7/23/2017 instead of getting the randY from mAspectRatio, get it from mvp so that it can scale to the size of the actual play area
-            float halfRatio = mAspectRatio / 2;
-            float randY = (float)(Math.random() * mAspectRatio) - halfRatio;
-            StardroidStar newStar = new StardroidStar(-mAspectRatio, randY);
-            mStars.add(newStar);
-        }
-
         // Create a new ArrayList to put all of the passed stars
         ArrayList<StardroidStar> passedStars = new ArrayList<>();
 
@@ -98,6 +87,21 @@ public class StardroidEngine {
         // Remove stars that have passed
         for (StardroidStar oldStar : passedStars) {
             mStars.remove(oldStar);
+        }
+
+        createStars();
+    }
+
+    private void createStars() {
+        // TODO: Speed up by moving create/destroy to a background thread (in model?)
+        // randomly add new stars to the background
+        if (getObjectCount() < MAGIC_MAX_COUNT_OBJECTS && mStars.size() < MAGIC_MAX_COUNT_STAR && Math.random() * 100 <= 25) {
+            // FIXME: 7/23/2017 instead of getting the randY from mAspectRatio, get it from mvp so that it can scale to the size of the actual play area
+            float halfRatio = mAspectRatio / 2;
+            float randY = (float)(Math.random() * mAspectRatio) - halfRatio;
+
+            StardroidStar newStar = new StardroidStar(-mAspectRatio, randY);
+            mStars.add(newStar);
         }
     }
 
