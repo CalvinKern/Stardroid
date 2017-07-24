@@ -12,11 +12,11 @@ public class StardroidStar extends StardroidShape {
 
     // Constants
 
-    private static final double TWINKLE_MAX = 0.3;
+    private static final double TWINKLE_MAX = 0.00001;
     private static final double TWINKLE_CHANCE = 0.65;
 
-    private static final float SPEED_SCALE = 10000.f;
     private static final float SIZE_SCALE = 0.0075f;
+    private static final float SPEED_SCALE = 5000.f;
 
     private float mPositionX;
     private float mPositionY;
