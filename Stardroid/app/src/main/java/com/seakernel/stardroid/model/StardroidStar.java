@@ -15,8 +15,8 @@ public class StardroidStar extends StardroidShape {
     private static final double TWINKLE_MAX = 0.3;
     private static final double TWINKLE_CHANCE = 0.65;
 
-    private static final float HALF_SIZE = 0.0075f;
     private static final float SPEED_SCALE = 10000.f;
+    private static final float SIZE_SCALE = 0.0075f;
 
     private float mPositionX;
     private float mPositionY;
@@ -112,6 +112,7 @@ public class StardroidStar extends StardroidShape {
         Matrix.translateM(mMvpMatrix, 0, mPositionX, mPositionY, 0.0f);
 //        Matrix.rotateM(mMvpMatrix, 0, 0.0f, 0.0f, 0.0f, 1.0f);
 
+        //TODO: Make glow not so epileptic
         float offset = Math.random() < TWINKLE_CHANCE ? 1.f : 1 - (float)(Math.random() * TWINKLE_MAX);
         float[] twinkleOffset = new float[] {offset, offset, offset, 1.f};
 
@@ -122,14 +123,29 @@ public class StardroidStar extends StardroidShape {
     }
 
     @Override
+    protected int getDrawMode() {
+        return GLES20.GL_TRIANGLE_FAN;
+    }
+
+    @Override
     protected float[] getCoordinates() {
-        float halfSize = HALF_SIZE * (mFloatingSpeed * SPEED_SCALE);
-        return new float[] {
-                -halfSize, -halfSize, 0.0f, // bottom left
-                halfSize, -halfSize, 0.0f,  // bottom right
-                -halfSize,  halfSize, 0.0f, // top left
-                halfSize,  halfSize, 0.0f,  // top right
-        };
+        float size = SIZE_SCALE * (mFloatingSpeed * SPEED_SCALE);
+
+        int triangleAmount = 10; //# of triangles used to draw circle
+
+        float twicePi = (float) (2.0f * Math.PI);
+
+        float[] coords = new float[(triangleAmount * 3)];
+        coords[0] = 0;
+        coords[1] = 0;
+        coords[2] = 0;
+        for(int i = 3; i < coords.length; i+=3) {
+            coords[i] =     (float) (size * Math.cos(i * twicePi / (coords.length - 6)));
+            coords[i + 1] = (float) (size * Math.sin(i * twicePi / (coords.length - 6)));
+            coords[i + 2] = 0;
+        }
+
+        return coords;
     }
 
     public float getStarFloatingSpeed() {
