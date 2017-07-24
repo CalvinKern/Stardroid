@@ -31,6 +31,7 @@ public class Profiler {
 
     private static final Profiler PROFILER = new Profiler();
 
+    private boolean mShouldLog;
     private int mFrameCount = 0;
     private long mCurrentFps = 0;
     private final Stack<Long> mNanoTimes = new Stack<>();
@@ -40,7 +41,23 @@ public class Profiler {
     }
 
     public Profiler() {
+        this(false);
+    }
+
+    public Profiler(boolean turnOffLogging) {
+        mShouldLog = !turnOffLogging;
+
         pushNanoTime(); // Initialize the time stack
+    }
+
+    private void log(String format, Object... args) {
+        if (mShouldLog) {
+            Log.d(TAG, String.format(format, args));
+        }
+    }
+
+    public void setShouldLog(boolean shouldLog) {
+        mShouldLog = shouldLog;
     }
 
     // Add a time stamp
@@ -88,7 +105,7 @@ public class Profiler {
 
         mCurrentFps = (long) (mFrameCount / (dt / ONE_SECOND_IN_NANOSECONDS));
         if (BuildConfig.DEBUG) {
-            Log.d(TAG, String.format(FRAME_LOG_MESSAGE, mCurrentFps, engine.getObjectCount()));
+            log(FRAME_LOG_MESSAGE, mCurrentFps, engine.getObjectCount());
         }
         mFrameCount = 0;
 
@@ -115,7 +132,7 @@ public class Profiler {
         long timeStamp = popNanoTime();
         if (BuildConfig.DEBUG) {
             // TODO: Somehow make this log in a way that isn't obnoxious?
-            Log.d(TAG, String.format(SECTION_LOG_MESSAGE, sectionName, timeStamp / ONE_MILLISECOND_IN_NANOSECONDS));
+            log(SECTION_LOG_MESSAGE, sectionName, timeStamp / ONE_MILLISECOND_IN_NANOSECONDS);
         }
     }
 }
