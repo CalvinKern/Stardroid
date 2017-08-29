@@ -42,28 +42,29 @@ public abstract class StardroidShape {
     // This String contains the fragment shader source code required for GLES to draw
     protected static final String TEXTURE_FRAGMENT_SHADER_SOURCE =
             "precision mediump float;\n"
-                    + "uniform sampler2D " + TEXTURE_UNIT + ";\n"
-                    + "varying vec2 " + TEXTURE_COORDINATE_VARYING + ";\n"
-                    + "\n"
-                    + "void main()\n"
-                    + "{\n"
-                    + "   vec4 mColor = texture2D(" + TEXTURE_UNIT + ", " + TEXTURE_COORDINATE_VARYING + ");\n"
-                    + "   gl_FragColor = mColor;\n"
-                    + "}";
+                + "uniform sampler2D " + TEXTURE_UNIT + ";\n"
+                + "varying vec2 " + TEXTURE_COORDINATE_VARYING + ";\n"
+                + "\n"
+                + "void main()\n"
+                + "{\n"
+                + "   vec4 mColor = texture2D(" + TEXTURE_UNIT + ", " + TEXTURE_COORDINATE_VARYING + ");\n"
+                + "   gl_FragColor = mColor;\n"
+                + "}";
 
     protected static final String COLOR_VERTEX_SHADER_SOURCE =
-            "attribute vec4 " + POSITION_VARYING + ";"
-                    + "uniform mat4 " + MVP_MATRIX + ";"
-                    + "void main() {"
-                    + "  gl_Position = " + MVP_MATRIX + " * " + POSITION_VARYING + ";"
-                    + "}";
+//            "precision mediump float;" + // Maybe do this here too?
+            "attribute vec4 " + POSITION_VARYING + ";" +
+            "uniform mat4 " + MVP_MATRIX + ";" +
+            "void main() {" +
+            "  gl_Position = " + MVP_MATRIX + " * " + POSITION_VARYING + ";" +
+            "}";
 
     protected static final String COLOR_FRAGMENT_SHADER_SOURCE =
             "precision mediump float;"
-                    + "uniform vec4 " + COLOR_VARYING + ";"
-                    + "void main() {"
-                    + "  gl_FragColor = " + COLOR_VARYING + ";"
-                    + "}";
+                + "uniform vec4 " + COLOR_VARYING + ";"
+                + "void main() {"
+                + "  gl_FragColor = " + COLOR_VARYING + ";"
+                + "}";
 
     // Shader handles
     private int mMVPMatrixHandle;
