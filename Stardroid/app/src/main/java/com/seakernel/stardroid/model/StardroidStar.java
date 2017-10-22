@@ -98,7 +98,7 @@ public class StardroidStar extends StardroidShape {
         }
     }
 
-    public void update(float dt) {
+    private void update(float dt) {
         // Fixed time step
 //        setPositionX(getPositionX() -(getStarFloatingSpeed() * 10));
 
@@ -107,7 +107,9 @@ public class StardroidStar extends StardroidShape {
     }
 
     @Override
-    public void draw(float[] mvpMatrix) {
+    public void draw(float[] mvpMatrix, float dt) {
+        update(dt);
+
         mMvpMatrix = mvpMatrix.clone();
 
         Matrix.translateM(mMvpMatrix, 0, mPositionX, mPositionY, 0.0f);
@@ -120,7 +122,7 @@ public class StardroidStar extends StardroidShape {
         // Set mColor for drawing the triangle
         GLES20.glUniform4fv(mColorTwinkleHandle, 1, twinkleOffset, 0);
 
-        super.draw(mMvpMatrix);
+        super.draw(mMvpMatrix, dt);
     }
 
     @Override

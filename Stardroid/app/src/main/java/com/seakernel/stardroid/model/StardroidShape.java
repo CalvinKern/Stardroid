@@ -137,10 +137,9 @@ public abstract class StardroidShape {
         };
     }
 
-    public void update(float dt) {} // Default implementation to do nothing
 
     @CallSuper
-    public void draw(float[] mvpMatrix) {
+    public void draw(float[] mvpMatrix, float dt) {
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(PROGRAM);
 

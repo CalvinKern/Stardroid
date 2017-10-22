@@ -62,7 +62,7 @@ public class StardroidEngine {
     public void draw(float[] mvpMatrix, float dt) {
         drawStars(mvpMatrix, dt); // First so it can go in the background
 
-        drawPause(mvpMatrix);
+        drawPause(mvpMatrix, dt);
 
         // TODO: Draw the rest of the game
     }
@@ -73,7 +73,6 @@ public class StardroidEngine {
 
         // Loop through all the stars in the background
         for (StardroidStar star : mStars) {
-            star.update(dt);
 
             // Determine if the star has passed the screen
             if (star.getPositionX() <= -mAspectRatio) {
@@ -81,7 +80,7 @@ public class StardroidEngine {
                 continue;
             }
 
-            star.draw(mvpMatrix);
+            star.draw(mvpMatrix, dt);
         }
 
         // Remove stars that have passed
@@ -109,10 +108,10 @@ public class StardroidEngine {
      * @param mvpMatrix
      * @return true if the game is paused
      */
-    private boolean drawPause(float[] mvpMatrix) {
+    private boolean drawPause(float[] mvpMatrix, float dt) {
         // If paused, only draw the
         if (StardroidModel.getInstance().isPaused()) {
-            mPauseSprite.draw(mvpMatrix); // TODO: Change this to draw the resume button (that also states paused)
+            mPauseSprite.draw(mvpMatrix, dt); // TODO: Change this to draw the resume button (that also states paused)
             return true; // Return here if we are paused so we don't keep drawing everything else
         } else {
             // TODO: Modify mvp to draw pause in the (top-right?) corner.
