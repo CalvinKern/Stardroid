@@ -57,6 +57,8 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     private int mFrameCount = 0;
     private TextView mFpsTextView;
     private long mFrameStartNano = System.nanoTime();
+    private float mScreenWidth;
+    private float mScreenHeight;
 
     public static GameFragment newInstance() {
         Bundle args = new Bundle();
@@ -119,10 +121,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
                 }
 
                 if (mHasActiveTouch && !StardroidModel.getInstance().isPaused()) {
-//                    shipX = 2 * (event.getRawX() - screenWidth / 2) / screenWidth + 1f * stardroidModel.getUserShip().getShipWidth();
-//                    shipY = -2 * (event.getRawY() - screenHeight / 2) / screenHeight + 0.5f * stardroidModel.getUserShip().getShipHeight();
-//
-//                    stardroidModel.moveUserShip(shipX, shipY, 0.0f);
+                    mStardroidEngine.receiveTouch(event.getRawX() / mScreenWidth, event.getRawY() / mScreenHeight);
                 }
                 return true;
             }
@@ -230,15 +229,23 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         GLES20.glViewport(0, 0, width, height);
 
         // Store the size of the screen
-//        mScreenWidth = width;
-//        mScreenHeight = height;
+        mScreenWidth = width;
+        mScreenHeight = height;
 
         float aspectRatio = (float) width / height;
-        mStardroidEngine.initializeScreen(aspectRatio);
 
         // this projection matrix is applied to object coordinates
         // in the onDrawFrame() method
         Matrix.frustumM(mProjectionMatrix, 0, -aspectRatio, aspectRatio, -1, 1, 3, 7);
+
+        // TODO: Can these matrices be set in onSurfaceChanged, so that it only happens once?
+        // Set the camera position (View matrix)
+        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
+
+        // Calculate the projection and view transformation
+        Matrix.multiplyMM(mMvpMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
+        mStardroidEngine.initializeScreen(aspectRatio);
     }
 
     // =============================================================================================
@@ -253,24 +260,18 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         StardroidModel model = StardroidModel.getInstance(); // TODO: Definitely change the model to hold stars, and everything else
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-        // TODO: Can these matrices be set in onSurfaceChanged, so that it only happens once?
-        // Set the camera position (View matrix)
-        Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, -1.0f, 0.0f);
-
-        // Calculate the projection and view transformation
-        Matrix.multiplyMM(mMvpMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-
 //        SpaceShip userShip = model.getUserShip();
 //
 //        if (isActive)
 //            model.addUserBullet(userShip.getShipX() + userShip.getShipWidth(), userShip.getShipY());
 //
+        // TODO: push mMvpMatrix; google effective storage methods
         profiler.startTrackingSection();
         mStardroidEngine.draw(mMvpMatrix, dt);
         profiler.stopTrackingSection("Drawing");
 
 //        if (!model.isPaused()) {
-//            mStardroidEngine.draw(userShip, model.getUserBullets(), model.getCollidingBullets(), model.generateEnemies(), model.generateSpecialEnemies(), model.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
+//            mStardroidEngine.doDraw(userShip, model.getUserBullets(), model.getCollidingBullets(), model.generateEnemies(), model.generateSpecialEnemies(), model.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
 //        } else {
 //            mStardroidEngine.drawPause();
 //        }

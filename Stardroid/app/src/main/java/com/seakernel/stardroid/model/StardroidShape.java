@@ -73,22 +73,24 @@ public abstract class StardroidShape {
 
     // Vertex variables
     private static final int COORDS_PER_VERTEX = 3;
-    protected static float[] COORDINATES;
     private FloatBuffer mVertexBuffer;
     private int VERTEX_COUNT;
     private int VERTEX_STRIDE;
+    private final int PROGRAM;
 
     // Set mColor with red, green, blue and alpha (opacity) values
     protected float mColor[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
-    private final int PROGRAM;
     protected float[] mMvpMatrix;
+    protected float mPositionX, mPositionY;
 
     protected abstract void initialize();
 
     public StardroidShape() {
         initialize();
 
-        COORDINATES = getCoordinates();
+        mMvpMatrix = new float[16];
+
+        final float[] COORDINATES = getCoordinates();
         VERTEX_COUNT = COORDINATES.length / COORDS_PER_VERTEX;
         VERTEX_STRIDE = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
@@ -137,9 +139,20 @@ public abstract class StardroidShape {
         };
     }
 
+    protected abstract void draw(float[] mvMatrix, float dt);
 
     @CallSuper
-    public void draw(float[] mvpMatrix, float dt) {
+    public void doDraw(float[] mvpMatrix, float dt) {
+        float[] copy = new float[16];
+        System.arraycopy(mvpMatrix, 0, copy, 0, mvpMatrix.length); // TODO: in place state saving of mvpMatrix for efficiency?
+
+        // TODO: Uncomment once the shots have been removed from drawing during the ship's draw
+//        if (mPositionX != 0 || mPositionY != 0) {
+//            Matrix.translateM(copy, 0, mPositionX, mPositionY, 0.0f);
+//        }
+        draw(copy, dt);
+
+
         // Add program to OpenGL ES environment
         GLES20.glUseProgram(PROGRAM);
 
@@ -154,7 +167,7 @@ public abstract class StardroidShape {
         GLES20.glUniform4fv(mColorHandle, 1, mColor, 0);
 
         // Pass the projection and view transformation to the shader
-        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, copy, 0);
 
         // Draw the triangle
         GLES20.glDrawArrays(getDrawMode(), 0, VERTEX_COUNT);

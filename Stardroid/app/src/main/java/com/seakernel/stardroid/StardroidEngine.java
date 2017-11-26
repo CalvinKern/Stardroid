@@ -1,5 +1,6 @@
 package com.seakernel.stardroid;
 
+import com.seakernel.stardroid.model.SpaceShip;
 import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.model.StardroidPause;
 import com.seakernel.stardroid.model.StardroidStar;
@@ -21,6 +22,7 @@ public class StardroidEngine {
     private float mAspectRatio;
     private StardroidPause mPauseSprite = null;
     private ArrayList<StardroidStar> mStars = null;
+    public SpaceShip mUserShip = null;
 
     /**
      * @return total number of objects tracked for drawing
@@ -38,6 +40,17 @@ public class StardroidEngine {
         // initialize the stars in the background for the start of the game
         initializeStars();
         mPauseSprite = new StardroidPause();
+        mUserShip = new SpaceShip();
+    }
+
+    public void receiveTouch(float normX, float normY) {
+        normX = ( 2 * normX) - 1;
+        normY = (-2 * normY) + 1;
+        mUserShip.moveToPosition(normX * mAspectRatio, normY);
+
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            Log.d("GameFragment", String.format("Touch down at (%f, %f)", shipX, shipY));
+//        }
     }
 
     /**
@@ -64,6 +77,8 @@ public class StardroidEngine {
 
         drawPause(mvpMatrix, dt);
 
+        mUserShip.doDraw(mvpMatrix, dt);
+
         // TODO: Draw the rest of the game
     }
 
@@ -76,11 +91,12 @@ public class StardroidEngine {
 
             // Determine if the star has passed the screen
             if (star.getPositionX() <= -mAspectRatio) {
+//                Log.d("StardroidEngine", "Star dying (" + star.getPositionX() + "," + star.getPositionY() + ")");
                 passedStars.add(star);
                 continue;
             }
 
-            star.draw(mvpMatrix, dt);
+            star.doDraw(mvpMatrix, dt);
         }
 
         // Remove stars that have passed
@@ -95,11 +111,8 @@ public class StardroidEngine {
         // TODO: Speed up by moving create/destroy to a background thread (in model?)
         // randomly add new stars to the background
         if (getObjectCount() < MAGIC_MAX_COUNT_OBJECTS && mStars.size() < MAGIC_MAX_COUNT_STAR && Math.random() * 100 <= 25) {
-            // FIXME: 7/23/2017 instead of getting the randY from mAspectRatio, get it from mvp so that it can scale to the size of the actual play area
-            float halfRatio = mAspectRatio / 2;
-            float randY = (float)(Math.random() * mAspectRatio) - halfRatio;
-
-            StardroidStar newStar = new StardroidStar(mAspectRatio, randY);
+            // FIXME: 7/23/2017 instead of getting a random point from mAspectRatio, get it from mvp so that it can scale to the size of the actual play area, or maybe that's just how the cookie crumbles
+            StardroidStar newStar = new StardroidStar(mAspectRatio, getRandomPointOnScreen());
             mStars.add(newStar);
         }
     }
@@ -109,17 +122,17 @@ public class StardroidEngine {
      * @return true if the game is paused
      */
     private boolean drawPause(float[] mvpMatrix, float dt) {
-        // If paused, only draw the
+        // If paused, only doDraw the
         if (StardroidModel.getInstance().isPaused()) {
-            mPauseSprite.draw(mvpMatrix, dt); // TODO: Change this to draw the resume button (that also states paused)
+            mPauseSprite.doDraw(mvpMatrix, dt); // TODO: Change this to doDraw the resume button (that also states paused)
             return true; // Return here if we are paused so we don't keep drawing everything else
         } else {
-            // TODO: Modify mvp to draw pause in the (top-right?) corner.
-            final float[] copyMvp = new float[mvpMatrix.length];
-            System.arraycopy(mvpMatrix, 0, copyMvp, 0, mvpMatrix.length); // TODO: in place state saving of mvpMatrix for efficiency?
+            // TODO: Modify mvp to doDraw pause in the (top-right?) corner.
+//            final float[] copyMvp = new float[mvpMatrix.length];
+//            System.arraycopy(mvpMatrix, 0, copyMvp, 0, mvpMatrix.length); // TODO: in place state saving of mvpMatrix for efficiency?
 
-            // TODO: draw once the mvp is correct
-//            mPauseSprite.draw(copyMvp);
+            // TODO: doDraw once the mvp is correct
+//            mPauseSprite.doDraw(copyMvp);
             return false;
         }
     }

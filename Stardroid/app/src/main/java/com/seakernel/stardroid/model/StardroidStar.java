@@ -18,8 +18,6 @@ public class StardroidStar extends StardroidShape {
     private static final float SIZE_SCALE = 0.0075f;
     private static final float SPEED_SCALE = 5000.f;
 
-    private float mPositionX;
-    private float mPositionY;
     private float mFloatingSpeed;
     private int mColorTwinkleHandle;
 
@@ -100,20 +98,18 @@ public class StardroidStar extends StardroidShape {
 
     private void update(float dt) {
         // Fixed time step
-//        setPositionX(getPositionX() -(getStarFloatingSpeed() * 10));
+//        setPositionX(getPositionX() -(getSpeed() * 10));
 
         // Variable time step
-        setPositionX(getPositionX() - (getStarFloatingSpeed() * dt));
+        setPositionX(getPositionX() - (getSpeed() * dt));
     }
 
     @Override
     public void draw(float[] mvpMatrix, float dt) {
         update(dt);
 
-        mMvpMatrix = mvpMatrix.clone();
-
-        Matrix.translateM(mMvpMatrix, 0, mPositionX, mPositionY, 0.0f);
-//        Matrix.rotateM(mMvpMatrix, 0, 0.0f, 0.0f, 0.0f, 1.0f);
+        Matrix.translateM(mvpMatrix, 0, mPositionX, mPositionY, 0.0f);
+//        Matrix.rotateM(mvpMatrix, 0, 0.0f, 0.0f, 0.0f, 1.0f);
 
         //TODO: Make glow not so epileptic
         float offset = Math.random() < TWINKLE_CHANCE ? 1.f : 1 - (float)(Math.random() * TWINKLE_MAX);
@@ -121,8 +117,6 @@ public class StardroidStar extends StardroidShape {
 
         // Set mColor for drawing the triangle
         GLES20.glUniform4fv(mColorTwinkleHandle, 1, twinkleOffset, 0);
-
-        super.draw(mMvpMatrix, dt);
     }
 
     @Override
@@ -151,7 +145,7 @@ public class StardroidStar extends StardroidShape {
         return coords;
     }
 
-    public float getStarFloatingSpeed() {
+    protected float getSpeed() {
         return mFloatingSpeed;
     }
 
