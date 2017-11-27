@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/text_white"
         android:textSize="@dimen/text_detail"
+        android:layout_marginStart="@dimen/default_margin"
         />
 
 </RelativeLayout>
