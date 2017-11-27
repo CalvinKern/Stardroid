@@ -233,6 +233,7 @@ public abstract class StardroidShape {
         mPositionY = y;
     }
 
+    // TODO: For getWidth and getHeight, don't assume square coordinates. Have shapes set a width and height instead?
     public float getWidth() {
         float[] coords = getCoordinates();
         float midLeft = (coords[0] + coords[6]) / 2.f;
