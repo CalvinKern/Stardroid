@@ -3,9 +3,11 @@ package com.seakernel.stardroid;
 import com.seakernel.stardroid.model.SpaceShip;
 import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.model.StardroidPause;
+import com.seakernel.stardroid.model.StardroidShape;
 import com.seakernel.stardroid.model.StardroidStar;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This Class performs as the sprite engine that draws all required elements for the Stardroid game
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 public class StardroidEngine {
 
     private static final int MAGIC_MAX_COUNT_STAR = 169; // REDUCE this to improve FPS ;)
-    private static final int MAGIC_MAX_COUNT_OBJECTS = 800; // This is the max for 60 fps on a good phone
+    private static final int MAGIC_MAX_COUNT_OBJECTS = 800; // This is the max for 60 fps on a good phone (Nexus 6P)
 
     // Member Variables
 
@@ -75,45 +77,44 @@ public class StardroidEngine {
     public void draw(float[] mvpMatrix, float dt) {
         drawStars(mvpMatrix, dt); // First so it can go in the background
 
-        drawPause(mvpMatrix, dt);
-
-        mUserShip.doDraw(mvpMatrix, dt);
+        drawUser(mvpMatrix, dt);
 
         // TODO: Draw the rest of the game
+
+        drawPause(mvpMatrix, dt);
     }
 
-    private void drawStars(float[] mvpMatrix, float dt) {
-        // Create a new ArrayList to put all of the passed stars
-        ArrayList<StardroidStar> passedStars = new ArrayList<>();
+    /**
+     * Draws the list of shapes and returns a sublist of any shapes that have gone out of bounds
+     *
+     * @param list the list of shapes to draw and check for out of bounds
+     * @param mvpMatrix
+     * @param dt
+     * @return the sublist of shapes that are out of bounds
+     */
+    private List<StardroidShape> drawAndReturnOutOfBoundsObjects(List<? extends StardroidShape> list, float[] mvpMatrix, float dt) {
+        ArrayList<StardroidShape> shapesLeaving = new ArrayList<>();
 
-        // Loop through all the stars in the background
-        for (StardroidStar star : mStars) {
+        for (StardroidShape shape : list) {
 
-            // Determine if the star has passed the screen
-            if (star.getPositionX() <= -mAspectRatio) {
-//                Log.d("StardroidEngine", "Star dying (" + star.getPositionX() + "," + star.getPositionY() + ")");
-                passedStars.add(star);
+            if (shape.hasGoneOutOfBounds(new float[]{-mAspectRatio, 1.f, mAspectRatio, -1.f})) {
+//                Log.d("StardroidEngine", "Shape leaving (" + shape.getPositionX() + "," + shape.getPositionY() + ")");
+                shapesLeaving.add(shape);
                 continue;
             }
 
-            star.doDraw(mvpMatrix, dt);
+            shape.doDraw(mvpMatrix, dt);
         }
 
-        // Remove stars that have passed
-        for (StardroidStar oldStar : passedStars) {
-            mStars.remove(oldStar);
-        }
-
-        createStars();
+        return shapesLeaving;
     }
 
-    private void createStars() {
-        // TODO: Speed up by moving create/destroy to a background thread (in model?)
-        // randomly add new stars to the background
-        if (getObjectCount() < MAGIC_MAX_COUNT_OBJECTS && mStars.size() < MAGIC_MAX_COUNT_STAR && Math.random() * 100 <= 25) {
-            // FIXME: 7/23/2017 instead of getting a random point from mAspectRatio, get it from mvp so that it can scale to the size of the actual play area, or maybe that's just how the cookie crumbles
-            StardroidStar newStar = new StardroidStar(mAspectRatio, getRandomPointOnScreen());
-            mStars.add(newStar);
+    private void drawStars(float[] mvpMatrix, float dt) {
+        List<StardroidShape> passed = drawAndReturnOutOfBoundsObjects(mStars, mvpMatrix, dt);
+
+        for (StardroidShape starToReset : passed) {
+            // FIXME: 7/23/2017 instead of setting from mAspectRatio, get it from mvp so that it can scale to the size of the actual play area, or maybe that's just how the cookie crumbles
+            starToReset.setPositionX(mAspectRatio);
         }
     }
 
@@ -135,5 +136,16 @@ public class StardroidEngine {
 //            mPauseSprite.doDraw(copyMvp);
             return false;
         }
+    }
+
+    private void drawUser(float[] mvpMatrix, float dt) {
+        mUserShip.doDraw(mvpMatrix, dt);
+        drawProjectiles(mvpMatrix, dt);
+    }
+
+    private void drawProjectiles(float[] mvpMatrix, float dt) {
+        mUserShip.destroyProjectiles(drawAndReturnOutOfBoundsObjects(mUserShip.getProjectiles(), mvpMatrix, dt));
+
+        mUserShip.createProjectiles(dt);
     }
 }

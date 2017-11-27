@@ -118,6 +118,8 @@ public abstract class StardroidShape {
         onCreateProgramHandles(PROGRAM);
     }
 
+    protected void destroy() {}
+
     @CallSuper
     protected void onCreateProgramHandles(final int PROGRAM) {
         // get handle to vertex shader's vPosition member
@@ -213,5 +215,46 @@ public abstract class StardroidShape {
         }
 
         return shader;
+    }
+
+    public float getPositionX() {
+        return mPositionX;
+    }
+
+    public float getPositionY() {
+        return mPositionY;
+    }
+
+    public void setPositionX(float x) {
+        mPositionX = x;
+    }
+
+    public void setPositionY(float y) {
+        mPositionY = y;
+    }
+
+    public float getWidth() {
+        float[] coords = getCoordinates();
+        float midLeft = (coords[0] + coords[6]) / 2.f;
+        float midRight = (coords[3] + coords[9]) / 2.f;
+        return midLeft > midRight ? midLeft - midRight : midRight - midLeft;
+    }
+
+    public float getHeight() {
+        float[] coords = getCoordinates();
+        float midBottom = (coords[1] + coords[4]) / 2.f;
+        float midTop = (coords[7] + coords[10]) / 2.f;
+        return midTop > midBottom ? midTop - midBottom : midBottom - midTop;
+    }
+
+    /**
+     * @param bounds [left, top, right, bottom]
+     * @return returns true if the shape is outside of the bounds
+     */
+    public boolean hasGoneOutOfBounds(float[] bounds) {
+        return getPositionX() + getWidth() < bounds[0] || // left
+                getPositionY() - getHeight() > bounds[1] || // top
+                getPositionX() - getWidth() > bounds[2] || // right
+                getPositionY() + getHeight() < bounds[3]; // bottom
     }
 }

@@ -1,7 +1,6 @@
 package com.seakernel.stardroid.model;
 
 import android.opengl.Matrix;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
 
 public class SpaceShip extends StardroidShape {
 
-    private float MILLISECONDS_BETWEEN_SHOTS = 500f;
+    private float mMillisecondsBetweenShots = 500f;
     private float mElapsedTime = 0;
 
     private List<Projectile> mProjectiles = new ArrayList<>();
@@ -23,29 +22,18 @@ public class SpaceShip extends StardroidShape {
     }
 
     @Override
+    public void destroy() {
+        destroyProjectiles(mProjectiles);
+    }
+
+    @Override
     public void draw(float[] mvpMatrix, float dt) {
 //        mMvpMatrix = mvpMatrix.clone();
 
-        drawShooting(mvpMatrix, dt); // TODO: Move this to the engine/model
         Matrix.translateM(mvpMatrix, 0, mPositionX, mPositionY, 0.0f);
 //        Log.d("Ship", String.format("doDraw at: (%f,%f)", mPositionX, mPositionY));
 //        Log.d("Ship", String.format("doDraw at: (%f,%f)", mvpMatrix[12], mvpMatrix[13]));
 
-    }
-
-    private void drawShooting(float[] mvpMatrix, float dt) {
-        mElapsedTime += dt;
-        if (mElapsedTime >= MILLISECONDS_BETWEEN_SHOTS) {
-            mElapsedTime = 0;
-            Projectile shot = new Projectile(mPositionX, mPositionY);
-            mProjectiles.add(shot);
-        }
-
-        for (Projectile shot : mProjectiles) {
-            shot.doDraw(mvpMatrix, dt);
-        }
-
-        // TODO: Check for passed bullets
     }
 
     @Override
@@ -71,5 +59,31 @@ public class SpaceShip extends StardroidShape {
         // TODO: Add in engine speed to position
         mPositionX = x;
         mPositionY = y;
+    }
+
+    public float getMillisecondsBetweenShots() {
+        return mMillisecondsBetweenShots;
+    }
+
+    public void setMillisecondsBetweenShots(float milliseconds) {
+        mMillisecondsBetweenShots = milliseconds;
+    }
+
+    public void createProjectiles(float dt) {
+        mElapsedTime += dt;
+        if (mElapsedTime >= mMillisecondsBetweenShots) {
+            mElapsedTime = 0;
+            Projectile projectile = new Projectile(mPositionX, mPositionY);
+            mProjectiles.add(projectile);
+        }
+    }
+
+    public List<Projectile> getProjectiles() {
+        return new ArrayList<>(mProjectiles);
+    }
+
+    public void destroyProjectiles(List<? extends StardroidShape> stardroidShapes) {
+        //noinspection SuspiciousMethodCalls
+        mProjectiles.removeAll(stardroidShapes);
     }
 }

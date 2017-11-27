@@ -148,16 +148,4 @@ public class StardroidStar extends StardroidShape {
     protected float getSpeed() {
         return mFloatingSpeed;
     }
-
-    public float getPositionX() {
-        return mPositionX;
-    }
-
-    public float getPositionY() {
-        return mPositionY;
-    }
-
-    public void setPositionX(float x) {
-        mPositionX = x;
-    }
 }
