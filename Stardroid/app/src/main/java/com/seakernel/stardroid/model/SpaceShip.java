@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SpaceShip extends StardroidShape {
 
-    private float MILLISECONDS_BETWEEN_SHOTS = 5f;
+    private float MILLISECONDS_BETWEEN_SHOTS = 500f;
     private float mElapsedTime = 0;
 
     private List<Projectile> mProjectiles = new ArrayList<>();
