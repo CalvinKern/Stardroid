@@ -16,7 +16,7 @@ public class StardroidStar extends StardroidShape {
     private static final double TWINKLE_CHANCE = 0.65;
 
     private static final float SIZE_SCALE = 0.0075f;
-    private static final float SPEED_SCALE = 5000.f;
+    private static final float SPEED_SCALAR = 5000.f;
 
     private float mFloatingSpeed;
     private int mColorTwinkleHandle;
@@ -41,8 +41,8 @@ public class StardroidStar extends StardroidShape {
     @Override
     protected void initialize() {
         mColor = getStarColor();
-        double rand = Math.random(); // TODO: Bias the random number to be smaller
-        mFloatingSpeed = (float)(rand / SPEED_SCALE);
+        double rand = Math.pow(Math.random(), 3); // x^3 to make the number biased to be smaller
+        mFloatingSpeed = (float)(rand / SPEED_SCALAR);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class StardroidStar extends StardroidShape {
 
     @Override
     protected float[] getCoordinates() {
-        float size = SIZE_SCALE * (mFloatingSpeed * SPEED_SCALE);
+        float size = SIZE_SCALE * (mFloatingSpeed * SPEED_SCALAR);
 
         int triangleAmount = 10; //# of triangles used to draw circle
 
