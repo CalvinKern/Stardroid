@@ -33,18 +33,6 @@ public class StardroidEngine {
         return mStars.size();
     }
 
-    /**
-     * This method initializes all necessary data structures and GLES20
-     */
-    public void initializeScreen(float aspectRatio) {
-        mAspectRatio = aspectRatio;
-
-        // initialize the stars in the background for the start of the game
-        initializeStars();
-        mPauseSprite = new StardroidPause();
-        mUserShip = new SpaceShip();
-    }
-
     public void receiveTouch(float normX, float normY) {
         normX = ( 2 * normX) - 1;
         normY = (-2 * normY) + 1;
@@ -56,9 +44,25 @@ public class StardroidEngine {
     }
 
     /**
-     * This helper method initializes the list of stars for the beginning of the game
+     * This method initializes all necessary data structures and GLES20
      */
-    private void initializeStars() {
+    public void initializeScreen(float aspectRatio) {
+        mAspectRatio = aspectRatio;
+
+        // initialize the stars in the background for the start of the game
+        generateBackground();
+        mPauseSprite = new StardroidPause();
+        mUserShip = new SpaceShip();
+    }
+
+    private void generateBackground() {
+        generateStars();
+    }
+
+    /**
+     * This initializes the list of stars for the game
+     */
+    private void generateStars() {
         mStars = new ArrayList<>();
         if (mStars.size() == 0) {
             for (int i = 0; i < MAGIC_MAX_COUNT_STAR; i++) {
