@@ -143,13 +143,8 @@ public class StardroidEngine {
     }
 
     private void drawUser(float[] mvpMatrix, float dt) {
-        mUserShip.doDraw(mvpMatrix, dt);
-        drawProjectiles(mvpMatrix, dt);
-    }
-
-    private void drawProjectiles(float[] mvpMatrix, float dt) {
+        // TODO: figure out a cleaner way to draw projectiles while checking out of bounds (should be in ship class, but it doesn't have aspect ratio...)
         mUserShip.destroyProjectiles(drawAndReturnOutOfBoundsObjects(mUserShip.getProjectiles(), mvpMatrix, dt));
-
-        mUserShip.createProjectiles(dt);
+        mUserShip.doDraw(mvpMatrix, dt);
     }
 }

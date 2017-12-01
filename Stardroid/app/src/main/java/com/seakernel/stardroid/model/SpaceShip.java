@@ -43,11 +43,13 @@ public class SpaceShip extends StardroidShape {
         }
 
         Matrix.translateM(mvpMatrix, 0, mPositionX, mPositionY, 0.0f);
+
+        createProjectiles(dt);
     }
 
     @Override
     protected float[] getCoordinates() {
-        float size = 0.05f;
+        final float size = 0.05f;
         return new float[] {
                 -size, -size, 0.0f, // bottom left
                 size, -size, 0.0f,  // bottom right
