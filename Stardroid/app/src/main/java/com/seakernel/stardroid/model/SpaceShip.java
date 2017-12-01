@@ -13,12 +13,16 @@ public class SpaceShip extends StardroidShape {
 
     private float mMillisecondsBetweenShots = 500f;
     private float mElapsedTime = 0;
+    private float mMoveToX;
+    private float mMoveToY;
+    private float mSpeed = 0.001f;
 
     private List<Projectile> mProjectiles = new ArrayList<>();
 
     @Override
     protected void initialize() {
-
+        mMoveToX = mPositionX;
+        mMoveToY = mPositionY;
     }
 
     @Override
@@ -28,12 +32,17 @@ public class SpaceShip extends StardroidShape {
 
     @Override
     public void draw(float[] mvpMatrix, float dt) {
-//        mMvpMatrix = mvpMatrix.clone();
+        final float step = mSpeed * dt;
+
+        if (mMoveToX != mPositionX) {
+            mPositionX += (step * (mMoveToX > mPositionX ? 1 : -1)) % (mMoveToX - mPositionX);
+        }
+
+        if (mMoveToY != mPositionY) {
+            mPositionY += (step * (mMoveToY > mPositionY ? 1 : -1)) % (mMoveToY - mPositionY);
+        }
 
         Matrix.translateM(mvpMatrix, 0, mPositionX, mPositionY, 0.0f);
-//        Log.d("Ship", String.format("doDraw at: (%f,%f)", mPositionX, mPositionY));
-//        Log.d("Ship", String.format("doDraw at: (%f,%f)", mvpMatrix[12], mvpMatrix[13]));
-
     }
 
     @Override
@@ -48,17 +57,16 @@ public class SpaceShip extends StardroidShape {
     }
 
     public float getMoveToX() {
-        return mPositionX;
+        return mMoveToX;
     }
 
     public float getMoveToY() {
-        return mPositionY;
+        return mMoveToY;
     }
 
     public void moveToPosition(float x, float y) {
-        // TODO: Add in engine speed to position
-        mPositionX = x;
-        mPositionY = y;
+        mMoveToX = x;
+        mMoveToY = y;
     }
 
     public float getMillisecondsBetweenShots() {
