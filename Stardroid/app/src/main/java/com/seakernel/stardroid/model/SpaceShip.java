@@ -32,14 +32,17 @@ public class SpaceShip extends StardroidShape {
 
     @Override
     public void draw(float[] mvpMatrix, float dt) {
-        final float step = mSpeed * dt;
+        final float dx = mMoveToX - mPositionX;
+        final float dy = mMoveToY - mPositionY;
+        final float distance = (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        final float step = Math.min(mSpeed * dt, distance);
 
         if (mMoveToX != mPositionX) {
-            mPositionX += (step * (mMoveToX > mPositionX ? 1 : -1)) % (mMoveToX - mPositionX);
+            mPositionX += step * (dx / distance);
         }
 
         if (mMoveToY != mPositionY) {
-            mPositionY += (step * (mMoveToY > mPositionY ? 1 : -1)) % (mMoveToY - mPositionY);
+            mPositionY += step * (dy / distance);
         }
 
         Matrix.translateM(mvpMatrix, 0, mPositionX, mPositionY, 0.0f);
