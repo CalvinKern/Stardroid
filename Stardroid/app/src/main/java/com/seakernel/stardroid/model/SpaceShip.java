@@ -1,6 +1,7 @@
 package com.seakernel.stardroid.model;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,13 @@ import java.util.List;
 
 public class SpaceShip extends StardroidShape {
 
+    private final float MAX_SPEED_ENGINE = 0.01f;
+    private final float MIN_SPEED_ENGINE = 0.001f;
     private float mMillisecondsBetweenShots = 500f;
     private float mElapsedTime = 0;
     private float mMoveToX;
     private float mMoveToY;
-    private float mSpeed = 0.001f;
+    private float mSpeed;
 
     private List<Projectile> mProjectiles = new ArrayList<>();
 
@@ -23,6 +26,7 @@ public class SpaceShip extends StardroidShape {
     protected void initialize() {
         mMoveToX = mPositionX;
         mMoveToY = mPositionY;
+        resetEngineSpeed();
     }
 
     @Override
@@ -99,4 +103,28 @@ public class SpaceShip extends StardroidShape {
         //noinspection SuspiciousMethodCalls
         mProjectiles.removeAll(stardroidShapes);
     }
+    /**
+     * @return the engine speed as a percent [0, 100]
+     */
+    public float getEngineSpeed() {
+        return normSpeed() * 100;
+    }
+
+    private float normSpeed() {
+        return 1 / (MAX_SPEED_ENGINE - MIN_SPEED_ENGINE) * (mSpeed - MIN_SPEED_ENGINE);
+//        return (mSpeed - MIN_SPEED_ENGINE) / (MAX_SPEED_ENGINE - MIN_SPEED_ENGINE);
+    }
+
+    public void resetEngineSpeed() {
+        mSpeed = MIN_SPEED_ENGINE;
+        Log.d("SpaceShip", String.format("Reset Engine Speed (%f)", mSpeed));
+    }
+
+    public boolean incrementEngineSpeed() {
+        if (mSpeed + MIN_SPEED_ENGINE <= MAX_SPEED_ENGINE) {
+            mSpeed += MIN_SPEED_ENGINE;
+            Log.d("SpaceShip", String.format("New Engine Speed (%f)", mSpeed));
+            return true;
+        }
+        return false;
 }
