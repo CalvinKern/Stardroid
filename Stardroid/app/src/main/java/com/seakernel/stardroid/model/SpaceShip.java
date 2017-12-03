@@ -115,6 +115,10 @@ public class SpaceShip extends StardroidShape {
 //        return (mSpeed - MIN_SPEED_ENGINE) / (MAX_SPEED_ENGINE - MIN_SPEED_ENGINE);
     }
 
+    public boolean setEngineSpeed(float engineSpeed) {
+        return false;
+    }
+
     public void resetEngineSpeed() {
         mSpeed = MIN_SPEED_ENGINE;
         Log.d("SpaceShip", String.format("Reset Engine Speed (%f)", mSpeed));

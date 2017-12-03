@@ -9,6 +9,7 @@ import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,6 +57,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     // FPS variables
     private int mFrameCount = 0;
     private TextView mFpsTextView;
+    private TextView mEngineSpeedTextView;
     private long mFrameStartNano = System.nanoTime();
     private float mScreenWidth;
     private float mScreenHeight;
@@ -79,7 +81,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
             mTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    updateFpsTextView();
+                    updateUiViews();
                 }
             }, 1000, 1000);
         }
@@ -103,6 +105,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         // Only waste time getting the frames per second label if we're in debug mode
         if (BuildConfig.DEBUG) {
             mFpsTextView = (TextView) root.findViewById(R.id.fps_label);
+            mEngineSpeedTextView = (TextView) root.findViewById(R.id.engine_speed_label);
         }
 
         GLSurfaceView glView = (GLSurfaceView) root.findViewById(R.id.game_surface);
@@ -135,14 +138,25 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         super.onDestroyView();
 
         mFpsTextView = null;
+        mEngineSpeedTextView = null;
     }
 
-    private void updateFpsTextView() {
+    private void updateUiViews() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (mFpsTextView != null) {
                     mFpsTextView.setText(getString(R.string.fps, Profiler.getInstance().getCurrentFramesPerSecond()));
+                }
+                if (mEngineSpeedTextView != null) {
+                    final float engineSpeed = mStardroidEngine.getUserEngineSpeed();
+                    Log.d("GameFragment", "Engine Text: " + engineSpeed);
+                    mEngineSpeedTextView.setText(getString(R.string.engine_speed, engineSpeed));
+
+                    if (!mStardroidEngine.incrementEngineSpeed()) {
+                        Log.d("GameFragment", "Resetting user speed");
+                        mStardroidEngine.resetUserEngineSpeed();
+                    }
                 }
             }
         });

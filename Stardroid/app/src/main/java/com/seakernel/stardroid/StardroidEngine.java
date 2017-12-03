@@ -78,6 +78,12 @@ public class StardroidEngine {
 
     public void setTextures() { /*TODO:...Once I have something to texture*/ }
 
+    public float getUserEngineSpeed() {
+        return mUserShip.getEngineSpeed();
+    }
+
+    // -- Drawing Methods
+
     public void draw(float[] mvpMatrix, float dt) {
         drawStars(mvpMatrix, dt); // First so it can go in the background
 
@@ -146,5 +152,17 @@ public class StardroidEngine {
         // TODO: figure out a cleaner way to draw projectiles while checking out of bounds (should be in ship class, but it doesn't have aspect ratio...)
         mUserShip.destroyProjectiles(drawAndReturnOutOfBoundsObjects(mUserShip.getProjectiles(), mvpMatrix, dt));
         mUserShip.doDraw(mvpMatrix, dt);
+    }
+
+    public boolean setUserEngineSpeed(float engineSpeed) {
+        return mUserShip.setEngineSpeed(engineSpeed);
+    }
+
+    public boolean incrementEngineSpeed() {
+        return mUserShip.incrementEngineSpeed();
+    }
+
+    public void resetUserEngineSpeed() {
+        mUserShip.resetEngineSpeed();
     }
 }
