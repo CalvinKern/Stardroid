@@ -14,11 +14,12 @@ public class SpaceShip extends StardroidShape {
 
     private final float MAX_SPEED_ENGINE = 0.01f;
     private final float MIN_SPEED_ENGINE = 0.001f;
+
     private float mMillisecondsBetweenShots = 500f;
     private float mElapsedTime = 0;
     private float mMoveToX;
     private float mMoveToY;
-    private float mSpeed;
+    private float mSpeedPercent;
 
     private List<Projectile> mProjectiles = new ArrayList<>();
 
@@ -39,7 +40,7 @@ public class SpaceShip extends StardroidShape {
         final float dx = mMoveToX - mPositionX;
         final float dy = mMoveToY - mPositionY;
         final float distance = (float) Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-        final float step = Math.min(mSpeed * dt, distance);
+        final float step = Math.min(getRawSpeed() * dt, distance);
 
         if (mMoveToX != mPositionX) {
             mPositionX += step * (dx / distance);
@@ -103,32 +104,43 @@ public class SpaceShip extends StardroidShape {
         //noinspection SuspiciousMethodCalls
         mProjectiles.removeAll(stardroidShapes);
     }
+
     /**
      * @return the engine speed as a percent [0, 100]
      */
     public float getEngineSpeed() {
-        return normSpeed() * 100;
+        return mSpeedPercent;
     }
 
     private float normSpeed() {
-        return 1 / (MAX_SPEED_ENGINE - MIN_SPEED_ENGINE) * (mSpeed - MIN_SPEED_ENGINE);
-//        return (mSpeed - MIN_SPEED_ENGINE) / (MAX_SPEED_ENGINE - MIN_SPEED_ENGINE);
+        return 1 / (MAX_SPEED_ENGINE - MIN_SPEED_ENGINE) * (getRawSpeed() - MIN_SPEED_ENGINE);
+//        return (mSpeedPercent - MIN_SPEED_ENGINE) / (MAX_SPEED_ENGINE - MIN_SPEED_ENGINE);
+    }
+
+    private float getRawSpeed() {
+        return mSpeedPercent / 100 * MAX_SPEED_ENGINE;
     }
 
     public boolean setEngineSpeed(float engineSpeed) {
+//        float speed = engineSpeed / 100 * normSpeed();
+//        if (speed <= MAX_SPEED_ENGINE && speed >= MIN_SPEED_ENGINE) {
+//            mSpeedPercent = speed;
+//            return true;
+//        }
         return false;
     }
 
     public void resetEngineSpeed() {
-        mSpeed = MIN_SPEED_ENGINE;
-        Log.d("SpaceShip", String.format("Reset Engine Speed (%f)", mSpeed));
+        mSpeedPercent = 10;
+        Log.d("SpaceShip", String.format("Reset Engine Speed (%f)", mSpeedPercent));
     }
 
     public boolean incrementEngineSpeed() {
-        if (mSpeed + MIN_SPEED_ENGINE <= MAX_SPEED_ENGINE) {
-            mSpeed += MIN_SPEED_ENGINE;
-            Log.d("SpaceShip", String.format("New Engine Speed (%f)", mSpeed));
+        if (getRawSpeed() < MAX_SPEED_ENGINE) {
+            mSpeedPercent += 10;
+            Log.d("SpaceShip", String.format("New Engine Speed (%f)", mSpeedPercent));
             return true;
         }
         return false;
+    }
 }
