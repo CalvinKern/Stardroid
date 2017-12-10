@@ -1,7 +1,6 @@
 package com.seakernel.stardroid;
 
 import android.util.Log;
-import android.widget.Space;
 
 import com.seakernel.stardroid.model.Projectile;
 import com.seakernel.stardroid.model.SpaceShip;
@@ -106,7 +105,8 @@ public class StardroidEngine {
     }
 
     private boolean isShapeOutOfBounds(StardroidShape shape) {
-        return shape.hasGoneOutOfBounds(new float[]{-mAspectRatio, 1.f, mAspectRatio, -1.f});
+        float[] screenBounds = new float[]{-mAspectRatio, 1.f, mAspectRatio, -1.f};
+        return !shape.hasCollided(screenBounds);
     }
 
     /**
@@ -117,7 +117,7 @@ public class StardroidEngine {
      * @param dt
      * @return the sublist of shapes that are out of bounds
      */
-    private List<StardroidShape> drawAndReturnOutOfBoundsObjects(List<? extends StardroidShape> list, float[] mvpMatrix, float dt) {
+    private List<StardroidShape> drawAndCheckCollisions(List<? extends StardroidShape> list, float[] mvpMatrix, float dt) {
         ArrayList<StardroidShape> shapesLeaving = new ArrayList<>();
 
         for (StardroidShape shape : list) {
@@ -130,7 +130,28 @@ public class StardroidEngine {
 
             shape.doDraw(mvpMatrix, dt);
             if (shape instanceof SpaceShip) {
-                ((SpaceShip) shape).destroyProjectiles(drawAndReturnOutOfBoundsObjects(((SpaceShip) shape).getProjectiles(), mvpMatrix, dt));
+                SpaceShip ship = (SpaceShip) shape;
+                ship.destroyProjectiles(drawAndCheckCollisions(ship.getProjectiles(), mvpMatrix, dt));
+
+                List<Projectile> hitProjectiles = new ArrayList<>();
+
+                // Simple collision detection
+                for (Projectile projectile : mUserShip.getProjectiles()) {
+
+                    if (ship.hasCollided(projectile.getBounds())) {
+                        hitProjectiles.add(projectile);
+                        ship.destroy();
+                        shapesLeaving.add(ship);
+                    }
+                }
+
+                if (mUserShip.hasCollided(ship.getBounds())) {
+                    ship.destroy();
+                    shapesLeaving.add(ship);
+                    mUserShip.shipHit();
+                }
+
+                mUserShip.destroyProjectiles(hitProjectiles);
             }
         }
 
@@ -138,7 +159,7 @@ public class StardroidEngine {
     }
 
     private void drawStars(float[] mvpMatrix, float dt) {
-        List<StardroidShape> passed = drawAndReturnOutOfBoundsObjects(mStars, mvpMatrix, dt);
+        List<StardroidShape> passed = drawAndCheckCollisions(mStars, mvpMatrix, dt);
 
         for (StardroidShape starToReset : passed) {
             // FIXME: 7/23/2017 instead of setting from mAspectRatio, get it from mvp so that it can scale to the size of the actual play area, or maybe that's just how the cookie crumbles
@@ -168,7 +189,7 @@ public class StardroidEngine {
 
     private void drawUser(float[] mvpMatrix, float dt) {
         // TODO: figure out a cleaner way to draw projectiles while checking out of bounds (should be in ship class, but it doesn't have aspect ratio...)
-        mUserShip.destroyProjectiles(drawAndReturnOutOfBoundsObjects(mUserShip.getProjectiles(), mvpMatrix, dt));
+        mUserShip.destroyProjectiles(drawAndCheckCollisions(mUserShip.getProjectiles(), mvpMatrix, dt));
         mUserShip.doDraw(mvpMatrix, dt);
     }
 
@@ -179,7 +200,7 @@ public class StardroidEngine {
      * @param dt
      */
     private void drawEnemyShips(float[] mvpMatrix, float dt) {
-        drawAndReturnOutOfBoundsObjects(mEnemyShips, mvpMatrix, dt);
+        mEnemyShips.removeAll(drawAndCheckCollisions(mEnemyShips, mvpMatrix, dt));
         createEnemy(dt);
     }
 
@@ -194,6 +215,7 @@ public class StardroidEngine {
             ship.moveToPosition(-mAspectRatio * 2, ship.getPositionY());
 
             mEnemyShips.add(ship);
+//            Log.d("StardroidEngine", "Total Enemies: " + mEnemyShips.size());
         }
     }
 

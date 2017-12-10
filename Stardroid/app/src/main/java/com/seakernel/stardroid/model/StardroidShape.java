@@ -248,14 +248,23 @@ public abstract class StardroidShape {
         return midTop > midBottom ? midTop - midBottom : midBottom - midTop;
     }
 
+    public float[] getBounds() {
+        return new float[] {
+                getPositionX() - (getWidth() / 2), // left
+                getPositionY() + (getHeight() / 2), // top
+                getPositionX() + (getWidth() / 2), // right
+                getPositionY() - (getHeight() / 2) // bottom
+        };
+    }
+
     /**
      * @param bounds [left, top, right, bottom]
-     * @return returns true if the shape is outside of the bounds
+     * @return returns true if the shape is within of the bounds
      */
-    public boolean hasGoneOutOfBounds(float[] bounds) {
-        return getPositionX() + getWidth() < bounds[0] || // left
-                getPositionY() - getHeight() > bounds[1] || // top
-                getPositionX() - getWidth() > bounds[2] || // right
-                getPositionY() + getHeight() < bounds[3]; // bottom
+    public boolean hasCollided(float[] bounds) {
+        float[] shapeBounds = getBounds();
+
+        return !(bounds[0] > shapeBounds[2] || shapeBounds[0] > bounds[2]) &&
+                !(bounds[1] < shapeBounds[3] || shapeBounds[1] < bounds[3]);
     }
 }

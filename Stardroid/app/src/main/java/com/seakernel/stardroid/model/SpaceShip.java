@@ -162,4 +162,8 @@ public class SpaceShip extends StardroidShape {
     public boolean getCanShoot() {
         return mCanShoot;
     }
+
+    public void shipHit() {
+        // TODO: track ship health
+    }
 }
