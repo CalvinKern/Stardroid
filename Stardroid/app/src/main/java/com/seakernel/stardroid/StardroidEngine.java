@@ -2,6 +2,7 @@ package com.seakernel.stardroid;
 
 import android.util.Log;
 
+import com.seakernel.stardroid.model.Explosion;
 import com.seakernel.stardroid.model.Projectile;
 import com.seakernel.stardroid.model.SpaceShip;
 import com.seakernel.stardroid.model.StardroidModel;
@@ -11,6 +12,7 @@ import com.seakernel.stardroid.model.StardroidStar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 /**
  * This Class performs as the sprite engine that draws all required elements for the Stardroid game
@@ -30,6 +32,7 @@ public class StardroidEngine {
     private ArrayList<SpaceShip> mEnemyShips;
     private float mElapsedTime;
     private float mMillisecondsBetweenEnemyCreation = 1500;
+    private List<Explosion> mExplosions;
 
     /**
      * @return total number of objects tracked for drawing
@@ -58,6 +61,7 @@ public class StardroidEngine {
         generateBackground();
         mUserShip = new SpaceShip();
         mEnemyShips = new ArrayList<>();
+        mExplosions = new ArrayList<>();
         mPauseSprite = new StardroidPause();
 
         mUserShip.setCanShoot(true);
@@ -94,6 +98,8 @@ public class StardroidEngine {
 
     public void draw(float[] mvpMatrix, float dt) {
         drawStars(mvpMatrix, dt); // First so it can go in the background
+
+        drawExplosions(mvpMatrix, dt);
 
         drawUser(mvpMatrix, dt);
 
@@ -140,12 +146,14 @@ public class StardroidEngine {
 
                     if (ship.hasCollided(projectile.getBounds())) {
                         hitProjectiles.add(projectile);
+                        mExplosions.add(new Explosion(ship));
                         ship.destroy();
                         shapesLeaving.add(ship);
                     }
                 }
 
                 if (mUserShip.hasCollided(ship.getBounds())) {
+                    mExplosions.add(new Explosion(ship));
                     ship.destroy();
                     shapesLeaving.add(ship);
                     mUserShip.shipHit();
@@ -164,6 +172,15 @@ public class StardroidEngine {
         for (StardroidShape starToReset : passed) {
             // FIXME: 7/23/2017 instead of setting from mAspectRatio, get it from mvp so that it can scale to the size of the actual play area, or maybe that's just how the cookie crumbles
             starToReset.setPositionX(mAspectRatio);
+        }
+    }
+
+    private void drawExplosions(float[] mvpMatrix, float dt) {
+        for (Explosion explosion : new ArrayList<>(mExplosions)) {
+            explosion.draw(mvpMatrix, dt);
+            if (explosion.isFinished()) {
+                mExplosions.remove(explosion);
+            }
         }
     }
 
