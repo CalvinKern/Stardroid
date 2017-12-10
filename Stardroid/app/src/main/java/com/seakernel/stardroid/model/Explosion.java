@@ -47,7 +47,7 @@ public class Explosion {
         private float mSpeed;
         private float mMoveToX;
         private float mMoveToY;
-        private double mMaxAngleRad = Math.PI /4; // +- max angle
+        private double mMaxAngleRad = Math.PI * 2; // +- max angle
         private double mMovementDistance;
 
         public Particle (SpaceShip ship) {
@@ -64,8 +64,9 @@ public class Explosion {
 
             mMovementDistance = mSpeed * EXPLOSION_ANIMATION_MILLISECONDS;
 
-            mMoveToX = (float) (mMovementDistance * ship.getMoveToX() + (Math.random() * Math.cos(mMaxAngleRad) * 2 - 1));
-            mMoveToY = (float) (mMovementDistance * ship.getMoveToY() + (Math.random() * Math.sin(mMaxAngleRad) * 2 - 1));
+            double rand = Math.random();
+            mMoveToX = ship.getPositionX() + (float) (mMovementDistance * (Math.cos(rand * mMaxAngleRad)));
+            mMoveToY = ship.getPositionY() + (float) (mMovementDistance * (Math.sin(rand * mMaxAngleRad)));
         }
 
         @Override
