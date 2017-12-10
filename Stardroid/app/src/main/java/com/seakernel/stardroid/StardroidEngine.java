@@ -1,5 +1,9 @@
 package com.seakernel.stardroid;
 
+import android.util.Log;
+import android.widget.Space;
+
+import com.seakernel.stardroid.model.Projectile;
 import com.seakernel.stardroid.model.SpaceShip;
 import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.model.StardroidPause;
@@ -20,11 +24,13 @@ public class StardroidEngine {
     private static final int MAGIC_MAX_COUNT_OBJECTS = 800; // This is the max for 60 fps on a good phone (Nexus 6P)
 
     // Member Variables
-
     private float mAspectRatio;
     private StardroidPause mPauseSprite = null;
     private ArrayList<StardroidStar> mStars = null;
     public SpaceShip mUserShip = null;
+    private ArrayList<SpaceShip> mEnemyShips;
+    private float mElapsedTime;
+    private float mMillisecondsBetweenEnemyCreation = 1500;
 
     /**
      * @return total number of objects tracked for drawing
@@ -51,8 +57,11 @@ public class StardroidEngine {
 
         // initialize the stars in the background for the start of the game
         generateBackground();
-        mPauseSprite = new StardroidPause();
         mUserShip = new SpaceShip();
+        mEnemyShips = new ArrayList<>();
+        mPauseSprite = new StardroidPause();
+
+        mUserShip.setCanShoot(true);
     }
 
     private void generateBackground() {
@@ -89,9 +98,15 @@ public class StardroidEngine {
 
         drawUser(mvpMatrix, dt);
 
+        drawEnemyShips(mvpMatrix, dt);
+
         // TODO: Draw the rest of the game
 
         drawPause(mvpMatrix, dt);
+    }
+
+    private boolean isShapeOutOfBounds(StardroidShape shape) {
+        return shape.hasGoneOutOfBounds(new float[]{-mAspectRatio, 1.f, mAspectRatio, -1.f});
     }
 
     /**
@@ -107,13 +122,16 @@ public class StardroidEngine {
 
         for (StardroidShape shape : list) {
 
-            if (shape.hasGoneOutOfBounds(new float[]{-mAspectRatio, 1.f, mAspectRatio, -1.f})) {
+            if (isShapeOutOfBounds(shape)) {
 //                Log.d("StardroidEngine", "Shape leaving (" + shape.getPositionX() + "," + shape.getPositionY() + ")");
                 shapesLeaving.add(shape);
                 continue;
             }
 
             shape.doDraw(mvpMatrix, dt);
+            if (shape instanceof SpaceShip) {
+                ((SpaceShip) shape).destroyProjectiles(drawAndReturnOutOfBoundsObjects(((SpaceShip) shape).getProjectiles(), mvpMatrix, dt));
+            }
         }
 
         return shapesLeaving;
@@ -152,6 +170,31 @@ public class StardroidEngine {
         // TODO: figure out a cleaner way to draw projectiles while checking out of bounds (should be in ship class, but it doesn't have aspect ratio...)
         mUserShip.destroyProjectiles(drawAndReturnOutOfBoundsObjects(mUserShip.getProjectiles(), mvpMatrix, dt));
         mUserShip.doDraw(mvpMatrix, dt);
+    }
+
+    /**
+     * Draws and creates enemy ships as well as their projectiles
+     *
+     * @param mvpMatrix
+     * @param dt
+     */
+    private void drawEnemyShips(float[] mvpMatrix, float dt) {
+        drawAndReturnOutOfBoundsObjects(mEnemyShips, mvpMatrix, dt);
+        createEnemy(dt);
+    }
+
+
+    public void createEnemy(float dt) {
+        mElapsedTime += dt;
+        if (mElapsedTime >= mMillisecondsBetweenEnemyCreation) {
+            mElapsedTime = 0;
+            SpaceShip ship = new SpaceShip(mAspectRatio, getRandomPointOnScreen());
+            ship.setEngineSpeed(5);
+            ship.setCanShoot(false);
+            ship.moveToPosition(-mAspectRatio * 2, ship.getPositionY());
+
+            mEnemyShips.add(ship);
+        }
     }
 
     public boolean setUserEngineSpeed(float engineSpeed) {

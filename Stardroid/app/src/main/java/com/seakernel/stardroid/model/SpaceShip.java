@@ -20,8 +20,16 @@ public class SpaceShip extends StardroidShape {
     private float mMoveToX;
     private float mMoveToY;
     private float mSpeedPercent;
+    private boolean mCanShoot;
 
     private List<Projectile> mProjectiles = new ArrayList<>();
+
+    public SpaceShip() { /* Empty Constructor */}
+
+    public SpaceShip(float x, float y) {
+        mPositionX = x;
+        mPositionY = y;
+    }
 
     @Override
     protected void initialize() {
@@ -52,7 +60,9 @@ public class SpaceShip extends StardroidShape {
 
         Matrix.translateM(mvpMatrix, 0, mPositionX, mPositionY, 0.0f);
 
-        createProjectiles(dt);
+        if (mCanShoot) {
+            createProjectiles(dt);
+        }
     }
 
     @Override
@@ -143,5 +153,13 @@ public class SpaceShip extends StardroidShape {
             return true;
         }
         return false;
+    }
+
+    public void setCanShoot(boolean canShoot) {
+        mCanShoot = canShoot;
+    }
+
+    public boolean getCanShoot() {
+        return mCanShoot;
     }
 }
