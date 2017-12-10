@@ -127,7 +127,7 @@ public class SpaceShip extends StardroidShape {
 //        return (mSpeedPercent - MIN_SPEED_ENGINE) / (MAX_SPEED_ENGINE - MIN_SPEED_ENGINE);
     }
 
-    private float getRawSpeed() {
+    public float getRawSpeed() {
         return mSpeedPercent / 100 * MAX_SPEED_ENGINE;
     }
 
