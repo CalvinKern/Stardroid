@@ -188,7 +188,7 @@ public class StardroidEngine {
         mElapsedTime += dt;
         if (mElapsedTime >= mMillisecondsBetweenEnemyCreation) {
             mElapsedTime = 0;
-            SpaceShip ship = new SpaceShip(mAspectRatio, getRandomPointOnScreen());
+            SpaceShip ship = new SpaceShip(mAspectRatio, (float)Math.random() * 1.8f - 0.9f);
             ship.setEngineSpeed(5);
             ship.setCanShoot(false);
             ship.moveToPosition(-mAspectRatio * 2, ship.getPositionY());
