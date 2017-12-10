@@ -121,12 +121,13 @@ public class SpaceShip extends StardroidShape {
         return mSpeedPercent / 100 * MAX_SPEED_ENGINE;
     }
 
-    public boolean setEngineSpeed(float engineSpeed) {
-//        float speed = engineSpeed / 100 * normSpeed();
+    public boolean setEngineSpeed(float speedPercent) {
+//        float speed = speedPercent / 100 * normSpeed();
 //        if (speed <= MAX_SPEED_ENGINE && speed >= MIN_SPEED_ENGINE) {
 //            mSpeedPercent = speed;
 //            return true;
 //        }
+        mSpeedPercent = speedPercent;
         return false;
     }
 

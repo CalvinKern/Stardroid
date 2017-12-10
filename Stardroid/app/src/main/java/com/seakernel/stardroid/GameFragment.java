@@ -149,9 +149,9 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
                     mFpsTextView.setText(getString(R.string.fps, Profiler.getInstance().getCurrentFramesPerSecond()));
                 }
                 if (mEngineSpeedTextView != null) {
-                    if (!mStardroidEngine.incrementEngineSpeed()) {
-                        mStardroidEngine.resetUserEngineSpeed();
-                    }
+//                    if (!mStardroidEngine.incrementEngineSpeed()) {
+//                        mStardroidEngine.resetUserEngineSpeed();
+//                    }
 
                     final float engineSpeed = mStardroidEngine.getUserEngineSpeed();
                     mEngineSpeedTextView.setText(getString(R.string.engine_speed, engineSpeed));
