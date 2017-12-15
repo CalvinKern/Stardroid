@@ -62,6 +62,18 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
         }
     };
 
+    private final StardroidModel.GameStateChangeWatcher mGameStateWatcher = new StardroidModel.GameStateChangeWatcher() {
+        @Override
+        public void onStateChanged(int newState) {
+            if (newState == StardroidModel.GameState.END) {
+                // TODO: Get in the game over screen instead of the start screen
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.add(R.id.game_overlay, StartOverlayFragment.newInstance(), START_FRAGMENT_TAG);
+                transaction.commit();
+            }
+        }
+    };
+
     // =============================================================================================
     // Activity Methods
     // =============================================================================================
@@ -81,6 +93,15 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
         transaction.add(R.id.game_surface, GameFragment.newInstance(), GAME_FRAGMENT_TAG);
         transaction.add(R.id.game_overlay, StartOverlayFragment.newInstance(), START_FRAGMENT_TAG);
         transaction.commit();
+
+        StardroidModel.getInstance().addGameStateChangeWatcher(mGameStateWatcher);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        StardroidModel.getInstance().removeGameStateChangeWatcher(mGameStateWatcher);
     }
 
     @Override

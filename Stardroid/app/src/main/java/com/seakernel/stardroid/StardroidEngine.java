@@ -57,15 +57,19 @@ public class StardroidEngine {
 
         // initialize the stars in the background for the start of the game
         generateBackground();
+        resetGame();
+    }
+
+    public void resetGame() {
         mUserShip = new SpaceShip();
         mEnemyShips = new ArrayList<>();
-        mExplosions = new ArrayList<>();
         mPauseSprite = new StardroidPause();
 
         mUserShip.setCanShoot(true);
     }
 
     private void generateBackground() {
+        mExplosions = new ArrayList<>();
         generateStars();
     }
 
@@ -104,6 +108,8 @@ public class StardroidEngine {
             drawGameRunning(mvpMatrix, dt);
         } else if (mModel.isPaused()) {
             drawPause(mvpMatrix, dt);
+        } else if (mModel.getState() == StardroidModel.GameState.END) {
+            resetGame();
         }
 
         mModel = null; // Clean up reference
