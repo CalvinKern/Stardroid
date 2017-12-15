@@ -1,7 +1,5 @@
 package com.seakernel.stardroid;
 
-import android.util.Log;
-
 import com.seakernel.stardroid.model.Explosion;
 import com.seakernel.stardroid.model.Projectile;
 import com.seakernel.stardroid.model.SpaceShip;
@@ -12,7 +10,6 @@ import com.seakernel.stardroid.model.StardroidStar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * This Class performs as the sprite engine that draws all required elements for the Stardroid game
@@ -33,6 +30,7 @@ public class StardroidEngine {
     private float mElapsedTime;
     private float mMillisecondsBetweenEnemyCreation = 1500;
     private List<Explosion> mExplosions;
+    private StardroidModel mModel;
 
     /**
      * @return total number of objects tracked for drawing
@@ -100,14 +98,15 @@ public class StardroidEngine {
         drawStars(mvpMatrix, dt); // First so it can go in the background
 
         drawExplosions(mvpMatrix, dt);
+        mModel = StardroidModel.getInstance();
 
-        drawUser(mvpMatrix, dt);
+        if (mModel.isGameRunning()) {
+            drawGameRunning(mvpMatrix, dt);
+        } else if (mModel.isPaused()) {
+            drawPause(mvpMatrix, dt);
+        }
 
-        drawEnemyShips(mvpMatrix, dt);
-
-        // TODO: Draw the rest of the game
-
-        drawPause(mvpMatrix, dt);
+        mModel = null; // Clean up reference
     }
 
     private boolean isShapeOutOfBounds(StardroidShape shape) {
@@ -210,6 +209,11 @@ public class StardroidEngine {
 //            mPauseSprite.doDraw(copyMvp);
             return false;
         }
+    }
+
+    private void drawGameRunning(float[] mvpMatrix, float dt) {
+        drawUser(mvpMatrix, dt);
+        drawEnemyShips(mvpMatrix, dt);
     }
 
     private void drawUser(float[] mvpMatrix, float dt) {
