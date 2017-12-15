@@ -66,10 +66,12 @@ public class StardroidEngine {
         mPauseSprite = new StardroidPause();
 
         mUserShip.setCanShoot(true);
+        mUserShip.setEngineSpeed(20f);
     }
 
     private void generateBackground() {
         mExplosions = new ArrayList<>();
+
         generateStars();
     }
 
