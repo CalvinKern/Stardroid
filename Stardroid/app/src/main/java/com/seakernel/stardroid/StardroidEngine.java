@@ -153,10 +153,18 @@ public class StardroidEngine {
                 }
 
                 if (mUserShip.hasCollided(ship.getBounds())) {
-                    mExplosions.add(new Explosion(ship));
-                    ship.destroy();
-                    shapesLeaving.add(ship);
-                    mUserShip.shipHit();
+                    Explosion enemyExplosion = ship.shipHit();
+                    if (enemyExplosion != null) {
+                        mExplosions.add(enemyExplosion);
+                        ship.destroy();
+                        shapesLeaving.add(ship);
+                    }
+
+                    Explosion explosion = mUserShip.shipHit();
+                    if (explosion != null) {
+                        mExplosions.add(explosion);
+                        StardroidModel.getInstance().endGame();
+                    }
                 }
 
                 mUserShip.destroyProjectiles(hitProjectiles);
@@ -220,7 +228,6 @@ public class StardroidEngine {
         mEnemyShips.removeAll(drawAndCheckCollisions(mEnemyShips, mvpMatrix, dt));
         createEnemy(dt);
     }
-
 
     public void createEnemy(float dt) {
         mElapsedTime += dt;

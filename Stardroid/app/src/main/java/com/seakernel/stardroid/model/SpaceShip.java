@@ -21,6 +21,8 @@ public class SpaceShip extends StardroidShape {
     private float mMoveToY;
     private float mSpeedPercent;
     private boolean mCanShoot;
+    private int mHealthPoints;
+    private int mHealthPointsMax;
 
     private List<Projectile> mProjectiles = new ArrayList<>();
 
@@ -29,6 +31,9 @@ public class SpaceShip extends StardroidShape {
     public SpaceShip(float x, float y) {
         mPositionX = x;
         mPositionY = y;
+
+        mHealthPoints = 1;
+        mHealthPointsMax = 1;
     }
 
     @Override
@@ -163,7 +168,26 @@ public class SpaceShip extends StardroidShape {
         return mCanShoot;
     }
 
-    public void shipHit() {
-        // TODO: track ship health
+    /**
+     * @return true if the ship no longer has health
+     */
+    public Explosion shipHit() {
+        mHealthPoints -= 1;
+        if (mHealthPoints <= 0) {
+            return new Explosion(this);
+        }
+        return null;
+    }
+
+    public void setHealthPointsMax(int max) {
+        mHealthPointsMax = max;
+    }
+
+    public void setHealthPoints(int health) {
+        mHealthPoints = health;
+    }
+
+    public int getHealthPoints() {
+        return mHealthPoints;
     }
 }
