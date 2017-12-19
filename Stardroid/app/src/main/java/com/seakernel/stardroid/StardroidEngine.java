@@ -30,7 +30,6 @@ public class StardroidEngine {
     private float mElapsedTime;
     private float mMillisecondsBetweenEnemyCreation = 1500;
     private List<Explosion> mExplosions;
-    private StardroidModel mModel;
     private int mEnemiesDestroyed; // TODO: Keep track of in model (probably via callback on enemies being destroyed))
     private boolean mResetGame;
 
@@ -121,20 +120,17 @@ public class StardroidEngine {
         drawStars(mvpMatrix, dt); // First so it can go in the background
 
         drawExplosions(mvpMatrix, dt);
-        mModel = StardroidModel.getInstance();
 
         if (mResetGame) {
             mResetGame = false;
             resetGame();
         }
 
-        if (mModel.isGameRunning()) {
-            drawGameRunning(mvpMatrix, dt);
-        } else if (mModel.isPaused()) {
+        if (StardroidModel.getInstance().isPaused()) {
             drawPause(mvpMatrix, dt);
+        } else {
+            drawGameRunning(mvpMatrix, dt);
         }
-
-        mModel = null; // Clean up reference
     }
 
     private boolean isShapeOutOfBounds(StardroidShape shape) {
@@ -180,7 +176,7 @@ public class StardroidEngine {
                     }
                 }
 
-                if (mUserShip.hasCollided(ship.getBounds())) {
+                if (StardroidModel.getInstance().isGameRunning() && mUserShip.hasCollided(ship.getBounds())) {
                     Explosion enemyExplosion = ship.shipHit();
                     if (enemyExplosion != null) {
                         mExplosions.add(enemyExplosion);
@@ -249,7 +245,9 @@ public class StardroidEngine {
     private void drawUser(float[] mvpMatrix, float dt) {
         // TODO: figure out a cleaner way to draw projectiles while checking out of bounds (should be in ship class, but it doesn't have aspect ratio...)
         mUserShip.destroyProjectiles(drawAndCheckCollisions(mUserShip.getProjectiles(), mvpMatrix, dt));
-        mUserShip.doDraw(mvpMatrix, dt);
+        if (StardroidModel.getInstance().isGameRunning()) {
+            mUserShip.doDraw(mvpMatrix, dt);
+        }
     }
 
     /**
@@ -260,7 +258,9 @@ public class StardroidEngine {
      */
     private void drawEnemyShips(float[] mvpMatrix, float dt) {
         mEnemyShips.removeAll(drawAndCheckCollisions(mEnemyShips, mvpMatrix, dt));
-        createEnemy(dt);
+        if (StardroidModel.getInstance().isGameRunning()) {
+            createEnemy(dt);
+        }
     }
 
     public void createEnemy(float dt) {
