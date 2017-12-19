@@ -8,6 +8,7 @@
     <string name="button_close">close</string>
     <string name="background_start_accessibility">Nebula background image</string>
     <string name="fps">%d FPS</string>
+    <string name="score">Score: %d</string>
     <string name="engine_speed">%.0f Speed</string>
 
 </resources>

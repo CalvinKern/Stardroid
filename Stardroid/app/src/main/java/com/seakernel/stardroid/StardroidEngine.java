@@ -31,6 +31,7 @@ public class StardroidEngine {
     private float mMillisecondsBetweenEnemyCreation = 1500;
     private List<Explosion> mExplosions;
     private StardroidModel mModel;
+    private int mEnemiesDestroyed; // TODO: Keep track of in model (probably via callback on enemies being destroyed))
 
     /**
      * @return total number of objects tracked for drawing
@@ -154,6 +155,7 @@ public class StardroidEngine {
                     if (ship.hasCollided(projectile.getBounds())) {
                         hitProjectiles.add(projectile);
                         mExplosions.add(new Explosion(ship));
+                        mEnemiesDestroyed++;
                         ship.destroy();
                         shapesLeaving.add(ship);
                     }
@@ -163,6 +165,7 @@ public class StardroidEngine {
                     Explosion enemyExplosion = ship.shipHit();
                     if (enemyExplosion != null) {
                         mExplosions.add(enemyExplosion);
+                        mEnemiesDestroyed++;
                         ship.destroy();
                         shapesLeaving.add(ship);
                     }
@@ -265,5 +268,9 @@ public class StardroidEngine {
 
     public void resetUserEngineSpeed() {
         mUserShip.resetEngineSpeed();
+    }
+
+    public int getScore() {
+        return mEnemiesDestroyed;
     }
 }

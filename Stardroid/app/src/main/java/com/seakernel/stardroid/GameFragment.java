@@ -9,7 +9,6 @@ import android.opengl.GLUtils;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,6 +55,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
     // FPS variables
     private int mFrameCount = 0;
+    private TextView mScoreTextView;
     private TextView mFpsTextView;
     private TextView mEngineSpeedTextView;
     private long mFrameStartNano = System.nanoTime();
@@ -105,6 +105,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         // Only waste time getting the frames per second label if we're in debug mode
         if (BuildConfig.DEBUG) {
             mFpsTextView = (TextView) root.findViewById(R.id.fps_label);
+            mScoreTextView = (TextView) root.findViewById(R.id.score_label);
             mEngineSpeedTextView = (TextView) root.findViewById(R.id.engine_speed_label);
         }
 
@@ -138,6 +139,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         super.onDestroyView();
 
         mFpsTextView = null;
+        mScoreTextView = null;
         mEngineSpeedTextView = null;
     }
 
@@ -148,6 +150,11 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
                 if (mFpsTextView != null) {
                     mFpsTextView.setText(getString(R.string.fps, Profiler.getInstance().getCurrentFramesPerSecond()));
                 }
+
+                if (mScoreTextView != null) {
+                    mScoreTextView.setText(getString(R.string.score, mStardroidEngine.getScore()));
+                }
+
                 if (mEngineSpeedTextView != null) {
 //                    if (!mStardroidEngine.incrementEngineSpeed()) {
 //                        mStardroidEngine.resetUserEngineSpeed();
