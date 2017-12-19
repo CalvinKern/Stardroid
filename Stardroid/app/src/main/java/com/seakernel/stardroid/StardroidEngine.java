@@ -80,6 +80,7 @@ public class StardroidEngine {
         mPauseSprite = new StardroidPause();
 
         mUserShip.setCanShoot(true);
+        mUserShip.setIsPlayer();
         mUserShip.setEngineSpeed(20f);
 
         mEnemiesDestroyed = 0;

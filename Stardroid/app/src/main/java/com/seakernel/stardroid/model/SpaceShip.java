@@ -40,6 +40,10 @@ public class SpaceShip extends StardroidShape {
         mColor = OpenGlColors.ENEMY_RED;
     }
 
+    public void setIsPlayer() {
+        mColor = OpenGlColors.PLAYER_BLUE;
+    }
+
     @Override
     protected void initialize() {
         mMoveToX = mPositionX;
