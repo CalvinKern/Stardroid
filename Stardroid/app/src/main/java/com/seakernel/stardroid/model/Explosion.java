@@ -56,6 +56,8 @@ public class Explosion {
             mPositionX = ship.getPositionX();
             mPositionY = ship.getPositionY();
 
+            mColor = ship.mColor;
+
             setCoordinates(ship);
         }
 
