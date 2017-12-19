@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
 
     private final StardroidModel.GameStateChangeWatcher mGameStateWatcher = new StardroidModel.GameStateChangeWatcher() {
         @Override
-        public void onStateChanged(int newState) {
+        public void onStateChanged(int oldState, int newState) {
             if (newState == StardroidModel.GameState.END) {
                 onGameOver();
             }

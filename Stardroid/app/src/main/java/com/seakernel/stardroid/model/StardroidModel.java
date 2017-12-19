@@ -2,6 +2,8 @@ package com.seakernel.stardroid.model;
 
 import android.support.annotation.IntDef;
 
+import com.seakernel.stardroid.StardroidEngine;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.List;
 public class StardroidModel {
 
     public interface GameStateChangeWatcher {
-        void onStateChanged(@GameState int newState);
+        void onStateChanged(@GameState int oldState, @GameState int newState);
     }
 
     // Static Variables
@@ -56,9 +58,20 @@ public class StardroidModel {
         return mGameStateChangeWatchers.remove(watcher);
     }
 
-    private void updateGameStateChangeWatchers() {
+    private void updateGameStateChangeWatchers(int oldState, int newState) {
         for (GameStateChangeWatcher watcher : mGameStateChangeWatchers) {
-            watcher.onStateChanged(mState); // TODO: Check for null watcher?
+            watcher.onStateChanged(oldState, newState); // TODO: Check for null watcher?
+        }
+    }
+
+    private void setState(@GameState int state) {
+        setState(mState, state);
+    }
+
+    private void setState(@GameState int oldState, @GameState int newState) {
+        if (oldState != newState) {
+            mState = newState;
+            updateGameStateChangeWatchers(oldState, newState);
         }
     }
 
@@ -68,11 +81,9 @@ public class StardroidModel {
     }
 
     public void resetState() {
-        mState = GameState.BLANK;
-
         // TODO: Reset the rest of the game state
 
-        updateGameStateChangeWatchers();
+        setState(GameState.BLANK);
     }
 
     public boolean isPaused() {
@@ -80,12 +91,7 @@ public class StardroidModel {
     }
 
     public void setPaused(boolean isPaused) {
-        @GameState int oldState = mState;
-        mState = isPaused ? GameState.PAUSED : GameState.RUNNING;
-
-        if (oldState != mState) {
-            updateGameStateChangeWatchers();
-        }
+        setState(isPaused ? GameState.PAUSED : GameState.RUNNING);
     }
 
     public boolean isGameRunning() {
@@ -93,18 +99,14 @@ public class StardroidModel {
     }
 
     public void startGame() {
-        mState = GameState.RUNNING;
-
         // TODO: Any other setup
 
-        updateGameStateChangeWatchers();
+        setState(mState, GameState.RUNNING);
     }
 
     public void endGame() {
-        mState = GameState.END;
-
         // TODO: Any other wrap up
 
-        updateGameStateChangeWatchers();
+        setState(mState, GameState.END);
     }
 }
