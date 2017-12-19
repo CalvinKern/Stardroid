@@ -32,6 +32,20 @@ public class StardroidEngine {
     private List<Explosion> mExplosions;
     private StardroidModel mModel;
     private int mEnemiesDestroyed; // TODO: Keep track of in model (probably via callback on enemies being destroyed))
+    private boolean mResetGame;
+
+    private final StardroidModel.GameStateChangeWatcher mGameStateChangeWatcher = new StardroidModel.GameStateChangeWatcher() {
+        @Override
+        public void onStateChanged(int oldState, int newState) {
+            if (oldState != StardroidModel.GameState.RUNNING && newState == StardroidModel.GameState.RUNNING) {
+                mResetGame = true;
+            }
+        }
+    };
+
+    public StardroidEngine() {
+        StardroidModel.getInstance().addGameStateChangeWatcher(mGameStateChangeWatcher); // TODO: Remove this somehow...
+    }
 
     /**
      * @return total number of objects tracked for drawing
@@ -68,6 +82,8 @@ public class StardroidEngine {
 
         mUserShip.setCanShoot(true);
         mUserShip.setEngineSpeed(20f);
+
+        mEnemiesDestroyed = 0;
     }
 
     private void generateBackground() {
@@ -107,12 +123,15 @@ public class StardroidEngine {
         drawExplosions(mvpMatrix, dt);
         mModel = StardroidModel.getInstance();
 
+        if (mResetGame) {
+            mResetGame = false;
+            resetGame();
+        }
+
         if (mModel.isGameRunning()) {
             drawGameRunning(mvpMatrix, dt);
         } else if (mModel.isPaused()) {
             drawPause(mvpMatrix, dt);
-        } else if (mModel.getState() == StardroidModel.GameState.END) {
-            resetGame();
         }
 
         mModel = null; // Clean up reference
