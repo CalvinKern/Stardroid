@@ -79,7 +79,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
                 public void run() {
                     updateUiViews();
                 }
-            }, 1000, 1000);
+            }, 1000, 500);
         }
     }
 
