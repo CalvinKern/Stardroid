@@ -12,4 +12,6 @@ public class OpenGlColors {
     public static float[] STAR_YELLOW_ORANGE        = {1.f, 0.75f, 0.5f, 1.f}; // Yellow Orange
     public static float[] STAR_ORANGE_RED           = {1.f, 0.75f, 0.7f, 1.f}; // Orange Red
     public static float[] STAR_WHITE                = {1.f, 1.f, 1.f, 1.f}; // Return a white star default
+
+    public static float[] ENEMY_RED = {0.9568627f, 0.2627451f, 0.2117647f, 1.f}; // Yellow Orange rgb(244,67,54)
 }

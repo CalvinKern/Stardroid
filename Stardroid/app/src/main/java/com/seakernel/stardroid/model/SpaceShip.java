@@ -36,6 +36,10 @@ public class SpaceShip extends StardroidShape {
         mHealthPointsMax = 1;
     }
 
+    public void setIsEnemy() {
+        mColor = OpenGlColors.ENEMY_RED;
+    }
+
     @Override
     protected void initialize() {
         mMoveToX = mPositionX;

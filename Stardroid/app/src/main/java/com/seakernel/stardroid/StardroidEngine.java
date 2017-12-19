@@ -270,6 +270,7 @@ public class StardroidEngine {
             SpaceShip ship = new SpaceShip(mAspectRatio, (float)Math.random() * 1.8f - 0.9f);
             ship.setEngineSpeed(5);
             ship.setCanShoot(false);
+            ship.setIsEnemy();
             ship.moveToPosition(-mAspectRatio * 2, ship.getPositionY());
 
             mEnemyShips.add(ship);
