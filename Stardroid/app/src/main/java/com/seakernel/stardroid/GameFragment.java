@@ -143,24 +143,34 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (mFpsTextView != null) {
-                    mFpsTextView.setText(getString(R.string.fps, Profiler.getInstance().getCurrentFramesPerSecond()));
-                }
-
-                if (mScoreTextView != null) {
-                    mScoreTextView.setText(getString(R.string.score, mStardroidEngine.getScore()));
-                }
-
-                if (mEngineSpeedTextView != null) {
-//                    if (!mStardroidEngine.incrementEngineSpeed()) {
-//                        mStardroidEngine.resetUserEngineSpeed();
-//                    }
-
-                    final float engineSpeed = mStardroidEngine.getUserEngineSpeed();
-                    mEngineSpeedTextView.setText(getString(R.string.engine_speed, engineSpeed));
-                }
+                updateFpsTextView();
+                updateScoreTextView();
+//                updateSpeedTextView(); // Not used for now
             }
         });
+    }
+
+    private void updateFpsTextView() {
+        if (mFpsTextView != null) {
+            mFpsTextView.setText(getString(R.string.fps, Profiler.getInstance().getCurrentFramesPerSecond()));
+        }
+    }
+
+    private void updateScoreTextView() {
+        if (mScoreTextView != null) {
+            mScoreTextView.setText(getString(R.string.score, mStardroidEngine.getScore()));
+        }
+    }
+
+    private void updateSpeedTextView() {
+        if (mEngineSpeedTextView != null) {
+//            if (!mStardroidEngine.incrementEngineSpeed()) {
+//                mStardroidEngine.resetUserEngineSpeed();
+//            }
+
+            final float engineSpeed = mStardroidEngine.getUserEngineSpeed();
+            mEngineSpeedTextView.setText(getString(R.string.engine_speed, engineSpeed));
+        }
     }
 
     // =============================================================================================
