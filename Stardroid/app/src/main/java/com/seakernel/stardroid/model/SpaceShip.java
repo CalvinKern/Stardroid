@@ -115,6 +115,7 @@ public class SpaceShip extends StardroidShape {
         if (mElapsedTime >= mMillisecondsBetweenShots) {
             mElapsedTime = 0;
             Projectile projectile = new Projectile(mPositionX, mPositionY);
+            projectile.mColor = mColor;
             mProjectiles.add(projectile);
         }
     }
