@@ -148,7 +148,7 @@ public class SpaceShip extends StardroidShape {
 
     public void resetEngineSpeed() {
         mSpeedPercent = 10;
-        Log.d("SpaceShip", String.format("Reset Engine Speed (%f)", mSpeedPercent));
+//        Log.d("SpaceShip", String.format("Reset Engine Speed (%f)", mSpeedPercent));
     }
 
     public boolean incrementEngineSpeed() {
