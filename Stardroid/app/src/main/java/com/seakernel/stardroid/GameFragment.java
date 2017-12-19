@@ -30,8 +30,6 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
-    private static final int FRAME_COLLECTION_SIZE = 1;
-
     private static final int[] TEXTURE_DRAWABLE_IDS = new int[] {
             R.drawable.usership,
 //            R.drawable.enemyship,
@@ -45,6 +43,8 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     };
 
     private Timer mTimer;
+    private float mScreenWidth;
+    private float mScreenHeight;
     private boolean mHasActiveTouch;
     private StardroidEngine mStardroidEngine = null;
 
@@ -54,13 +54,9 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     private final float[] mProjectionMatrix = new float[16];
 
     // FPS variables
-    private int mFrameCount = 0;
     private TextView mScoreTextView;
     private TextView mFpsTextView;
     private TextView mEngineSpeedTextView;
-    private long mFrameStartNano = System.nanoTime();
-    private float mScreenWidth;
-    private float mScreenHeight;
 
     public static GameFragment newInstance() {
         Bundle args = new Bundle();
@@ -257,7 +253,6 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         // in the onDrawFrame() method
         Matrix.frustumM(mProjectionMatrix, 0, -aspectRatio, aspectRatio, -1, 1, 3, 7);
 
-        // TODO: Can these matrices be set in onSurfaceChanged, so that it only happens once?
         // Set the camera position (View matrix)
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
 
@@ -279,20 +274,9 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         StardroidModel model = StardroidModel.getInstance(); // TODO: Definitely change the model to hold stars, and everything else
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
-//        SpaceShip userShip = model.getUserShip();
-//
-//        if (isActive)
-//            model.addUserBullet(userShip.getShipX() + userShip.getShipWidth(), userShip.getShipY());
-//
         // TODO: push mMvpMatrix; google effective storage methods
         profiler.startTrackingSection();
         mStardroidEngine.draw(mMvpMatrix, dt);
         profiler.stopTrackingSection("Drawing");
-
-//        if (!model.isPaused()) {
-//            mStardroidEngine.doDraw(userShip, model.getUserBullets(), model.getCollidingBullets(), model.generateEnemies(), model.generateSpecialEnemies(), model.getPowerUps()); // DOESN'T REQUIRE COLLIDING BULLETS
-//        } else {
-//            mStardroidEngine.drawPause();
-//        }
     }
 }

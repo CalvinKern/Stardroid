@@ -1,6 +1,7 @@
 package com.seakernel.stardroid;
 
 import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
     // Fragment Tags
     private static final String START_FRAGMENT_TAG = "start";
     private static final String GAME_FRAGMENT_TAG = "game";
-    private static final String OVER_FRAGMENT_TAG = "over";
+    private static final String END_FRAGMENT_TAG = "over";
 
     // Animation Constants
     /**
@@ -66,10 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
         @Override
         public void onStateChanged(int newState) {
             if (newState == StardroidModel.GameState.END) {
-                // TODO: Get in the game over screen instead of the start screen
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.add(R.id.game_overlay, StartOverlayFragment.newInstance(), START_FRAGMENT_TAG);
-                transaction.commit();
+                onGameOver();
             }
         }
     };
@@ -187,13 +185,39 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
 
     public void onPlayClicked(View view) {
         // Hide the start fragment so that the game can show unobstructed
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.remove(manager.findFragmentByTag(START_FRAGMENT_TAG));
-        transaction.addToBackStack(null); // TODO: Remove this once I have a 'quit' button in the pause screen
-        transaction.commit();
+        removeFragmentByTag(START_FRAGMENT_TAG, true);
+        removeFragmentByTag(END_FRAGMENT_TAG, false);
 
         // Start the game model
         StardroidModel.getInstance().startGame();
+    }
+
+    private void onGameOver() {
+        // Hide the start fragment so that the game can show unobstructed
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.game_overlay, EndOverlayFragment.newInstance(), END_FRAGMENT_TAG);
+        transaction.commit();
+
+        getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
+            @Override
+            public void onBackStackChanged() {
+                removeFragmentByTag(END_FRAGMENT_TAG, false);
+
+                getFragmentManager().removeOnBackStackChangedListener(this);
+            }
+        });
+    }
+
+    private void removeFragmentByTag(final String tag, final boolean addToBackStack) {
+        final FragmentManager manager = getFragmentManager();
+        final Fragment fragment = manager.findFragmentByTag(tag);
+        if (fragment != null && fragment.isAdded()) {
+            final FragmentTransaction transaction = manager.beginTransaction();
+            transaction.remove(fragment);
+            if (addToBackStack) {
+                transaction.addToBackStack(null); // TODO: Remove this once I have a 'quit' button in the pause screen
+            }
+            transaction.commit();
+        }
     }
 }
