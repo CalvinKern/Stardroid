@@ -30,7 +30,6 @@ public class StardroidEngine {
     private float mElapsedTime;
     private float mMillisecondsBetweenEnemyCreation = 1500;
     private List<Explosion> mExplosions;
-    private int mEnemiesDestroyed; // TODO: Keep track of in model (probably via callback on enemies being destroyed))
     private boolean mResetGame;
 
     private final StardroidModel.GameStateChangeWatcher mGameStateChangeWatcher = new StardroidModel.GameStateChangeWatcher() {
@@ -83,7 +82,7 @@ public class StardroidEngine {
         mUserShip.setIsPlayer();
         mUserShip.setEngineSpeed(20f);
 
-        mEnemiesDestroyed = 0;
+        StardroidModel.getInstance().resetScore();
     }
 
     private void generateBackground() {
@@ -150,6 +149,7 @@ public class StardroidEngine {
     private List<StardroidShape> drawAndCheckCollisions(List<? extends StardroidShape> list, float[] mvpMatrix, float dt) {
         ArrayList<StardroidShape> shapesLeaving = new ArrayList<>();
 
+        int enemiesDestroyedPoints = 0;
         for (StardroidShape shape : list) {
 
             if (isShapeOutOfBounds(shape)) {
@@ -171,7 +171,7 @@ public class StardroidEngine {
                     if (ship.hasCollided(projectile.getBounds())) {
                         hitProjectiles.add(projectile);
                         mExplosions.add(new Explosion(ship));
-                        mEnemiesDestroyed++;
+                        enemiesDestroyedPoints++;
                         ship.destroy();
                         shapesLeaving.add(ship);
                     }
@@ -181,7 +181,7 @@ public class StardroidEngine {
                     Explosion enemyExplosion = ship.shipHit();
                     if (enemyExplosion != null) {
                         mExplosions.add(enemyExplosion);
-                        mEnemiesDestroyed++;
+                        enemiesDestroyedPoints++;
                         ship.destroy();
                         shapesLeaving.add(ship);
                     }
@@ -196,6 +196,8 @@ public class StardroidEngine {
                 mUserShip.destroyProjectiles(hitProjectiles);
             }
         }
+
+        StardroidModel.getInstance().addScore(enemiesDestroyedPoints);
 
         return shapesLeaving;
     }
@@ -289,9 +291,5 @@ public class StardroidEngine {
 
     public void resetUserEngineSpeed() {
         mUserShip.resetEngineSpeed();
-    }
-
-    public int getScore() {
-        return mEnemiesDestroyed;
     }
 }

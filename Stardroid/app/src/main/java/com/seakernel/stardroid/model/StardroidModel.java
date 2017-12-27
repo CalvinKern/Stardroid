@@ -43,6 +43,7 @@ public class StardroidModel {
     @GameState
     private int mState;
     private List<GameStateChangeWatcher> mGameStateChangeWatchers;
+    private int mEnemiesDestroyed;
 
     private StardroidModel() {
         mGameStateChangeWatchers = new ArrayList<>();
@@ -108,5 +109,17 @@ public class StardroidModel {
         // TODO: Any other wrap up
 
         setState(mState, GameState.END);
+    }
+
+    public void resetScore() {
+        mEnemiesDestroyed = 0;
+    }
+
+    public int getScore() {
+        return mEnemiesDestroyed;
+    }
+
+    public void addScore(int toAdd) {
+        mEnemiesDestroyed += toAdd;
     }
 }

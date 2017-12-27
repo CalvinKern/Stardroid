@@ -158,7 +158,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
     private void updateScoreTextView() {
         if (mScoreTextView != null) {
-            mScoreTextView.setText(getString(R.string.score, mStardroidEngine.getScore()));
+            mScoreTextView.setText(getString(R.string.score, StardroidModel.getInstance().getScore()));
         }
     }
 
