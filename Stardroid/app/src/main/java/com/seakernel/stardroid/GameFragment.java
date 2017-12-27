@@ -1,5 +1,6 @@
 package com.seakernel.stardroid;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -69,8 +70,6 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mStardroidEngine = new StardroidEngine(); // TODO: Make this retain state when put in the background
-
         // Only schedule fps text updater if we're in debug
         if (BuildConfig.DEBUG) {
             mTimer = new Timer();
@@ -81,6 +80,11 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
                 }
             }, 1000, 500);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState); // TODO: Save game state
     }
 
     @Override
@@ -97,6 +101,8 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_game, container, false);
+
+        mStardroidEngine = new StardroidEngine(); // TODO: Restore game state
 
         // Only waste time getting the frames per second label if we're in debug mode
         if (BuildConfig.DEBUG) {
@@ -137,10 +143,19 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         mFpsTextView = null;
         mScoreTextView = null;
         mEngineSpeedTextView = null;
+
+        if (mStardroidEngine != null) {
+            mStardroidEngine = null;
+        }
     }
 
     private void updateUiViews() {
-        getActivity().runOnUiThread(new Runnable() {
+        final Activity activity = getActivity();
+        if (activity == null || isDetached()) {
+            return;
+        }
+
+        activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 updateFpsTextView();
