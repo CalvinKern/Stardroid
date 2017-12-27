@@ -99,7 +99,7 @@ public class StardroidEngine {
         mStars = new ArrayList<>();
         if (mStars.size() == 0) {
             for (int i = 0; i < MAGIC_MAX_COUNT_STAR; i++) {
-                StardroidStar star = new StardroidStar(getRandomPointOnScreen(), getRandomPointOnScreen());
+                StardroidStar star = new StardroidStar(getRandomPointOnScreen(), (float)(Math.random() * 2 - 1));
                 mStars.add(star);
             }
         }
