@@ -62,7 +62,7 @@ public class Explosion {
         }
 
         private void setCoordinates(SpaceShip ship) {
-            mSpeed = (float)(ship.getRawSpeed() - ship.getRawSpeed() * Math.random() * 0.6);
+            mSpeed = (float)(ship.getRawSpeed(5) - ship.getRawSpeed(5) * Math.random() * 0.6);
 
             mMovementDistance = mSpeed * EXPLOSION_ANIMATION_MILLISECONDS;
 
