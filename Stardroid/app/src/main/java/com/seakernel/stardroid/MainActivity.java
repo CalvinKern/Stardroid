@@ -87,10 +87,12 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
         setContentView(R.layout.activity_game);
 
         // Load the view with the start fragment on top of the game fragment (so we can see the cool stars)
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.game_surface, GameFragment.newInstance(), GAME_FRAGMENT_TAG);
-        transaction.add(R.id.game_overlay, StartOverlayFragment.newInstance(), START_FRAGMENT_TAG);
-        transaction.commit();
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.add(R.id.game_surface, GameFragment.newInstance(), GAME_FRAGMENT_TAG);
+            transaction.add(R.id.game_overlay, StartOverlayFragment.newInstance(), START_FRAGMENT_TAG);
+            transaction.commit();
+        }
 
         StardroidModel.getInstance().addGameStateChangeWatcher(mGameStateWatcher);
     }
