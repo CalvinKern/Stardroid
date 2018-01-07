@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,78 +10,91 @@
     tools:context=".MainActivity"
     >
 
-    <LinearLayout
-        android:id="@+id/start_title_container"
+    <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/start_title_margin"
-        android:layout_centerHorizontal="true"
-        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        app:cardBackgroundColor="@color/colorPrimaryDark"
         >
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/app_name"
-            android:textColor="@color/text_white"
-            android:textSize="@dimen/text_title"
-            android:layout_marginBottom="@dimen/default_margin"
-            />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:text="@string/button_play"
-            android:onClick="onPlayClicked"
-            />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/start_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="@dimen/default_margin"
-        android:gravity="center_vertical"
-        android:text="@string/button_settings"
-        android:textColor="@color/text_white"
-        android:drawableStart="@android:drawable/ic_menu_preferences"
-        android:background="?attr/selectableItemBackground"
-        />
-
-    <RelativeLayout
-        android:id="@+id/start_settings_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/double_margin"
-        android:background="@drawable/settings_background"
-        android:visibility="gone"
-        android:clickable="true"
-        >
-        <TextView
+        <LinearLayout
+            android:id="@+id/start_title_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/default_margin"
-            android:text="@string/button_settings"
-            android:textColor="@color/text_white"
-            android:textSize="@dimen/text_subtitle"
-            />
-        <TextView
-            android:id="@+id/start_settings_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="@dimen/default_margin"
-            android:text="@string/button_close"
-            android:textColor="@color/text_white"
-            android:textSize="@dimen/text_detail"
-            android:background="?attr/selectableItemBackground"
-            />
-    </RelativeLayout>
+            android:orientation="vertical"
+            android:padding="@dimen/default_margin"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/app_name"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_title"
+                android:layout_marginBottom="@dimen/default_margin"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/button_play"
+                android:onClick="onPlayClicked"
+                />
+
+            <ImageView
+                android:id="@+id/start_settings"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:layout_gravity="bottom|end"
+                android:gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/ic_settings_white_48dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/button_settings"
+                />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorBackgroundGray"
+        >
+
+        <RelativeLayout
+            android:id="@+id/start_settings_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/double_margin"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:elevation="10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/default_margin"
+                android:text="@string/button_settings"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_subtitle"
+                />
+            <TextView
+                android:id="@+id/start_settings_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/default_margin"
+                android:text="@string/button_close"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_detail"
+                android:background="?attr/selectableItemBackground"
+                />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>
