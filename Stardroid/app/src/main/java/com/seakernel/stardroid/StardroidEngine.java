@@ -1,5 +1,6 @@
 package com.seakernel.stardroid;
 
+import com.seakernel.stardroid.model.EnemyShip;
 import com.seakernel.stardroid.model.Explosion;
 import com.seakernel.stardroid.model.Projectile;
 import com.seakernel.stardroid.model.SpaceShip;
@@ -270,10 +271,8 @@ public class StardroidEngine {
         mElapsedTime += dt;
         if (mElapsedTime >= mMillisecondsBetweenEnemyCreation) {
             mElapsedTime = 0;
-            SpaceShip ship = new SpaceShip(mAspectRatio, (float)Math.random() * 1.8f - 0.9f);
+            SpaceShip ship = new EnemyShip(mAspectRatio, (float)Math.random() * 1.8f - 0.9f);
             ship.setEngineSpeed(5);
-            ship.setCanShoot(false);
-            ship.setIsEnemy();
             ship.moveToPosition(-mAspectRatio * 2, ship.getPositionY());
 
             mEnemyShips.add(ship);
