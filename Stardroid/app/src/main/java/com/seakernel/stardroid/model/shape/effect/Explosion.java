@@ -1,6 +1,9 @@
-package com.seakernel.stardroid.model;
+package com.seakernel.stardroid.model.shape.effect;
 
 import android.opengl.Matrix;
+
+import com.seakernel.stardroid.model.shape.StardroidShape;
+import com.seakernel.stardroid.model.shape.ship.BaseShip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +19,7 @@ public class Explosion {
     private float mElapsedTime;
     private List<Particle> mParticles;
 
-    public Explosion (SpaceShip ship) {
+    public Explosion (BaseShip ship) {
         super();
 
         mParticles = new ArrayList<>();
@@ -24,7 +27,7 @@ public class Explosion {
         createParticles(ship);
     }
 
-    private void createParticles(SpaceShip ship) {
+    private void createParticles(BaseShip ship) {
         for (int i = 0; i < PARTICLES_COUNT; i++) {
             Particle particle = new Particle(ship);
             mParticles.add(particle);
@@ -50,18 +53,18 @@ public class Explosion {
         private double mMaxAngleRad = Math.PI * 2; // +- max angle
         private double mMovementDistance;
 
-        public Particle (SpaceShip ship) {
+        public Particle (BaseShip ship) {
             super();
 
             mPositionX = ship.getPositionX();
             mPositionY = ship.getPositionY();
 
-            mColor = ship.mColor;
+            mColor = ship.getColor();
 
             setCoordinates(ship);
         }
 
-        private void setCoordinates(SpaceShip ship) {
+        private void setCoordinates(BaseShip ship) {
             mSpeed = (float)(ship.getRawSpeed(5) - ship.getRawSpeed(5) * Math.random() * 0.6);
 
             mMovementDistance = mSpeed * EXPLOSION_ANIMATION_MILLISECONDS;

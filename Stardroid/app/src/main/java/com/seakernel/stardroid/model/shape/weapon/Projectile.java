@@ -1,6 +1,8 @@
-package com.seakernel.stardroid.model;
+package com.seakernel.stardroid.model.shape.weapon;
 
 import android.opengl.Matrix;
+
+import com.seakernel.stardroid.model.shape.StardroidShape;
 
 /**
  * Created by Calvin on 8/28/2017.
@@ -61,5 +63,9 @@ public class Projectile extends StardroidShape {
 
     public void setSpeed(float speed) {
         mFloatingSpeed = speed;
+    }
+
+    public void setColor(float[] color) {
+        mColor = color;
     }
 }

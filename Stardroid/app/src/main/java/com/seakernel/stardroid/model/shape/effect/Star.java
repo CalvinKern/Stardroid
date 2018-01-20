@@ -1,12 +1,15 @@
-package com.seakernel.stardroid.model;
+package com.seakernel.stardroid.model.shape.effect;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import com.seakernel.stardroid.model.OpenGlColors;
+import com.seakernel.stardroid.model.shape.StardroidShape;
+
 /**
  * Created by Calvin on 2/28/16.
  */
-public class StardroidStar extends StardroidShape {
+public class Star extends StardroidShape {
     // Fragment Shader keys
     private static final String COLOR_TWINKLE_VARYING = "vColorTwinkle";
 
@@ -29,7 +32,7 @@ public class StardroidStar extends StardroidShape {
                     + "  gl_FragColor = " + COLOR_VARYING + "*" + COLOR_TWINKLE_VARYING + ";"
                     + "}";
 
-    public StardroidStar (float x, float y) {
+    public Star(float x, float y) {
         super();
 
         // TODO: This could be internally monitored in the background to speed up drawing \0/ for multi-threading

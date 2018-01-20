@@ -1,11 +1,11 @@
-package com.seakernel.stardroid.model;
+package com.seakernel.stardroid.model.shape;
 
 import android.opengl.Matrix;
 
 /**
  * Created by Calvin on 2/28/16.
  */
-public class StardroidPause extends StardroidShape {
+public class Pause extends StardroidShape {
 
     private static final float POS = 0.9f;
     private static final float WIDTH = .05f;

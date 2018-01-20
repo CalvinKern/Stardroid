@@ -1,10 +1,12 @@
-package com.seakernel.stardroid.model;
+package com.seakernel.stardroid.model.shape.ship;
+
+import com.seakernel.stardroid.model.OpenGlColors;
 
 /**
  * Created by Calvin on 1/17/2018.
  */
 
-public class EnemyShip extends SpaceShip {
+public class EnemyShip extends BaseShip {
 
     private static final float MAGIC_TIME_SCALAR_FOR_Y_MOVEMENT_IN_A_SINE_WAVE = 5f;
     private long mTime;

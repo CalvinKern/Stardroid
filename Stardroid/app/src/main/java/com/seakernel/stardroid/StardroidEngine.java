@@ -1,13 +1,13 @@
 package com.seakernel.stardroid;
 
-import com.seakernel.stardroid.model.EnemyShip;
-import com.seakernel.stardroid.model.Explosion;
-import com.seakernel.stardroid.model.Projectile;
-import com.seakernel.stardroid.model.SpaceShip;
+import com.seakernel.stardroid.model.shape.ship.EnemyShip;
+import com.seakernel.stardroid.model.shape.effect.Explosion;
+import com.seakernel.stardroid.model.shape.weapon.Projectile;
+import com.seakernel.stardroid.model.shape.ship.BaseShip;
 import com.seakernel.stardroid.model.StardroidModel;
-import com.seakernel.stardroid.model.StardroidPause;
-import com.seakernel.stardroid.model.StardroidShape;
-import com.seakernel.stardroid.model.StardroidStar;
+import com.seakernel.stardroid.model.shape.Pause;
+import com.seakernel.stardroid.model.shape.StardroidShape;
+import com.seakernel.stardroid.model.shape.effect.Star;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +24,10 @@ public class StardroidEngine {
 
     // Member Variables
     private float mAspectRatio;
-    private StardroidPause mPauseSprite = null;
-    private ArrayList<StardroidStar> mStars = null;
-    public SpaceShip mUserShip = null;
-    private ArrayList<SpaceShip> mEnemyShips;
+    private Pause mPauseSprite = null;
+    private ArrayList<Star> mStars = null;
+    public BaseShip mUserShip = null;
+    private ArrayList<BaseShip> mEnemyShips;
     private float mElapsedTime;
     private float mMillisecondsBetweenEnemyCreation = 1500;
     private List<Explosion> mExplosions;
@@ -75,9 +75,9 @@ public class StardroidEngine {
     }
 
     public void resetGame() {
-        mUserShip = new SpaceShip();
+        mUserShip = new BaseShip();
         mEnemyShips = new ArrayList<>();
-        mPauseSprite = new StardroidPause();
+        mPauseSprite = new Pause();
 
         mUserShip.setCanShoot(true);
         mUserShip.setIsPlayer();
@@ -99,7 +99,7 @@ public class StardroidEngine {
         mStars = new ArrayList<>();
         if (mStars.size() == 0) {
             for (int i = 0; i < MAGIC_MAX_COUNT_STAR; i++) {
-                StardroidStar star = new StardroidStar(getRandomPointOnScreen(), (float)(Math.random() * 2 - 1));
+                Star star = new Star(getRandomPointOnScreen(), (float)(Math.random() * 2 - 1));
                 mStars.add(star);
             }
         }
@@ -160,8 +160,8 @@ public class StardroidEngine {
             }
 
             shape.doDraw(mvpMatrix, dt);
-            if (shape instanceof SpaceShip) {
-                SpaceShip ship = (SpaceShip) shape;
+            if (shape instanceof BaseShip) {
+                BaseShip ship = (BaseShip) shape;
                 ship.destroyProjectiles(drawAndCheckCollisions(ship.getProjectiles(), mvpMatrix, dt));
 
                 List<Projectile> hitProjectiles = new ArrayList<>();
@@ -271,7 +271,7 @@ public class StardroidEngine {
         mElapsedTime += dt;
         if (mElapsedTime >= mMillisecondsBetweenEnemyCreation) {
             mElapsedTime = 0;
-            SpaceShip ship = new EnemyShip(mAspectRatio, (float)Math.random() * 1.8f - 0.9f);
+            BaseShip ship = new EnemyShip(mAspectRatio, (float)Math.random() * 1.8f - 0.9f);
             ship.setEngineSpeed(5);
             ship.moveToPosition(-mAspectRatio * 2, ship.getPositionY());
 

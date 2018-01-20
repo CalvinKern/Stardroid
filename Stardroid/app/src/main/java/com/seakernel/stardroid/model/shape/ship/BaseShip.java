@@ -1,7 +1,12 @@
-package com.seakernel.stardroid.model;
+package com.seakernel.stardroid.model.shape.ship;
 
 import android.opengl.Matrix;
 import android.util.Log;
+
+import com.seakernel.stardroid.model.shape.effect.Explosion;
+import com.seakernel.stardroid.model.OpenGlColors;
+import com.seakernel.stardroid.model.shape.weapon.Projectile;
+import com.seakernel.stardroid.model.shape.StardroidShape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +15,7 @@ import java.util.List;
  * Created by Calvin on 7/20/2017.
  */
 
-public class SpaceShip extends StardroidShape {
+public class BaseShip extends StardroidShape {
 
     private final float MAX_SPEED_ENGINE = 0.01f;
     private final float MIN_SPEED_ENGINE = 0.001f;
@@ -26,9 +31,9 @@ public class SpaceShip extends StardroidShape {
 
     private List<Projectile> mProjectiles = new ArrayList<>();
 
-    public SpaceShip() { /* Empty Constructor */}
+    public BaseShip() { /* Empty Constructor */}
 
-    public SpaceShip(float x, float y) {
+    public BaseShip(float x, float y) {
         mPositionX = x;
         mPositionY = y;
 
@@ -111,7 +116,7 @@ public class SpaceShip extends StardroidShape {
         if (mElapsedTime >= mMillisecondsBetweenShots) {
             mElapsedTime = 0;
             Projectile projectile = new Projectile(mPositionX, mPositionY);
-            projectile.mColor = mColor;
+            projectile.setColor(mColor);
             mProjectiles.add(projectile);
         }
     }

@@ -1,4 +1,4 @@
-package com.seakernel.stardroid.model;
+package com.seakernel.stardroid.model.shape;
 
 import android.opengl.GLES20;
 import android.support.annotation.CallSuper;
@@ -266,5 +266,9 @@ public abstract class StardroidShape {
 
         return !(bounds[0] > shapeBounds[2] || shapeBounds[0] > bounds[2]) &&
                 !(bounds[1] < shapeBounds[3] || shapeBounds[1] < bounds[3]);
+    }
+
+    public float[] getColor() {
+        return mColor;
     }
 }
