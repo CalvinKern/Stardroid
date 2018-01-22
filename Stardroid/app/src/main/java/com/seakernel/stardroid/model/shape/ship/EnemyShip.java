@@ -11,8 +11,8 @@ public class EnemyShip extends BaseShip {
     private static final float MAGIC_TIME_SCALAR_FOR_Y_MOVEMENT_IN_A_SINE_WAVE = 5f;
     private long mTime;
 
-    public EnemyShip(float aspectRatio, float v) {
-        super(aspectRatio, v);
+    public EnemyShip(final float x, final float y) {
+        super(x, y);
 
         mColor = OpenGlColors.ENEMY_RED;
 

@@ -3,10 +3,9 @@ package com.seakernel.stardroid.model.shape.ship;
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.seakernel.stardroid.model.shape.effect.Explosion;
-import com.seakernel.stardroid.model.OpenGlColors;
-import com.seakernel.stardroid.model.shape.weapon.Projectile;
 import com.seakernel.stardroid.model.shape.StardroidShape;
+import com.seakernel.stardroid.model.shape.effect.Explosion;
+import com.seakernel.stardroid.model.shape.weapon.Projectile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,18 +30,18 @@ public class BaseShip extends StardroidShape {
 
     private List<Projectile> mProjectiles = new ArrayList<>();
 
-    public BaseShip() { /* Empty Constructor */}
-
-    public BaseShip(float x, float y) {
-        mPositionX = x;
-        mPositionY = y;
+    public BaseShip() {
+        super();
 
         mHealthPoints = 1;
         mHealthPointsMax = 1;
     }
 
-    public void setIsPlayer() {
-        mColor = OpenGlColors.PLAYER_BLUE;
+    public BaseShip(float x, float y) {
+        this();
+
+        mPositionX = x;
+        mPositionY = y;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.seakernel.stardroid;
 
 import com.seakernel.stardroid.model.shape.ship.EnemyShip;
 import com.seakernel.stardroid.model.shape.effect.Explosion;
+import com.seakernel.stardroid.model.shape.ship.UserShip;
 import com.seakernel.stardroid.model.shape.weapon.Projectile;
 import com.seakernel.stardroid.model.shape.ship.BaseShip;
 import com.seakernel.stardroid.model.StardroidModel;
@@ -75,13 +76,9 @@ public class StardroidEngine {
     }
 
     public void resetGame() {
-        mUserShip = new BaseShip();
+        mUserShip = new UserShip();
         mEnemyShips = new ArrayList<>();
         mPauseSprite = new Pause();
-
-        mUserShip.setCanShoot(true);
-        mUserShip.setIsPlayer();
-        mUserShip.setEngineSpeed(20f);
 
         StardroidModel.getInstance().resetScore();
     }
