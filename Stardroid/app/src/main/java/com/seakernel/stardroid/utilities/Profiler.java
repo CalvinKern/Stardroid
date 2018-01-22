@@ -104,7 +104,7 @@ public class Profiler {
         pushNanoTime(); // Push a new time onto the stack
 
         mCurrentFps = (long) (mFrameCount / (dt / ONE_SECOND_IN_NANOSECONDS));
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && engine != null) {
             log(FRAME_LOG_MESSAGE, mCurrentFps, engine.getObjectCount());
         }
         mFrameCount = 0;
