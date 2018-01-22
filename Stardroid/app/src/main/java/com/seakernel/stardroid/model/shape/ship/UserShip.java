@@ -1,6 +1,7 @@
 package com.seakernel.stardroid.model.shape.ship;
 
 import com.seakernel.stardroid.model.OpenGlColors;
+import com.seakernel.stardroid.model.shape.weapon.Gun;
 
 /**
  * Created by Calvin on 1/21/18.
@@ -17,6 +18,7 @@ public class UserShip extends BaseShip {
 
         setCanShoot(true);
         setEngineSpeed(ENGINE_SPEED_PERCENT);
+        addGun(new Gun());
     }
 
 }

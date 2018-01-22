@@ -5,9 +5,11 @@ import android.util.Log;
 
 import com.seakernel.stardroid.model.shape.StardroidShape;
 import com.seakernel.stardroid.model.shape.effect.Explosion;
+import com.seakernel.stardroid.model.shape.weapon.Gun;
 import com.seakernel.stardroid.model.shape.weapon.Projectile;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -19,8 +21,6 @@ public class BaseShip extends StardroidShape {
     private final float MAX_SPEED_ENGINE = 0.01f;
     private final float MIN_SPEED_ENGINE = 0.001f;
 
-    private float mMillisecondsBetweenShots = 500f;
-    private float mElapsedTime = 0;
     private float mMoveToX;
     private float mMoveToY;
     private float mSpeedPercent;
@@ -28,7 +28,7 @@ public class BaseShip extends StardroidShape {
     private int mHealthPoints;
     private int mHealthPointsMax;
 
-    private List<Projectile> mProjectiles = new ArrayList<>();
+    private final Collection<Gun> mGuns = new ArrayList<>();
 
     public BaseShip() {
         super();
@@ -53,7 +53,9 @@ public class BaseShip extends StardroidShape {
 
     @Override
     public void destroy() {
-        destroyProjectiles(mProjectiles);
+        for (final Gun gun : mGuns) {
+            gun.destroy();
+        }
     }
 
     @Override
@@ -72,10 +74,11 @@ public class BaseShip extends StardroidShape {
         }
 
         Matrix.translateM(mvpMatrix, 0, mPositionX, mPositionY, 0.0f);
+    }
 
-        if (mCanShoot) {
-            createProjectiles(dt);
-        }
+    @Override
+    protected void drawChildren(final float[] mvpMatrix, final float dt) {
+        drawGuns(mvpMatrix, dt);
     }
 
     @Override
@@ -102,31 +105,34 @@ public class BaseShip extends StardroidShape {
         mMoveToY = y;
     }
 
-    public float getMillisecondsBetweenShots() {
-        return mMillisecondsBetweenShots;
-    }
-
-    public void setMillisecondsBetweenShots(float milliseconds) {
-        mMillisecondsBetweenShots = milliseconds;
-    }
-
-    public void createProjectiles(float dt) {
-        mElapsedTime += dt;
-        if (mElapsedTime >= mMillisecondsBetweenShots) {
-            mElapsedTime = 0;
-            Projectile projectile = new Projectile(mPositionX, mPositionY);
-            projectile.setColor(mColor);
-            mProjectiles.add(projectile);
-        }
+    protected void addGun(final Gun gun) {
+        mGuns.add(gun);
     }
 
     public List<Projectile> getProjectiles() {
-        return new ArrayList<>(mProjectiles);
+        final List<Projectile> projectiles = new ArrayList<>();
+        for (final Gun gun : mGuns) {
+            projectiles.addAll(gun.getProjectiles());
+        }
+        return projectiles;
     }
 
-    public void destroyProjectiles(List<? extends StardroidShape> stardroidShapes) {
-        //noinspection SuspiciousMethodCalls
-        mProjectiles.removeAll(stardroidShapes);
+    public void destroyProjectiles(final Collection<? extends StardroidShape> projectiles) {
+        // TODO: restructure this (destroyProjectiles) and getProjectiles to not have to loop
+        //       through every gun,
+        for (final Gun gun : mGuns) {
+            gun.destroyProjectiles(projectiles);
+        }
+    }
+
+    private void drawGuns(final float[] mvpMatrix, final float dt) {
+        for (final Gun gun : mGuns) {
+            gun.doDraw(mvpMatrix, dt);
+
+            if (mCanShoot) {
+                gun.createProjectiles(dt, mPositionX, mPositionY);
+            }
+        }
     }
 
     /**

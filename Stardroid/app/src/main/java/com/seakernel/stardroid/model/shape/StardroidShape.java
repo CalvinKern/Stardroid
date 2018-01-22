@@ -118,7 +118,7 @@ public abstract class StardroidShape {
         onCreateProgramHandles(PROGRAM);
     }
 
-    protected void destroy() {}
+    public void destroy() {}
 
     @CallSuper
     protected void onCreateProgramHandles(final int PROGRAM) {
@@ -142,6 +142,8 @@ public abstract class StardroidShape {
     }
 
     protected abstract void draw(float[] mvMatrix, float dt);
+
+    protected void drawChildren(final float[] mvpMatrix, final float dt) {}
 
     @CallSuper
     public void doDraw(float[] mvpMatrix, float dt) {
@@ -176,6 +178,8 @@ public abstract class StardroidShape {
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
+
+        drawChildren(copy, dt);
     }
 
     protected int getDrawMode() {
