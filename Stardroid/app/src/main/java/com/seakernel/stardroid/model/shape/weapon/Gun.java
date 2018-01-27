@@ -15,11 +15,18 @@ public class Gun extends StardroidShape {
 
     protected static final float MILLISECONDS_BETWEEN_SHOTS = 500.0f;
 
-    private static final float SIZE = 0.02f;
+    private static final float HALF_SIZE = 0.02f;
 
     private float mElapsedTime;
+    private float[] mTranslationVector = {0.0f, 0.0f, 0.0f};
 
     private final Collection<Projectile> mProjectiles = new ArrayList<>();
+
+    public Gun() { /* empty constructor */ }
+
+    public Gun(final float x, final float y, final float z) {
+        mTranslationVector = new float[]{x, y, z};
+    }
 
     @Override
     protected void initialize() {
@@ -28,16 +35,16 @@ public class Gun extends StardroidShape {
 
     @Override
     protected void draw(final float[] mvMatrix, final float dt) {
-        // TODO: Probably have an offset to move the gun placement on the ship
+        android.opengl.Matrix.translateM(mvMatrix, 0, mTranslationVector[0], mTranslationVector[1], mTranslationVector[2]);
     }
 
     @Override
     protected float[] getCoordinates() {
         return new float[] {
-                -SIZE, -SIZE, 0.0f, // bottom left
-                SIZE, -SIZE, 0.0f,  // bottom right
-                -SIZE, SIZE, 0.0f, // top left
-                SIZE, SIZE, 0.0f,  // top right
+                -HALF_SIZE, -HALF_SIZE, 0.0f, // bottom left
+                HALF_SIZE, -HALF_SIZE, 0.0f,  // bottom right
+                -HALF_SIZE, HALF_SIZE, 0.0f, // top left
+                HALF_SIZE, HALF_SIZE, 0.0f,  // top right
         };
     }
 

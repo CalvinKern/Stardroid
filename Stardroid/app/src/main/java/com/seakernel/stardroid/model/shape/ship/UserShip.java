@@ -18,7 +18,7 @@ public class UserShip extends BaseShip {
 
         setCanShoot(true);
         setEngineSpeed(ENGINE_SPEED_PERCENT);
-        addGun(new Gun());
+        addGun(new Gun(0, getHeight() / 2, 0));
     }
 
 }
