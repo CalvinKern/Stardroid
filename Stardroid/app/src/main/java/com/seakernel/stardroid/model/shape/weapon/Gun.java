@@ -52,7 +52,7 @@ public class Gun extends StardroidShape {
         mElapsedTime += dt;
         if (mElapsedTime >= MILLISECONDS_BETWEEN_SHOTS) {
             mElapsedTime = 0;
-            final Projectile projectile = new Projectile(positionX, positionY);
+            final Projectile projectile = new Projectile(positionX + mTranslationVector[0], positionY + mTranslationVector[1]);
             projectile.setColor(mColor);
             mProjectiles.add(projectile);
         }
