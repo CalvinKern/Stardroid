@@ -28,6 +28,11 @@ public class Gun extends StardroidShape {
         mTranslationVector = new float[]{x, y, z};
     }
 
+    public Gun(final float x, final float y, final float z, final float[] color) {
+        this(x, y, z);
+        setColor(color);
+    }
+
     @Override
     protected void initialize() {
         mColor = OpenGlColors.STAR_YELLOW_ORANGE;
@@ -65,5 +70,12 @@ public class Gun extends StardroidShape {
     public void destroyProjectiles(final Collection<? extends StardroidShape> projectiles) {
         //noinspection SuspiciousMethodCalls
         mProjectiles.removeAll(projectiles);
+    }
+
+    public void setColor(final float[] color) {
+        if (color != null) {
+            mColor = color;
+        }
+    }
     }
 }
