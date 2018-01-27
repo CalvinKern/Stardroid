@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
         // Hide the start fragment so that the game can show unobstructed
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.add(R.id.game_overlay, EndOverlayFragment.newInstance(), END_FRAGMENT_TAG);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
 
         getFragmentManager().addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements View.OnSystemUiVi
             if (addToBackStack) {
                 transaction.addToBackStack(null); // TODO: Remove this once I have a 'quit' button in the pause screen
             }
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
         }
     }
 }
