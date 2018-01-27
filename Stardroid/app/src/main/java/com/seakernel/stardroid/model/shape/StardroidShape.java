@@ -237,19 +237,14 @@ public abstract class StardroidShape {
         mPositionY = y;
     }
 
-    // TODO: For getWidth and getHeight, don't assume square coordinates. Have shapes set a width and height instead?
-    public float getWidth() {
-        float[] coords = getCoordinates();
-        float midLeft = (coords[0] + coords[6]) / 2.f;
-        float midRight = (coords[3] + coords[9]) / 2.f;
-        return midLeft > midRight ? midLeft - midRight : midRight - midLeft;
+    protected float getWidth() {
+        final float[] coordinates = getCoordinates();
+        return (Math.abs(coordinates[0] - coordinates[3]) + Math.abs(coordinates[6] - coordinates[9])) / 2;
     }
 
-    public float getHeight() {
-        float[] coords = getCoordinates();
-        float midBottom = (coords[1] + coords[4]) / 2.f;
-        float midTop = (coords[7] + coords[10]) / 2.f;
-        return midTop > midBottom ? midTop - midBottom : midBottom - midTop;
+    protected float getHeight() {
+        final float[] coordinates = getCoordinates();
+        return (Math.abs(coordinates[1] - coordinates[7]) + Math.abs(coordinates[4] - coordinates[10])) / 2;
     }
 
     public float[] getBounds() {
