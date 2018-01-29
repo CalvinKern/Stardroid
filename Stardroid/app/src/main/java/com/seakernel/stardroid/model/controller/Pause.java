@@ -1,4 +1,4 @@
-package com.seakernel.stardroid.model.shape;
+package com.seakernel.stardroid.model.controller;
 
 import android.opengl.Matrix;
 

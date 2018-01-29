@@ -1,14 +1,14 @@
 package com.seakernel.stardroid;
 
-import com.seakernel.stardroid.model.shape.ship.EnemyShip;
-import com.seakernel.stardroid.model.shape.effect.Explosion;
-import com.seakernel.stardroid.model.shape.ship.UserShip;
-import com.seakernel.stardroid.model.shape.weapon.Projectile;
-import com.seakernel.stardroid.model.shape.ship.BaseShip;
+import com.seakernel.stardroid.model.controller.ship.EnemyShip;
+import com.seakernel.stardroid.model.controller.effect.Explosion;
+import com.seakernel.stardroid.model.controller.ship.UserShip;
+import com.seakernel.stardroid.model.controller.weapon.Projectile;
+import com.seakernel.stardroid.model.controller.ship.BaseShip;
 import com.seakernel.stardroid.model.StardroidModel;
-import com.seakernel.stardroid.model.shape.Pause;
-import com.seakernel.stardroid.model.shape.StardroidShape;
-import com.seakernel.stardroid.model.shape.effect.Star;
+import com.seakernel.stardroid.model.controller.Pause;
+import com.seakernel.stardroid.model.controller.StardroidShape;
+import com.seakernel.stardroid.model.controller.effect.Star;
 
 import java.util.ArrayList;
 import java.util.List;

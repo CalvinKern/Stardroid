@@ -1,8 +1,8 @@
-package com.seakernel.stardroid.model.shape.weapon;
+package com.seakernel.stardroid.model.controller.weapon;
 
 import android.opengl.Matrix;
 
-import com.seakernel.stardroid.model.shape.StardroidShape;
+import com.seakernel.stardroid.model.controller.StardroidShape;
 
 /**
  * Created by Calvin on 8/28/2017.

@@ -1,4 +1,4 @@
-package com.seakernel.stardroid.model.shape.ship;
+package com.seakernel.stardroid.model.controller.ship;
 
 import com.seakernel.stardroid.model.OpenGlColors;
 

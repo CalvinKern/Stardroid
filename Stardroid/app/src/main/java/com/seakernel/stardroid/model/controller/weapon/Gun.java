@@ -1,7 +1,7 @@
-package com.seakernel.stardroid.model.shape.weapon;
+package com.seakernel.stardroid.model.controller.weapon;
 
 import com.seakernel.stardroid.model.OpenGlColors;
-import com.seakernel.stardroid.model.shape.StardroidShape;
+import com.seakernel.stardroid.model.controller.StardroidShape;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,6 +42,7 @@ public class Gun extends StardroidShape {
     @Override
     protected void draw(final float[] mvMatrix, final float dt) {
         android.opengl.Matrix.translateM(mvMatrix, 0, mTranslationVector[0], mTranslationVector[1], mTranslationVector[2]);
+//        Matrix.new(mvMatrix).multiply(Matrix.translation(50, 50, 0));
     }
 
     @Override

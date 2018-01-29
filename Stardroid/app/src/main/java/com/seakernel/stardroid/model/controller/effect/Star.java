@@ -1,10 +1,10 @@
-package com.seakernel.stardroid.model.shape.effect;
+package com.seakernel.stardroid.model.controller.effect;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
 import com.seakernel.stardroid.model.OpenGlColors;
-import com.seakernel.stardroid.model.shape.StardroidShape;
+import com.seakernel.stardroid.model.controller.StardroidShape;
 
 /**
  * Created by Calvin on 2/28/16.

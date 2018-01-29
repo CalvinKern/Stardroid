@@ -1,9 +1,9 @@
-package com.seakernel.stardroid.model.shape.effect;
+package com.seakernel.stardroid.model.controller.effect;
 
 import android.opengl.Matrix;
 
-import com.seakernel.stardroid.model.shape.StardroidShape;
-import com.seakernel.stardroid.model.shape.ship.BaseShip;
+import com.seakernel.stardroid.model.controller.StardroidShape;
+import com.seakernel.stardroid.model.controller.ship.BaseShip;
 
 import java.util.ArrayList;
 import java.util.List;

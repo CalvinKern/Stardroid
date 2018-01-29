@@ -1,12 +1,12 @@
-package com.seakernel.stardroid.model.shape.ship;
+package com.seakernel.stardroid.model.controller.ship;
 
 import android.opengl.Matrix;
 import android.util.Log;
 
-import com.seakernel.stardroid.model.shape.StardroidShape;
-import com.seakernel.stardroid.model.shape.effect.Explosion;
-import com.seakernel.stardroid.model.shape.weapon.Gun;
-import com.seakernel.stardroid.model.shape.weapon.Projectile;
+import com.seakernel.stardroid.model.controller.StardroidShape;
+import com.seakernel.stardroid.model.controller.effect.Explosion;
+import com.seakernel.stardroid.model.controller.weapon.Gun;
+import com.seakernel.stardroid.model.controller.weapon.Projectile;
 
 import java.util.ArrayList;
 import java.util.Collection;

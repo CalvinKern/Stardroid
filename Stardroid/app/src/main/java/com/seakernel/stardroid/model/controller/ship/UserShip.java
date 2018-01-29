@@ -1,7 +1,7 @@
-package com.seakernel.stardroid.model.shape.ship;
+package com.seakernel.stardroid.model.controller.ship;
 
 import com.seakernel.stardroid.model.OpenGlColors;
-import com.seakernel.stardroid.model.shape.weapon.Gun;
+import com.seakernel.stardroid.model.controller.weapon.Gun;
 
 /**
  * Created by Calvin on 1/21/18.
