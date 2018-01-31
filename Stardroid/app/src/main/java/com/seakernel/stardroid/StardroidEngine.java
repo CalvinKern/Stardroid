@@ -1,14 +1,14 @@
 package com.seakernel.stardroid;
 
-import com.seakernel.stardroid.model.controller.ship.EnemyShip;
-import com.seakernel.stardroid.model.controller.effect.Explosion;
-import com.seakernel.stardroid.model.controller.ship.UserShip;
-import com.seakernel.stardroid.model.controller.weapon.Projectile;
-import com.seakernel.stardroid.model.controller.ship.BaseShip;
+import com.seakernel.stardroid.model.EnemyController;
 import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.model.controller.Pause;
 import com.seakernel.stardroid.model.controller.StardroidShape;
+import com.seakernel.stardroid.model.controller.effect.Explosion;
 import com.seakernel.stardroid.model.controller.effect.Star;
+import com.seakernel.stardroid.model.controller.ship.BaseShip;
+import com.seakernel.stardroid.model.controller.ship.UserShip;
+import com.seakernel.stardroid.model.controller.weapon.Projectile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +28,10 @@ public class StardroidEngine {
     private Pause mPauseSprite = null;
     private ArrayList<Star> mStars = null;
     public BaseShip mUserShip = null;
-    private ArrayList<BaseShip> mEnemyShips;
     private float mElapsedTime;
-    private float mMillisecondsBetweenEnemyCreation = 1500;
     private List<Explosion> mExplosions;
     private boolean mResetGame;
+    private EnemyController mEnemyController;
 
     private final StardroidModel.GameStateChangeWatcher mGameStateChangeWatcher = new StardroidModel.GameStateChangeWatcher() {
         @Override
@@ -45,6 +44,7 @@ public class StardroidEngine {
 
     public StardroidEngine() {
         StardroidModel.getInstance().addGameStateChangeWatcher(mGameStateChangeWatcher); // TODO: Remove this somehow...
+        mEnemyController = new EnemyController();
     }
 
     /**
@@ -73,13 +73,14 @@ public class StardroidEngine {
         // initialize the stars in the background for the start of the game
         generateBackground();
         resetGame();
+        mEnemyController.setBounds(new float[]{ -aspectRatio, 1.0f, aspectRatio, -1.0f});
     }
 
     public void resetGame() {
         mUserShip = new UserShip();
-        mEnemyShips = new ArrayList<>();
         mPauseSprite = new Pause();
 
+        mEnemyController.reset();
         StardroidModel.getInstance().resetScore();
     }
 
@@ -258,22 +259,9 @@ public class StardroidEngine {
      * @param dt
      */
     private void drawEnemyShips(float[] mvpMatrix, float dt) {
-        mEnemyShips.removeAll(drawAndCheckCollisions(mEnemyShips, mvpMatrix, dt));
+        mEnemyController.destroyEnemies(drawAndCheckCollisions(mEnemyController.getEnemies(), mvpMatrix, dt));
         if (StardroidModel.getInstance().isGameRunning()) {
-            createEnemy(dt);
-        }
-    }
-
-    public void createEnemy(float dt) {
-        mElapsedTime += dt;
-        if (mElapsedTime >= mMillisecondsBetweenEnemyCreation) {
-            mElapsedTime = 0;
-            BaseShip ship = new EnemyShip(mAspectRatio, (float)Math.random() * 1.8f - 0.9f);
-            ship.setEngineSpeed(5);
-            ship.moveToPosition(-mAspectRatio * 2, ship.getPositionY());
-
-            mEnemyShips.add(ship);
-//            Log.d("StardroidEngine", "Total Enemies: " + mEnemyShips.size());
+            mEnemyController.addNewEnemySet(dt);
         }
     }
 

@@ -214,7 +214,7 @@ public abstract class StardroidShape {
         GLES20.glCompileShader(shader);
         String shaderLog = GLES20.glGetShaderInfoLog(shader);
 
-        if (shaderLog.length() > 0) {
+        if (shaderLog != null && shaderLog.length() > 0) {
             Log.e("SHADER_LOG", "Shader type :: " + type + "\n" + shaderLog);
         }
 
