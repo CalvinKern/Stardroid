@@ -14,8 +14,7 @@ public class UserShip extends BaseShip {
     public UserShip() {
         super();
 
-        mColor = OpenGlColors.PLAYER_BLUE;
-
+        setColor(OpenGlColors.PLAYER_BLUE);
         setCanShoot(true);
         setEngineSpeed(ENGINE_SPEED_PERCENT);
         addGun(new Gun(0, getHeight() / 2, 0));

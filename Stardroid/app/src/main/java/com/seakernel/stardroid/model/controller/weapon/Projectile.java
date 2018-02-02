@@ -64,8 +64,4 @@ public class Projectile extends StardroidShape {
     public void setSpeed(float speed) {
         mFloatingSpeed = speed;
     }
-
-    public void setColor(float[] color) {
-        mColor = color;
-    }
 }

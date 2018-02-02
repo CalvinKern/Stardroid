@@ -270,4 +270,10 @@ public abstract class StardroidShape {
     public float[] getColor() {
         return mColor;
     }
+
+    public void setColor(final float[] color) {
+        if (color != null) {
+            mColor = color;
+        }
+    }
 }

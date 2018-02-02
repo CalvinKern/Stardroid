@@ -74,12 +74,6 @@ public class Gun extends StardroidShape {
         mProjectiles.removeAll(projectiles);
     }
 
-    public void setColor(final float[] color) {
-        if (color != null) {
-            mColor = color;
-        }
-    }
-
     public void setMillisecondsBetweenShots(final float milliseconds) {
         if (milliseconds > 0) {
             mMillisecondsBetweenShots = milliseconds;
