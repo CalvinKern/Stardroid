@@ -132,9 +132,8 @@ public class StardroidEngine {
         }
     }
 
-    private boolean isShapeOutOfBounds(StardroidShape shape) {
-        float[] screenBounds = new float[]{-mAspectRatio, 1.f, mAspectRatio, -1.f};
-        return !shape.hasCollided(screenBounds);
+    private boolean isShapeOutOfBounds(final StardroidShape shape) {
+        return shape.getBounds()[2] < -mAspectRatio || shape.getBounds()[0] > mAspectRatio;
     }
 
     /**
