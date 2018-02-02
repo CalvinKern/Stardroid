@@ -27,12 +27,14 @@ public class BaseShip extends StardroidShape {
     private boolean mCanShoot;
     private int mHealthPoints;
     private int mHealthPointsMax;
+    private int mPoints;
 
     private final Collection<Gun> mGuns = new ArrayList<>();
 
     public BaseShip() {
         super();
 
+        mPoints = 1;
         mHealthPoints = 1;
         mHealthPointsMax = 1;
     }
@@ -209,4 +211,13 @@ public class BaseShip extends StardroidShape {
     public int getHealthPoints() {
         return mHealthPoints;
     }
+
+    public int getPoints() {
+        return mPoints;
+    }
+
+    public void setPoints(final int points) {
+        mPoints = points;
+    }
+
 }
