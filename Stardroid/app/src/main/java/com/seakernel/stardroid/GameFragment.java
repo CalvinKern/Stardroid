@@ -306,7 +306,9 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
         // TODO: push mMvpMatrix; google effective storage methods
         profiler.startTrackingSection();
-        mStardroidEngine.draw(mMvpMatrix, dt);
+        if (mStardroidEngine != null) {
+            mStardroidEngine.draw(mMvpMatrix, dt);
+        }
         profiler.stopTrackingSection("Drawing");
     }
 }
