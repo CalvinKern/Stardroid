@@ -39,12 +39,14 @@ class EnemyController {
     }
 
     private fun createEnemy(dt: Float) {
-        mElapsedTime += dt
-        if (mElapsedTime < mMillisecondsBetweenEnemyCreation) {
-            return
-        }
+        synchronized(this, {
+            mElapsedTime += dt
+            if (mElapsedTime < mMillisecondsBetweenEnemyCreation) {
+                return
+            }
+            mElapsedTime = 0f
+        })
 
-        mElapsedTime = 0f
         val ship = EnemyShip(mBounds[2], (Math.random() * Math.abs(mBounds[1] - mBounds[3]) - 1).toFloat())
         ship.moveToPosition(mBounds[0] * 2, ship.positionY)
         ship.engineSpeed = 5f
