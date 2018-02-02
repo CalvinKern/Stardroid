@@ -47,11 +47,41 @@ class EnemyController {
             mElapsedTime = 0f
         })
 
-        val ship = EnemyShip(mBounds[2], (Math.random() * Math.abs(mBounds[1] - mBounds[3]) - 1).toFloat())
-        ship.moveToPosition(mBounds[0] * 2, ship.positionY)
-        ship.engineSpeed = 5f
+        val position = floatArrayOf(mBounds[2], (Math.random() * Math.abs(mBounds[1] - mBounds[3]) - 1).toFloat())
+        val ship = newRandomEnemyShip(position[0], position[1])
 
         mEnemies.add(ship)
+    }
+
+    private fun newRandomEnemyShip(x: Float, y: Float): EnemyShip {
+        val ship = EnemyShip(x, y)
+
+        setShipProperties(ship)
+        ship.moveToPosition(mBounds[0] * 2, ship.positionY)
+
+        return ship
+    }
+
+    private fun setShipProperties(ship: EnemyShip) {
+        val rand = Math.random()
+        when {
+            rand < 0.33f -> {
+                ship.color = OpenGlColors.ENEMY_RED
+                ship.engineSpeed = 5f
+            }
+            rand < 0.64f -> {
+                ship.color = OpenGlColors.STAR_YELLOW_ORANGE
+                ship.engineSpeed = 7f
+            }
+            rand < 0.9f -> {
+                ship.color = OpenGlColors.STAR_WHITE
+                ship.engineSpeed = 10f
+            }
+            else -> {
+                ship.color = OpenGlColors.randColor()
+                ship.engineSpeed = 15f
+            }
+        }
     }
 
 }
