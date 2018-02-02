@@ -9,7 +9,7 @@ import com.seakernel.stardroid.model.controller.weapon.Gun;
  */
 
 public class UserShip extends BaseShip {
-    public static final float ENGINE_SPEED_PERCENT = 20.0f;
+    private static final float ENGINE_SPEED_PERCENT = 20.0f;
 
     public UserShip() {
         super();
