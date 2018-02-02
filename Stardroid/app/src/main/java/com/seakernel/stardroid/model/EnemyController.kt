@@ -15,8 +15,7 @@ class EnemyController {
     private var mElapsedTime: Float = 0.0f
     private var mMillisecondsBetweenEnemyCreation: Float = 1500.0f
 
-    fun reset() {
-        mBounds = FloatArray(4)
+    fun resetState() {
         mEnemies.clear()
         mElapsedTime = 0.0f
         mMillisecondsBetweenEnemyCreation = 1500.0f
@@ -46,9 +45,9 @@ class EnemyController {
         }
 
         mElapsedTime = 0f
-        val ship = EnemyShip(mBounds[2], (Math.random() * Math.abs(mBounds[1] - mBounds[3])).toFloat())
-        ship.engineSpeed = 5f
+        val ship = EnemyShip(mBounds[2], (Math.random() * Math.abs(mBounds[1] - mBounds[3]) - 1).toFloat())
         ship.moveToPosition(mBounds[0] * 2, ship.positionY)
+        ship.engineSpeed = 5f
 
         mEnemies.add(ship)
     }

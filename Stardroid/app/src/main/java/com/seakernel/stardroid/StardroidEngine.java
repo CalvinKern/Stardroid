@@ -80,7 +80,7 @@ public class StardroidEngine {
         mUserShip = new UserShip();
         mPauseSprite = new Pause();
 
-        mEnemyController.reset();
+        mEnemyController.resetState();
         StardroidModel.getInstance().resetScore();
     }
 
