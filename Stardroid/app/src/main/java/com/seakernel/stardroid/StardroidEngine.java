@@ -169,7 +169,7 @@ public class StardroidEngine {
                     if (ship.hasCollided(projectile.getBounds())) {
                         hitProjectiles.add(projectile);
                         mExplosions.add(new Explosion(ship));
-                        enemiesDestroyedPoints++;
+                        enemiesDestroyedPoints += ship.getPoints();
                         ship.destroy();
                         shapesLeaving.add(ship);
                     }
@@ -179,7 +179,7 @@ public class StardroidEngine {
                     Explosion enemyExplosion = ship.shipHit();
                     if (enemyExplosion != null) {
                         mExplosions.add(enemyExplosion);
-                        enemiesDestroyedPoints++;
+                        enemiesDestroyedPoints += ship.getPoints();
                         ship.destroy();
                         shapesLeaving.add(ship);
                     }

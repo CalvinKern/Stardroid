@@ -72,14 +72,17 @@ class EnemyController {
             rand < 0.64f -> {
                 ship.color = OpenGlColors.STAR_YELLOW_ORANGE
                 ship.engineSpeed = 7f
+                ship.points = 2
             }
             rand < 0.9f -> {
                 ship.color = OpenGlColors.STAR_WHITE
                 ship.engineSpeed = 10f
+                ship.points = 3
             }
             else -> {
                 ship.color = OpenGlColors.randColor()
                 ship.engineSpeed = 15f
+                ship.points = 5
             }
         }
     }
