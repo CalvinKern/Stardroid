@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class StardroidEngine {
 
+    private final static float MAGIC_FINGER_OFFSET = 0.25f;
     private static final int MAGIC_MAX_COUNT_STAR = 169; // REDUCE this to improve FPS ;)
     private static final int MAGIC_MAX_COUNT_OBJECTS = 800; // This is the max for 60 fps on a good phone (Nexus 6P)
 
@@ -57,7 +58,7 @@ public class StardroidEngine {
     public void receiveTouch(float normX, float normY) {
         normX = ( 2 * normX) - 1;
         normY = (-2 * normY) + 1;
-        mUserShip.moveToPosition(normX * mAspectRatio, normY);
+        mUserShip.moveToPosition((normX * mAspectRatio) + MAGIC_FINGER_OFFSET, normY);
 
 //        if (event.getAction() == MotionEvent.ACTION_DOWN) {
 //            Log.d("GameFragment", String.format("Touch down at (%f, %f)", shipX, shipY));
