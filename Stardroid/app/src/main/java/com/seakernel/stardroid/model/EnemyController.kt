@@ -9,16 +9,18 @@ import java.util.*
  * Copyright © 2018 SeaKernel. All rights reserved.
  */
 class EnemyController {
+    @Suppress("PrivatePropertyName", "PropertyName")
+    val MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION = 100.0f
 
     private var mBounds = FloatArray(4)
     private var mEnemies = ArrayList<EnemyShip>()
     private var mElapsedTime: Float = 0.0f
-    private var mMillisecondsBetweenEnemyCreation: Float = 1500.0f
+    private var mMillisecondsBetweenEnemyCreation: Float = 0.0f
 
     fun resetState() {
         mEnemies.clear()
         mElapsedTime = 0.0f
-        mMillisecondsBetweenEnemyCreation = 1500.0f
+        mMillisecondsBetweenEnemyCreation = 500.0f
     }
 
     // left, top, right, bottom
@@ -31,7 +33,18 @@ class EnemyController {
     }
 
     fun destroyEnemies(enemies: List<StardroidShape?>) {
+        if (mMillisecondsBetweenEnemyCreation > MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION) {
+            mMillisecondsBetweenEnemyCreation = Math.max(mMillisecondsBetweenEnemyCreation - enemies.size, MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION)
+        }
         mEnemies.removeAll(enemies)
+    }
+
+    fun getTimeBetweenEnemyCreation(): Float {
+        return mMillisecondsBetweenEnemyCreation
+    }
+
+    fun setTimeBetweenEnemyCreation(time: Float) {
+        mMillisecondsBetweenEnemyCreation = time
     }
 
     fun addNewEnemySet(dt: Float) {

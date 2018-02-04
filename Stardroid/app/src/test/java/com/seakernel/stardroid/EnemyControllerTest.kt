@@ -1,7 +1,11 @@
 package com.seakernel.stardroid
 
 import com.seakernel.stardroid.model.EnemyController
+import com.seakernel.stardroid.model.controller.StardroidShape
+import com.seakernel.stardroid.model.controller.ship.EnemyShip
 import org.junit.Test
+import java.util.*
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 /**
@@ -14,5 +18,33 @@ class EnemyControllerTest {
     fun getEnemiesTestNotNull() {
         val controller = EnemyController()
         assertNotNull(controller.getEnemies())
+    }
+
+    @Test
+    fun destroyEnemiesTestWillReducesCreationTime() {
+        val controller = EnemyController()
+        controller.resetState()
+        val time = controller.getTimeBetweenEnemyCreation()
+
+        val list = ArrayList<StardroidShape>()
+        list.add(EnemyShip(0f, 0f))
+
+        controller.destroyEnemies(list)
+
+        assertEquals(time - list.size, controller.getTimeBetweenEnemyCreation())
+    }
+
+    @Test
+    fun destroyEnemiesTestWillNotReduceCreationTimeMillisecondsPastMin() {
+        val controller = EnemyController()
+
+        controller.setTimeBetweenEnemyCreation(controller.MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION)
+
+        val list = ArrayList<StardroidShape>()
+        list.add(EnemyShip(0f, 0f))
+
+        controller.destroyEnemies(list)
+
+        assertEquals(controller.MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION, controller.getTimeBetweenEnemyCreation())
     }
 }
