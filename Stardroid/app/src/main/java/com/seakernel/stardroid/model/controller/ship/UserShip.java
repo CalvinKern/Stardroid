@@ -10,17 +10,29 @@ import com.seakernel.stardroid.model.controller.weapon.Gun;
 
 public class UserShip extends BaseShip {
     private static final float ENGINE_SPEED_PERCENT = 20.0f;
-
+    private static final float SHIP_WIDTH = 0.15f;
+    private static final float SHIP_HEIGHT = 0.3f;
 
     @Override
     protected float[] getCoordinates() {
-        final float size = 0.1f;
+        final float left = -SHIP_WIDTH * 1 / 3.0f;
+        final float right = SHIP_WIDTH * 2 / 3.0f;
+
         return new float[] {
-                -size, -size, 0.0f, // bottom left
-                size, -size, 0.0f,  // bottom right
-                -size,  size, 0.0f, // top left
-                size,  size, 0.0f,  // top right
+                left, -SHIP_HEIGHT / 2, 0.0f, // bottom left
+                right, 0, 0.0f,  // middle right
+                left,  SHIP_HEIGHT / 2, 0.0f,  // top left
         };
+    }
+
+    @Override
+    protected float getWidth() {
+        return SHIP_WIDTH;
+    }
+
+    @Override
+    protected float getHeight() {
+        return SHIP_HEIGHT;
     }
 
     public UserShip() {
@@ -29,8 +41,8 @@ public class UserShip extends BaseShip {
         setColor(OpenGlColors.PLAYER_BLUE);
         setCanShoot(true);
         setEngineSpeed(ENGINE_SPEED_PERCENT);
-        addGun(new Gun(getWidth() / 2, getHeight() / 6, 0, null, 500.0f));
-        addGun(new Gun(getWidth() / 2, -getHeight() / 6, 0, null, 500.0f));
+        addGun(new Gun(getWidth() / 4, getHeight() / 4, 0, null, 500.0f));
+        addGun(new Gun(getWidth() / 4, -getHeight() / 4, 0, null, 500.0f));
     }
 
 }
