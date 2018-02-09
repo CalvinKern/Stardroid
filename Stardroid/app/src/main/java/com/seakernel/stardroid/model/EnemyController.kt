@@ -20,7 +20,7 @@ class EnemyController {
     fun resetState() {
         mEnemies.clear()
         mElapsedTime = 0.0f
-        mMillisecondsBetweenEnemyCreation = 500.0f
+        setTimeBetweenEnemyCreation(500.0f)
     }
 
     // left, top, right, bottom
@@ -43,8 +43,8 @@ class EnemyController {
         return mMillisecondsBetweenEnemyCreation
     }
 
-    fun setTimeBetweenEnemyCreation(time: Float) {
-        mMillisecondsBetweenEnemyCreation = time
+    fun setTimeBetweenEnemyCreation(milliseconds: Float) {
+        mMillisecondsBetweenEnemyCreation = Math.max(milliseconds, MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION)
     }
 
     fun addNewEnemySet(dt: Float) {
