@@ -79,7 +79,7 @@ public class StardroidEngine {
 
     public void resetGame() {
         mUserShip = new UserShip();
-        mPauseSprite = new Pause();
+        mPauseSprite = new Pause(new float[]{ -mAspectRatio, 1.0f, mAspectRatio, -1.0f});
 
         mEnemyController.resetState();
         StardroidModel.getInstance().resetScore();
@@ -126,11 +126,8 @@ public class StardroidEngine {
             resetGame();
         }
 
-        if (StardroidModel.getInstance().isPaused()) {
-            drawPause(mvpMatrix, dt);
-        } else {
-            drawGameRunning(mvpMatrix, dt);
-        }
+        drawPause(mvpMatrix, dt);
+        drawGame(mvpMatrix, dt);
     }
 
     private boolean isShapeOutOfBounds(final StardroidShape shape) {
@@ -223,23 +220,15 @@ public class StardroidEngine {
      * @param mvpMatrix
      * @return true if the game is paused
      */
-    private boolean drawPause(float[] mvpMatrix, float dt) {
-        // If paused, only doDraw the
-        if (StardroidModel.getInstance().isPaused()) {
-            mPauseSprite.doDraw(mvpMatrix, dt); // TODO: Change this to doDraw the resume button (that also states paused)
-            return true; // Return here if we are paused so we don't keep drawing everything else
-        } else {
-            // TODO: Modify mvp to doDraw pause in the (top-right?) corner.
-//            final float[] copyMvp = new float[mvpMatrix.length];
-//            System.arraycopy(mvpMatrix, 0, copyMvp, 0, mvpMatrix.length); // TODO: in place state saving of mvpMatrix for efficiency?
-
-            // TODO: doDraw once the mvp is correct
-//            mPauseSprite.doDraw(copyMvp);
-            return false;
-        }
+    private void drawPause(float[] mvpMatrix, float dt) {
+        mPauseSprite.doDraw(mvpMatrix, dt); // TODO: Change this to doDraw the resume button (that also states paused)
     }
 
-    private void drawGameRunning(float[] mvpMatrix, float dt) {
+    private void drawGame(float[] mvpMatrix, float dt) {
+        if (StardroidModel.getInstance().isPaused()) {
+            return;
+        }
+
         drawUser(mvpMatrix, dt);
         drawEnemyShips(mvpMatrix, dt);
     }
