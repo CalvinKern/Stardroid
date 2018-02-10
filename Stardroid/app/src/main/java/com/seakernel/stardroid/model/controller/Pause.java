@@ -56,6 +56,31 @@ public class Pause extends StardroidShape { // TODO: Implement StardroidDrawable
         mLeftBar.doDraw(mvpMatrix, dt);
     }
 
+    public boolean receiveTouch(final float x, final float y) {
+        boolean touched = false;
+        final float height = WIDTH * HEIGHT_SCALE;
+
+        switch (StardroidModel.getInstance().getState()) {
+            case StardroidModel.GameState.RUNNING:
+                touched = mBounds[2] - (WIDTH * 4.5f) < x && mBounds[1] - (height * 2.5f) < y;
+                break;
+            case StardroidModel.GameState.PAUSED:
+                touched = WIDTH * 2 > x && -WIDTH * 2 < x &&
+                        height > y && -height < y;
+                break;
+            case StardroidModel.GameState.BLANK:
+            case StardroidModel.GameState.END:
+            default:
+                return false;
+        }
+
+        if (touched) {
+            StardroidModel.getInstance().setPaused(!StardroidModel.getInstance().isPaused());
+        }
+
+        return touched;
+    }
+
     private static class PauseBar extends StardroidShape {
 
         private final float mTranslationX;

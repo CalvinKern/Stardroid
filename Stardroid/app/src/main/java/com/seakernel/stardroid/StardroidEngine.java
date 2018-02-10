@@ -37,7 +37,8 @@ public class StardroidEngine {
     private final StardroidModel.GameStateChangeWatcher mGameStateChangeWatcher = new StardroidModel.GameStateChangeWatcher() {
         @Override
         public void onStateChanged(int oldState, int newState) {
-            if (oldState != StardroidModel.GameState.RUNNING && newState == StardroidModel.GameState.RUNNING) {
+            if (oldState != StardroidModel.GameState.RUNNING && oldState != StardroidModel.GameState.PAUSED &&
+                    newState == StardroidModel.GameState.RUNNING) {
                 mResetGame = true;
             }
         }
@@ -55,10 +56,15 @@ public class StardroidEngine {
         return mStars.size();
     }
 
-    public void receiveTouch(float normX, float normY) {
-        normX = ( 2 * normX) - 1;
-        normY = (-2 * normY) + 1;
-        mUserShip.moveToPosition((normX * mAspectRatio) + MAGIC_FINGER_OFFSET, normY);
+    public void receiveTouch(final float normX, final float normY) {
+        final float x = (( 2 * normX) - 1) * mAspectRatio;
+        final float y = (-2 * normY) + 1;
+
+        if (mPauseSprite.receiveTouch(x, y) || StardroidModel.getInstance().isPaused()) {
+            return;
+        }
+
+        mUserShip.moveToPosition(x + MAGIC_FINGER_OFFSET, y);
 
 //        if (event.getAction() == MotionEvent.ACTION_DOWN) {
 //            Log.d("GameFragment", String.format("Touch down at (%f, %f)", shipX, shipY));

@@ -59,6 +59,16 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     private TextView mFpsTextView;
     private TextView mEngineSpeedTextView;
 
+    private final StardroidModel.GameStateChangeWatcher mGameStateChangeWatcher = new StardroidModel.GameStateChangeWatcher() {
+        @Override
+        public void onStateChanged(int oldState, int newState) {
+            // Reset the touch on state change so the user doesn't experience any overlapping state
+            //  problems (such as moving the ship to where the pause button was when resuming play,
+            //  if they keep their finger pressed down)
+            mHasActiveTouch = false;
+        }
+    };
+
     public static GameFragment newInstance() {
         Bundle args = new Bundle();
         GameFragment fragment = new GameFragment();
@@ -80,6 +90,8 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
                 }
             }, 1000, 500);
         }
+
+        StardroidModel.getInstance().addGameStateChangeWatcher(mGameStateChangeWatcher);
     }
 
     @Override
@@ -95,6 +107,8 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
             mTimer.cancel();
             mTimer = null;
         }
+
+        StardroidModel.getInstance().removeGameStateChangeWatcher(mGameStateChangeWatcher);
     }
 
     @Nullable
@@ -126,7 +140,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
                     mHasActiveTouch = false;
                 }
 
-                if (mHasActiveTouch && !StardroidModel.getInstance().isPaused()) {
+                if (mHasActiveTouch) {
                     mStardroidEngine.receiveTouch(event.getRawX() / mScreenWidth, event.getRawY() / mScreenHeight);
                 }
                 return true;
