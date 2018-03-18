@@ -1,5 +1,6 @@
 package com.seakernel.stardroid.model
 
+import com.seakernel.stardroid.model.controller.PowerUp
 import com.seakernel.stardroid.model.controller.StardroidShape
 import com.seakernel.stardroid.model.controller.ship.EnemyShip
 import java.util.*
@@ -9,16 +10,22 @@ import java.util.*
  * Copyright © 2018 SeaKernel. All rights reserved.
  */
 class EnemyController {
-    @Suppress("PrivatePropertyName", "PropertyName")
-    val MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION = 100.0f
+
+    companion object {
+        val MILLISECONDS_BETWEEN_POWER_UPS = 10000.0f
+        val MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION = 100.0f
+    }
 
     private var mBounds = FloatArray(4)
     private var mEnemies = ArrayList<EnemyShip>()
+    private var mPowerUps = ArrayList<PowerUp>()
     private var mElapsedTime: Float = 0.0f
+    private var mElapsedPowerUpTime: Float = 0.0f
     private var mMillisecondsBetweenEnemyCreation: Float = 0.0f
 
     fun resetState() {
         mEnemies.clear()
+        mPowerUps.clear()
         mElapsedTime = 0.0f
         setTimeBetweenEnemyCreation(500.0f)
     }
@@ -28,15 +35,17 @@ class EnemyController {
         mBounds = bounds
     }
 
-    fun getEnemies(): ArrayList<EnemyShip> {
-        return ArrayList(mEnemies)
+    fun getShapes(): ArrayList<StardroidShape?> {
+        return ArrayList(mEnemies + mPowerUps)
     }
 
-    fun destroyEnemies(enemies: List<StardroidShape?>) {
+    fun destroyShapes(shapes: List<StardroidShape?>) {
         if (mMillisecondsBetweenEnemyCreation > MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION) {
-            mMillisecondsBetweenEnemyCreation = Math.max(mMillisecondsBetweenEnemyCreation - enemies.size, MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION)
+            mMillisecondsBetweenEnemyCreation = Math.max(mMillisecondsBetweenEnemyCreation - shapes.size, MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION)
         }
-        mEnemies.removeAll(enemies)
+
+        mEnemies.removeAll(shapes)
+        mPowerUps.removeAll(shapes)
     }
 
     fun getTimeBetweenEnemyCreation(): Float {
@@ -49,6 +58,30 @@ class EnemyController {
 
     fun addNewEnemySet(dt: Float) {
         createEnemy(dt)
+        createPowerUp(dt)
+    }
+
+    private fun getRandomSpawnPosition(): FloatArray {
+        return floatArrayOf(mBounds[2], (Math.random() * Math.abs(mBounds[1] - mBounds[3]) - 1).toFloat())
+    }
+
+    private fun createPowerUp(dt: Float) {
+        synchronized(this, {
+            mElapsedPowerUpTime += dt
+            if (mElapsedPowerUpTime < MILLISECONDS_BETWEEN_POWER_UPS) {
+                return
+            }
+            mElapsedPowerUpTime = 0f
+        })
+
+        val position = getRandomSpawnPosition()
+        mPowerUps.add(newRandomPowerUp(position[0], position[1]))
+    }
+
+    private fun newRandomPowerUp(x: Float, y: Float): PowerUp {
+        val powerUp = PowerUp(x, y)
+        powerUp.moveToPosition(mBounds[0] * 2, powerUp.positionY)
+        return powerUp
     }
 
     private fun createEnemy(dt: Float) {
@@ -60,7 +93,7 @@ class EnemyController {
             mElapsedTime = 0f
         })
 
-        val position = floatArrayOf(mBounds[2], (Math.random() * Math.abs(mBounds[1] - mBounds[3]) - 1).toFloat())
+        val position = getRandomSpawnPosition()
         val ship = newRandomEnemyShip(position[0], position[1])
 
         mEnemies.add(ship)

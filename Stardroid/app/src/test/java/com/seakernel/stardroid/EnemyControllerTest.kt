@@ -17,7 +17,7 @@ class EnemyControllerTest {
     @Test
     fun getEnemiesTestNotNull() {
         val controller = EnemyController()
-        assertNotNull(controller.getEnemies())
+        assertNotNull(controller.getShapes())
     }
 
     @Test
@@ -29,7 +29,7 @@ class EnemyControllerTest {
         val list = ArrayList<StardroidShape>()
         list.add(EnemyShip(0f, 0f))
 
-        controller.destroyEnemies(list)
+        controller.destroyShapes(list)
 
         assertEquals(time - list.size, controller.getTimeBetweenEnemyCreation())
     }
@@ -43,7 +43,7 @@ class EnemyControllerTest {
         val list = ArrayList<StardroidShape>()
         list.add(EnemyShip(0f, 0f))
 
-        controller.destroyEnemies(list)
+        controller.destroyShapes(list)
 
         assertEquals(controller.MIN_MILLISECONDS_BETWEEN_ENEMY_CREATION, controller.getTimeBetweenEnemyCreation())
     }

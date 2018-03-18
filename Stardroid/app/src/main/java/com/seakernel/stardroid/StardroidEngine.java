@@ -3,6 +3,7 @@ package com.seakernel.stardroid;
 import com.seakernel.stardroid.model.EnemyController;
 import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.model.controller.Pause;
+import com.seakernel.stardroid.model.controller.PowerUp;
 import com.seakernel.stardroid.model.controller.StardroidShape;
 import com.seakernel.stardroid.model.controller.effect.Explosion;
 import com.seakernel.stardroid.model.controller.effect.Star;
@@ -162,6 +163,12 @@ public class StardroidEngine {
 
             shape.doDraw(mvpMatrix, dt);
             if (shape instanceof BaseShip) {
+                if (shape instanceof PowerUp) {
+                    if (shape.hasCollided(mUserShip.getBounds())) {
+                        shapesLeaving.add(shape);
+                    }
+                    continue;
+                }
                 BaseShip ship = (BaseShip) shape;
                 ship.destroyProjectiles(drawAndCheckCollisions(ship.getProjectiles(), mvpMatrix, dt));
 
@@ -254,7 +261,7 @@ public class StardroidEngine {
      * @param dt
      */
     private void drawEnemyShips(float[] mvpMatrix, float dt) {
-        mEnemyController.destroyEnemies(drawAndCheckCollisions(mEnemyController.getEnemies(), mvpMatrix, dt));
+        mEnemyController.destroyShapes(drawAndCheckCollisions(mEnemyController.getShapes(), mvpMatrix, dt));
         if (StardroidModel.getInstance().isGameRunning()) {
             mEnemyController.addNewEnemySet(dt);
         }
