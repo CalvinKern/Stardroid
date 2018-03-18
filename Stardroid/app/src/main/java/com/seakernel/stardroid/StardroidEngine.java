@@ -165,6 +165,7 @@ public class StardroidEngine {
             if (shape instanceof BaseShip) {
                 if (shape instanceof PowerUp) {
                     if (shape.hasCollided(mUserShip.getBounds())) {
+                        ((UserShip) mUserShip).retrievedPowerUp(shape);
                         shapesLeaving.add(shape);
                     }
                     continue;

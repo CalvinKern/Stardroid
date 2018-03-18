@@ -13,7 +13,9 @@ import java.util.Collection;
 
 public class Gun extends StardroidShape {
 
-    private float mMillisecondsBetweenShots = 500.0f;
+    private static final float BASE_MILLISECONDS_BETWEEN_SHOTS = 500.0f;
+
+    private float mMillisecondsBetweenShots = BASE_MILLISECONDS_BETWEEN_SHOTS;
 
     private static final float HALF_SIZE = 0.02f;
 
@@ -21,6 +23,8 @@ public class Gun extends StardroidShape {
     private float[] mTranslationVector = {0.0f, 0.0f, 0.0f};
 
     private final Collection<Projectile> mProjectiles = new ArrayList<>();
+
+    private float mProjectileSpeed = Projectile.BASE_SPEED_RATE;
 
     public Gun() { /* empty constructor */ }
 
@@ -61,6 +65,7 @@ public class Gun extends StardroidShape {
             mElapsedTime = 0;
             final Projectile projectile = new Projectile(positionX + mTranslationVector[0], positionY + mTranslationVector[1]);
             projectile.setColor(mColor);
+            projectile.setSpeed(mProjectileSpeed);
             mProjectiles.add(projectile);
         }
     }
@@ -78,5 +83,10 @@ public class Gun extends StardroidShape {
         if (milliseconds > 0) {
             mMillisecondsBetweenShots = milliseconds;
         }
+    }
+
+    public void setProjectileSpeed(final float projectileSpeed) {
+        mProjectileSpeed = projectileSpeed;
+        setMillisecondsBetweenShots(BASE_MILLISECONDS_BETWEEN_SHOTS / (projectileSpeed / Projectile.BASE_SPEED_RATE));
     }
 }

@@ -1,7 +1,10 @@
 package com.seakernel.stardroid.model.controller.ship;
 
 import com.seakernel.stardroid.model.OpenGlColors;
+import com.seakernel.stardroid.model.controller.PowerUp;
+import com.seakernel.stardroid.model.controller.StardroidShape;
 import com.seakernel.stardroid.model.controller.weapon.Gun;
+import com.seakernel.stardroid.model.controller.weapon.Projectile;
 
 /**
  * Created by Calvin on 1/21/18.
@@ -43,6 +46,18 @@ public class UserShip extends BaseShip {
         setEngineSpeed(ENGINE_SPEED_PERCENT);
         addGun(new Gun(getWidth() / 4, getHeight() / 4, 0, null, 500.0f));
         addGun(new Gun(getWidth() / 4, -getHeight() / 4, 0, null, 500.0f));
+    }
+
+    public void retrievedPowerUp(StardroidShape shape) {
+        if (!(shape instanceof PowerUp)) {
+            return;
+        }
+
+        setEngineSpeed(ENGINE_SPEED_PERCENT * 100);
+        for (Gun gun : getGuns()) {
+            gun.setProjectileSpeed(Projectile.BASE_SPEED_RATE * 10);
+        }
+        // TODO: Set handler to turn power up off, will also need UI to show how long is left
     }
 
 }

@@ -111,6 +111,10 @@ public class BaseShip extends StardroidShape {
         mGuns.add(gun);
     }
 
+    protected List<Gun> getGuns() {
+        return new ArrayList<>(mGuns);
+    }
+
     public List<Projectile> getProjectiles() {
         final List<Projectile> projectiles = new ArrayList<>();
         for (final Gun gun : mGuns) {
