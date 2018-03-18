@@ -44,6 +44,7 @@ public class StardroidModel {
     private int mState;
     private List<GameStateChangeWatcher> mGameStateChangeWatchers;
     private int mEnemiesDestroyed;
+    private float mPowerUpMillisecondsLeft;
 
     private StardroidModel() {
         mGameStateChangeWatchers = new ArrayList<>();
@@ -121,5 +122,13 @@ public class StardroidModel {
 
     public void addScore(int toAdd) {
         mEnemiesDestroyed += toAdd;
+    }
+
+    public int getPowerUpSecondsLeft() {
+        return (int)(mPowerUpMillisecondsLeft / 1000);
+    }
+
+    public void setPowerUpMillisecondsLeft(float millisecondsLeft) {
+        mPowerUpMillisecondsLeft = millisecondsLeft;
     }
 }

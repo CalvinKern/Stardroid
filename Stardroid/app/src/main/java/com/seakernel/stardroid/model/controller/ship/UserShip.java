@@ -1,6 +1,7 @@
 package com.seakernel.stardroid.model.controller.ship;
 
 import com.seakernel.stardroid.model.OpenGlColors;
+import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.model.controller.PowerUp;
 import com.seakernel.stardroid.model.controller.StardroidShape;
 import com.seakernel.stardroid.model.controller.weapon.Gun;
@@ -63,6 +64,7 @@ public class UserShip extends BaseShip {
         }
 
         mPowerUpMillisecondsLeft = powerUp.getDurationMilliseconds();
+        StardroidModel.getInstance().setPowerUpMillisecondsLeft(mPowerUpMillisecondsLeft);
     }
 
     // TODO: Need UI to show how long is left
@@ -80,5 +82,6 @@ public class UserShip extends BaseShip {
                 gun.setProjectileSpeed(Projectile.BASE_SPEED_RATE);
             }
         }
+        StardroidModel.getInstance().setPowerUpMillisecondsLeft(mPowerUpMillisecondsLeft);
     }
 }

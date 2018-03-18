@@ -58,6 +58,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
     private TextView mScoreTextView;
     private TextView mFpsTextView;
     private TextView mEngineSpeedTextView;
+    private TextView mPowerUpDurationTextView;
 
     private final StardroidModel.GameStateChangeWatcher mGameStateChangeWatcher = new StardroidModel.GameStateChangeWatcher() {
         @Override
@@ -123,6 +124,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
             mFpsTextView = (TextView) root.findViewById(R.id.fps_label);
             mScoreTextView = (TextView) root.findViewById(R.id.score_label);
             mEngineSpeedTextView = (TextView) root.findViewById(R.id.engine_speed_label);
+            mPowerUpDurationTextView = (TextView) root.findViewById(R.id.ship_power_up_duration_left_label);
         }
 
         GLSurfaceView glView = (GLSurfaceView) root.findViewById(R.id.game_surface);
@@ -157,6 +159,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         mFpsTextView = null;
         mScoreTextView = null;
         mEngineSpeedTextView = null;
+        mPowerUpDurationTextView = null;
 
         if (mStardroidEngine != null) {
             mStardroidEngine = null;
@@ -175,6 +178,7 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
                 updateFpsTextView();
                 updateScoreTextView();
 //                updateSpeedTextView(); // Not used for now
+                updatePowerUpDurationTextView();
             }
         });
     }
@@ -204,6 +208,19 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
 
             final float engineSpeed = mStardroidEngine.getUserEngineSpeed();
             mEngineSpeedTextView.setText(getString(R.string.engine_speed, engineSpeed));
+        }
+    }
+
+    private void updatePowerUpDurationTextView() {
+        if (mPowerUpDurationTextView == null) {
+            return;
+        }
+
+        StardroidModel model = StardroidModel.getInstance();
+        if (model.getPowerUpSecondsLeft() <= 0) {
+            mPowerUpDurationTextView.setText("");
+        } else {
+            mPowerUpDurationTextView.setText(getString(R.string.power_up_duration, model.getPowerUpSecondsLeft()));
         }
     }
 
