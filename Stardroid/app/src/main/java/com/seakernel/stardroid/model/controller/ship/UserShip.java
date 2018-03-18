@@ -16,6 +16,8 @@ public class UserShip extends BaseShip {
     private static final float SHIP_WIDTH = 0.15f;
     private static final float SHIP_HEIGHT = 0.3f;
 
+    private float mPowerUpMillisecondsLeft;
+
     @Override
     protected float[] getCoordinates() {
         final float left = -SHIP_WIDTH * 1 / 3.0f;
@@ -53,11 +55,30 @@ public class UserShip extends BaseShip {
             return;
         }
 
-        setEngineSpeed(ENGINE_SPEED_PERCENT * 100);
+        final PowerUp powerUp = (PowerUp) shape;
+
+        setEngineSpeed(ENGINE_SPEED_PERCENT * powerUp.getEngineModifier());
         for (Gun gun : getGuns()) {
-            gun.setProjectileSpeed(Projectile.BASE_SPEED_RATE * 10);
+            gun.setProjectileSpeed(Projectile.BASE_SPEED_RATE * powerUp.getProjectileModifier());
         }
-        // TODO: Set handler to turn power up off, will also need UI to show how long is left
+
+        mPowerUpMillisecondsLeft = powerUp.getDurationMilliseconds();
     }
 
+    // TODO: Need UI to show how long is left
+    public float getPowerUpMillisecondsLeft() {
+        return mPowerUpMillisecondsLeft;
+    }
+
+    @Override
+    protected void drawChildren(float[] mvpMatrix, float dt) {
+        super.drawChildren(mvpMatrix, dt);
+
+        if (mPowerUpMillisecondsLeft > 0 && (mPowerUpMillisecondsLeft -= dt) < 0) {
+            setEngineSpeed(ENGINE_SPEED_PERCENT);
+            for (Gun gun : getGuns()) {
+                gun.setProjectileSpeed(Projectile.BASE_SPEED_RATE);
+            }
+        }
+    }
 }

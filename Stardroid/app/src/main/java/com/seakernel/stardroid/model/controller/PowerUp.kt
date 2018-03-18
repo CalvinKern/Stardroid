@@ -22,6 +22,17 @@ class PowerUp(x: Float, y: Float) : BaseShip(x, y) {
         super.draw(mvpMatrix, dt)
     }
 
+    fun getEngineModifier(): Float {
+        return 100f
+    }
+
+    fun getProjectileModifier(): Float {
+        return 10f
+    }
+    fun getDurationMilliseconds(): Float {
+        return 7000.0f
+    }
+
     companion object {
         private val MAGIC_TIME_SCALAR_FOR_Y_MOVEMENT_IN_A_SINE_WAVE = 5f
     }
