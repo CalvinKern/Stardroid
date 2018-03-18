@@ -15,6 +15,7 @@ public class OpenGlColors {
 
     public static float[] ENEMY_RED = {0.9568627f, 0.2627451f, 0.2117647f, 1.f}; // Yellow Orange rgb(244,67,54)
     public static float[] PLAYER_BLUE = {0.2588235f, 0.6470588f, 0.9607843f, 1.f}; // rgb(66,165,245)
+    public static float[] POWER_UP_GREEN = {0.29803f, 0.6862745f, 0.31372549f, 1.f}; // rgb(76,175,80)
 
     public static float[] randColor() {
         return randColor(1.0f);
