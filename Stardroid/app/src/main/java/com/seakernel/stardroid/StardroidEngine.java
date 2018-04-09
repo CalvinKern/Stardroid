@@ -1,5 +1,7 @@
 package com.seakernel.stardroid;
 
+import android.util.Log;
+
 import com.seakernel.stardroid.model.EnemyController;
 import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.model.controller.Pause;
@@ -198,6 +200,11 @@ public class StardroidEngine {
 
                     Explosion explosion = mUserShip.shipHit();
                     if (explosion != null) {
+                        Log.d("StardroidEngine", String.format("Ship destroyed: (%f, %f)\nDestroyed by %s: (%f, %f)",
+                                mUserShip.getPositionX(), mUserShip.getPositionY(),
+                                ship.getClass().getClass().getSimpleName(),
+                                ship.getPositionX(), ship.getPositionY()
+                                ));
                         mExplosions.add(explosion);
                         StardroidModel.getInstance().endGame();
                     }
