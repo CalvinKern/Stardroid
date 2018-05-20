@@ -154,6 +154,7 @@ public class StardroidEngine {
     private List<StardroidShape> drawAndCheckCollisions(List<? extends StardroidShape> list, float[] mvpMatrix, float dt) {
         ArrayList<StardroidShape> shapesLeaving = new ArrayList<>();
 
+        int enemiesDestroyed = 0;
         int enemiesDestroyedPoints = 0;
         for (StardroidShape shape : list) {
 
@@ -183,6 +184,7 @@ public class StardroidEngine {
                     if (ship.hasCollided(projectile.getBounds())) {
                         hitProjectiles.add(projectile);
                         mExplosions.add(new Explosion(ship));
+                        enemiesDestroyed++;
                         enemiesDestroyedPoints += ship.getPoints();
                         ship.destroy();
                         shapesLeaving.add(ship);
@@ -193,6 +195,7 @@ public class StardroidEngine {
                     Explosion enemyExplosion = ship.shipHit();
                     if (enemyExplosion != null) {
                         mExplosions.add(enemyExplosion);
+                        enemiesDestroyed++;
                         enemiesDestroyedPoints += ship.getPoints();
                         ship.destroy();
                         shapesLeaving.add(ship);
@@ -214,7 +217,7 @@ public class StardroidEngine {
             }
         }
 
-        StardroidModel.getInstance().addScore(enemiesDestroyedPoints);
+        StardroidModel.getInstance().addScore(enemiesDestroyed, enemiesDestroyedPoints);
 
         return shapesLeaving;
     }

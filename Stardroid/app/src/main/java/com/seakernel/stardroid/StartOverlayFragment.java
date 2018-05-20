@@ -54,6 +54,7 @@ public class StartOverlayFragment extends Fragment implements View.OnClickListen
         root.findViewById(R.id.start_settings_close).setOnClickListener(this);
         root.findViewById(R.id.settings_leaderboard).setOnClickListener(this);
         root.findViewById(R.id.settings_achievements).setOnClickListener(this);
+        root.findViewById(R.id.start_google_services_sign_in).setOnClickListener(this);
 
         return root;
     }

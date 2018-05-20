@@ -16,6 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.games.AchievementsClient;
+import com.google.android.gms.games.Games;
 import com.seakernel.stardroid.model.StardroidModel;
 import com.seakernel.stardroid.utilities.Profiler;
 
@@ -193,10 +197,22 @@ public class GameFragment extends Fragment implements GLSurfaceView.Renderer {
         if (mScoreTextView != null) {
             StardroidModel model = StardroidModel.getInstance();
             if (model.isGameRunning()) {
+                int destroyed = model.consumeDestroyed();
+                if (destroyed > 0) {
+                    updateIncrementalAchievement(R.string.achievement_destroy_100_enemies, destroyed);
+                }
                 mScoreTextView.setText(getString(R.string.score, model.getScore()));
             } else {
                 mScoreTextView.setText(null);
             }
+        }
+    }
+
+    private void updateIncrementalAchievement(int achievementId, int increment) {
+        final GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
+        if (account != null) {
+            AchievementsClient client = Games.getAchievementsClient(getActivity(), account);
+            client.increment(getString(achievementId), increment);
         }
     }
 

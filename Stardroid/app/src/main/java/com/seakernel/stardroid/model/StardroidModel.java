@@ -2,8 +2,6 @@ package com.seakernel.stardroid.model;
 
 import android.support.annotation.IntDef;
 
-import com.seakernel.stardroid.StardroidEngine;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -18,7 +16,6 @@ public class StardroidModel {
     public interface GameStateChangeWatcher {
         void onStateChanged(@GameState int oldState, @GameState int newState);
     }
-
     // Static Variables
     @Retention(RetentionPolicy.SOURCE)
     @IntDef
@@ -30,7 +27,6 @@ public class StardroidModel {
     }
 
     private static StardroidModel mModel;
-
     public static StardroidModel getInstance() {
         if (mModel == null) {
             mModel = new StardroidModel();
@@ -43,7 +39,8 @@ public class StardroidModel {
     @GameState
     private int mState;
     private List<GameStateChangeWatcher> mGameStateChangeWatchers;
-    private int mEnemiesDestroyed;
+    private int mScore;
+    private int mDestroyed;
     private float mPowerUpMillisecondsLeft;
 
     private StardroidModel() {
@@ -113,15 +110,23 @@ public class StardroidModel {
     }
 
     public void resetScore() {
-        mEnemiesDestroyed = 0;
+        mScore = 0;
+        mDestroyed = 0;
     }
 
     public int getScore() {
-        return mEnemiesDestroyed;
+        return mScore;
     }
 
-    public void addScore(int toAdd) {
-        mEnemiesDestroyed += toAdd;
+    public int consumeDestroyed() {
+        int destroyed = mDestroyed;
+        mDestroyed = 0;
+        return destroyed;
+    }
+
+    public void addScore(int destroyed, int toAdd) {
+        mDestroyed += destroyed;
+        mScore += toAdd;
     }
 
     public int getPowerUpSecondsLeft() {
