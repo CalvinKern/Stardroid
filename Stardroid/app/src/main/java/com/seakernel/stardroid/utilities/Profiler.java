@@ -29,7 +29,7 @@ public class Profiler {
     private static final String FRAME_LOG_MESSAGE = "FPS = %d\nObjects = %d";
     private static final String SECTION_LOG_MESSAGE = "%s took %d milliseconds";
 
-    private static final Profiler PROFILER = new Profiler();
+    private static final Profiler PROFILER = new Profiler(true);
 
     private boolean mShouldLog;
     private int mFrameCount = 0;
