@@ -10,7 +10,7 @@ import com.seakernel.stardroid.model.controller.StardroidShape;
 
 public class Projectile extends StardroidShape {
 
-    public static final float BASE_SPEED_RATE = 0.001f;
+    public static final float BASE_SPEED_RATE = 0.005f;
     private float mFloatingSpeed = BASE_SPEED_RATE;
 
     public Projectile(float x, float y) {

@@ -32,10 +32,10 @@ public class Gun extends StardroidShape {
         mTranslationVector = new float[]{x, y, z};
     }
 
-    public Gun(final float x, final float y, final float z, final float[] color, final float millisecondsBetweenShots) {
+    public Gun(final float x, final float y, final float z, final float[] color) {
         this(x, y, z);
         setColor(color);
-        setMillisecondsBetweenShots(millisecondsBetweenShots);
+        setMillisecondsBetweenShots(BASE_MILLISECONDS_BETWEEN_SHOTS);
     }
 
     @Override
@@ -85,8 +85,7 @@ public class Gun extends StardroidShape {
         }
     }
 
-    public void setProjectileSpeed(final float projectileSpeed) {
-        mProjectileSpeed = projectileSpeed;
+    public void setProjectileMultiplier(final float projectileSpeed) {
         setMillisecondsBetweenShots(BASE_MILLISECONDS_BETWEEN_SHOTS / (projectileSpeed / Projectile.BASE_SPEED_RATE));
     }
 }
